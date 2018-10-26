@@ -40,6 +40,7 @@ class BHSEntry(DocType):
     hom_number = Integer()
 
     entry_tei_iso = Text(analyzer=html_strip)
+
     created = Date()
 
     class Meta:
@@ -52,41 +53,14 @@ class BHSEntry(DocType):
         return datetime.now() > self.created
 
 
-def prepare_gra_for_index(entry):
-    # get headword in gra_notation
-
-    boo = r'.)'
-    rgx = re.compile('[%s]' % boo)
-    bhs_headword = entry.xpath('./ns:sense/ns:hi', namespaces=namespaces)[0]
-    bhs_headword = rgx.sub('', bhs_headword.text)
-    # bhs_headword = etree.tostring(bhs_headword, encoding='unicode')
-    bhs_headword = bhs_headword.strip(string.punctuation)
-    # remove pronunciation mark '-' from lemma
-    bhs_headword = bhs_headword.replace('-', '')
-
-    if ' ' in bhs_headword:
-        bhs_headword = bhs_headword.split()
-        bhs_headword = [e.strip(string.punctuation) for e in bhs_headword]
-
+def prepare_bhs_entry_for_index(entry):
     bhs_entry = etree.tostring(entry, encoding='unicode')
     ##entries in gra.xml have too many whitespaces
     bhs_entry = ' '.join(bhs_entry.split())
-    # '|' is used in the transcription to mark a line break within a word
-    bhs_entry = bhs_entry.replace('|', '')
-    bhs_entry = bhs_entry.replace('<lb/>', '</br>')
-    bhs_entry = re.sub(r'<hi rendition="#b">(.*?)</hi>', r'<b>\1</b>', bhs_entry,
-                       flags=re.DOTALL)
-    bhs_entry = re.sub(r'<hi rendition="#i">(.*?)</hi>', r'<i>\1</i>', bhs_entry,
-                       flags=re.DOTALL)
-    bhs_entry = re.sub(r'<hi rendition="#center">(.*?)</hi>', r'<div style="text-align:center>\1</div>', bhs_entry,
-                       flags=re.DOTALL)
-
     # normalize
-    if isinstance(bhs_headword, list):
-        bhs_headword = [unicodedata.normalize('NFC', e) for e in bhs_headword]
     bhs_entry = unicodedata.normalize('NFC', bhs_entry)
 
-    return bhs_entry, bhs_headword
+    return bhs_entry
 
 
 def get_bhs_entries(bhs_tei):
@@ -133,7 +107,6 @@ def index_entries(entries, conv):
 
         # entry_form_hyph = e.xpath('./form/hyph')[0].text
         tei_entry = e.xpath('.')[0]
-        tei_entry, headword_gra = prepare_gra_for_index(tei_entry)
 
         bhs_entry_to_index = BHSEntry(meta={'id': e.attrib['{http://www.w3.org/XML/1998/namespace}id']})
         bhs_entry_to_index.sort_id = e.xpath('./ns:note/ns:idno', namespaces=namespaces)[0].text
@@ -141,7 +114,6 @@ def index_entries(entries, conv):
         bhs_entry_to_index.headword_deva = headword_deva
         bhs_entry_to_index.headword_hk = headword_hk
         bhs_entry_to_index.headword_iso = headword_iso
-        bhs_entry_to_index.headword_gra = headword_gra
         bhs_entry_to_index.headword_ascii = headword_ascii
 
         if milestone:
@@ -149,7 +121,8 @@ def index_entries(entries, conv):
             bhs_entry_to_index.hom_number = hom_num
         else:
             bhs_entry_to_index.hom = False
-        bhs_entry_to_index.entry_tei_gra = tei_entry
+
+        bhs_entry_to_index.entry_tei_iso = prepare_bhs_entry_for_index(tei_entry)
 
         bhs_entry_to_index.created = datetime.now()
         bhs_entry_to_index.save()

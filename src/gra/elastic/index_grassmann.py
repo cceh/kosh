@@ -75,13 +75,6 @@ def prepare_gra_for_index(entry):
     gra_entry = ' '.join(gra_entry.split())
     # '|' is used in the transcription to mark a line break within a word
     gra_entry = gra_entry.replace('|', '')
-    gra_entry = gra_entry.replace('<lb/>', '</br>')
-    gra_entry = re.sub(r'<hi rendition="#b">(.*?)</hi>', r'<b>\1</b>', gra_entry,
-                       flags=re.DOTALL)
-    gra_entry = re.sub(r'<hi rendition="#i">(.*?)</hi>', r'<i>\1</i>', gra_entry,
-                       flags=re.DOTALL)
-    gra_entry = re.sub(r'<hi rendition="#center">(.*?)</hi>', r'<div style="text-align:center>\1</div>', gra_entry,
-                       flags=re.DOTALL)
 
     # normalize
     if isinstance(gra_headword, list):

@@ -16,8 +16,8 @@ from werkzeug.routing import Map, Rule
 client = Elasticsearch()
 
 app = flask.Flask(__name__)
-app.config["APPLICATION_ROOT"] = "/dicts/gra/rest"
-app.config["APPLICATION_NAME"] = "GRA_REST_API"
+app.config["APPLICATION_ROOT"] = "/dicts/bhs/rest"
+app.config["APPLICATION_NAME"] = "BHS_REST_API"
 
 MAX_RESULTS = 100
 re_integer_arg = re.compile(r'^[0-9]+$')
@@ -51,7 +51,7 @@ def make_json_response(obj):
 
 def get_from_elastic(query, query_type=None, field=None):
     if query_type == 'ids':
-        res = client.search(index="gra",
+        res = client.search(index="bhs",
                             body={
                                 "query": {'ids': {'values': query}},
                                 "sort": [
@@ -59,7 +59,7 @@ def get_from_elastic(query, query_type=None, field=None):
                                 ]})
     else:
         if query_type == 'fuzzy':
-            res = client.search(index="gra",
+            res = client.search(index="bhs",
                                 body={
                                     "query": {"fuzzy": {field: {"value": query,
                                                                 "prefix_length": 1,
@@ -69,7 +69,7 @@ def get_from_elastic(query, query_type=None, field=None):
                                     ]
                                 })
         else:
-            res = client.search(index="gra",
+            res = client.search(index="bhs",
                                 body={
                                     "query": {query_type: {field: query}},
                                     "sort": [
@@ -88,10 +88,8 @@ def select_from_elatic_response(elastic_raw):
         elastic_result['headword_slp1'] = e['_source']['headword_slp1']
         elastic_result['headword_hk'] = e['_source']['headword_hk']
         elastic_result['headword_deva'] = e['_source']['headword_deva']
-        elastic_result['headword_gra'] = e['_source']['headword_gra']
         elastic_result['headword_ascii'] = e['_source']['headword_ascii']
         elastic_result['entry_tei_iso'] = e['_source']['entry_tei_iso']
-        elastic_result['entry_tei_gra'] = e['_source']['entry_tei_gra']
         from_elastic.append(elastic_result)
     data['data'] = from_elastic
     return data
@@ -144,8 +142,7 @@ def search():
             res = get_from_elastic(headword, query_type, 'headword_deva')
         if input_translit == 'hk':
             res = get_from_elastic(headword, query_type, 'headword_hk')
-        if input_translit == 'gra':
-            res = get_from_elastic(headword, query_type, 'headword_gra')
+
 
     if entry is not None:
         print(entry, query_type)
@@ -162,7 +159,7 @@ def search():
                       Q(query_type, entry_tei_iso=query)],
               minimum_should_match=1)
         '''
-        res = client.search(index="gra",
+        res = client.search(index="bhs",
                             body={
                                 "query": {
                                     "bool": {
@@ -182,7 +179,7 @@ def search():
 
 @app.endpoint('headwords_id')
 def headwords_id(_id):
-    res = client.search(index="gra",
+    res = client.search(index="bhs",
                         body={
                             "query":
                                 {"term":
@@ -202,9 +199,9 @@ def headwords_id_context(_id):
     if gte < 0:
         gte = 0
     print(gte, lte)
-    # s = Search(using=client, index='gra')
+    # s = Search(using=client, index='bhs')
     # q = Q("range", sort_id={"gte": gte, "lte": lte})
-    res = client.search(index="gra",
+    res = client.search(index="bhs",
                         body={
                             "sort": [
                                 {"sort_id": {"order": "asc"}}
@@ -238,9 +235,9 @@ def simple(env, resp):
     return [b'Hello WSGI World']
 
 
-app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/gra/rest': app.wsgi_app})
+app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/bhs/rest': app.wsgi_app})
 
 if __name__ == '__main__':
     app.config.update(
         DEBUG=True)
-    app.run(host='127.0.0.1', port=os.environ.get('PORT', 5000))
+    app.run(host='127.0.0.1', port=os.environ.get('PORT', 5002))
