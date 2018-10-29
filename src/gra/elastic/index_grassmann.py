@@ -122,8 +122,8 @@ def gra_entry_to_iso(entry):
     if 'Ŕ' in s:
         s = s.replace('Ŕ', 'Ŕ̥')
 
-    if 'au' in s:
-        s = s.replace('au', 'a:u')
+    #if 'au' in s:
+    #    s = s.replace('au', 'au')
 
     s = unicodedata.normalize('NFC', s)
 
@@ -217,22 +217,6 @@ def get_slp1_to_iso_mapping(slp1_to_roman):
         d[input.text] = out
 
     return d
-
-
-def format_entries():
-    entries = get_grassmann_entries('data/gra_csl_with_greek_words.xml')
-    for e in entries:
-        entry_entry = e.xpath('./entry')[0]
-        out = etree.tostring(entry_entry, encoding='unicode', pretty_print=True)
-        ##entries in gra.xml have too many whitespaces
-        out = ' '.join(out.split())
-        out = re.sub(r'<hi rendition="#b">(.*?)</hi>', r'<b>\1</b>', out,
-                     flags=re.DOTALL)
-        out = re.sub(r'<hi rendition="#i">(.*?)</hi>', r'<i>\1</i>', out,
-                     flags=re.DOTALL)
-        out = re.sub(r'<hi rendition="#center">(.*?)</hi>', r'<div style="text-align:center>\1</div>', out,
-                     flags=re.DOTALL)
-        print(out)
 
 
 def test_transliterate_slp1_deva(to_trans, conv):
