@@ -398,6 +398,9 @@ def decode_diacritics(diacritics, grassman_tei):
                 s = s.replace('u10', 'u2')
             if 'u11' in s:
                 s = s.replace('u11', 'u3')
+            ##remove '|' this seems to mark an hyphen (line break) in the printed version
+            if '|' in s:
+                s = s.replace('|', '')
 
             for d in diacritics:
                 # if diac in string
