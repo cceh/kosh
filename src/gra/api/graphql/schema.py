@@ -7,6 +7,7 @@ from io import StringIO
 from bs4 import BeautifulSoup
 
 client = Elasticsearch()
+namespaces = {'ns': 'http://www.tei-c.org/ns/1.0'}
 
 
 def _json_object_hook(d):
@@ -28,7 +29,7 @@ parser = etree.XMLParser(recover=True)
 def extract_sense(entry_tei):
     tree = etree.parse(StringIO(entry_tei), parser)
     entry = tree.xpath('.')[0]
-    gra_sense = entry.xpath('./sense')[0]
+    gra_sense = entry.xpath('./ns:sense', namespaces=namespaces)[0]
     gra_sense = etree.tostring(gra_sense, encoding='unicode', pretty_print=True)
     soup = BeautifulSoup(gra_sense, 'lxml')
     gra_sense = soup.get_text()
