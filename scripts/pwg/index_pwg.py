@@ -18,22 +18,26 @@ scheme_slp1_deva = SchemeMap(SCHEMES[SLP1], SCHEMES[DEVANAGARI])
 scheme_slp1_hk = SchemeMap(SCHEMES[SLP1], SCHEMES[HK])
 scheme_iast_slp1 = SchemeMap(SCHEMES[IAST], SCHEMES[SLP1])
 
-namespaces = {'ns': 'http://www.tei-c.org/ns/1.0'}
+ducet_analyzer = analyzer('ducet_sort',
+                          tokenizer="icu_tokenizer",
+                          filter=["icu_folding", "lowercase"],
+                          char_filter=["html_strip"]
+                          )
 
 html_strip = analyzer('html_strip',
                       tokenizer="standard",
                       filter=["standard", "lowercase"],
-                      char_filter=["html_strip"])
+                      char_filter=["html_strip"]
+                      )
 
 
-class GraEntry(DocType):
+class PWGEntry(DocType):
     # TODO: add page number
     sort_id = Integer()
     headword_slp1 = Keyword(fields={'raw': Keyword()})
     headword_iso = Keyword(fields={'raw': Keyword()})
     headword_hk = Keyword(fields={'raw': Keyword()})
     headword_deva = Keyword(fields={'raw': Keyword()})
-    headword_gra = Keyword(fields={'raw': Keyword()})
     headword_ascii = Keyword(fields={'raw': Keyword()})
 
     # some entries have homographs, most of the time, they should be subetries
@@ -41,99 +45,22 @@ class GraEntry(DocType):
     hom_number = Integer()
 
     entry_tei_iso = Text(analyzer=html_strip)
-    entry_tei_gra = Text(analyzer=html_strip)
     created = Date()
 
     class Meta:
-        index = 'gra'
+        index = 'pwg'
 
     def save(self, **kwargs):
-        return super(GraEntry, self).save(**kwargs)
+        return super(PWGEntry, self).save(**kwargs)
 
     def is_published(self):
         return datetime.now() > self.created
 
 
-def prepare_gra_for_index(entry):
-    # get headword in gra_notation
-
-    boo = r'.)'
-    rgx = re.compile('[%s]' % boo)
-    gra_headword = entry.xpath('./ns:sense/ns:hi', namespaces=namespaces)[0]
-    gra_headword = rgx.sub('', gra_headword.text)
-    # gra_headword = etree.tostring(gra_headword, encoding='unicode')
-    gra_headword = gra_headword.strip(string.punctuation)
-    # remove pronunciation mark '-' from lemma
-    gra_headword = gra_headword.replace('-', '')
-
-    if ' ' in gra_headword:
-        gra_headword = gra_headword.split()
-        gra_headword = [e.strip(string.punctuation) for e in gra_headword]
-
-    gra_entry = etree.tostring(entry, encoding='unicode')
-    ##entries in gra.xml have too many whitespaces
-    gra_entry = ' '.join(gra_entry.split())
-    # '|' is used in the transcription to mark a line break within a word
-    gra_entry = gra_entry.replace('|', '')
-
-    # normalize
-    if isinstance(gra_headword, list):
-        gra_headword = [unicodedata.normalize('NFC', e) for e in gra_headword]
-    gra_entry = unicodedata.normalize('NFC', gra_entry)
-
-    return gra_entry, gra_headword
-
-
-def gra_entry_to_iso(entry):
-    s = entry
-    if 'ç' in s:
-        s = s.replace('ç', 'ś')
-    if 'Ç' in s:
-        s = s.replace('Ç', 'Ś')
-    # alle Vokale + circumflex sollten zu Vokal + Macron + Acute werden
-    if 'â' in s:
-        s = s.replace('â', 'ā́')
-    if 'Â' in s:
-        s = s.replace('Â', 'Ā́')
-    if 'ê' in s:
-        s = s.replace('ê', 'ḗ')
-    if 'Ê' in s:
-        s = s.replace('Ê', 'Ḗ')
-    if 'î' in s:
-        s = s.replace('î', 'ī́')
-    if 'Î' in s:
-        s = s.replace('Î', 'Ī́')
-    if 'ô' in s:
-        s = s.replace('ô', 'ṓ')
-    if 'Ô' in s:
-        s = s.replace('Ô', 'Ṓ')
-    if 'û' in s:
-        s = s.replace('û', 'ū́')
-    if 'Û' in s:
-        s = s.replace('Û', 'Ū́')
-    # ṙ > r˳
-    if 'ṙ' in s:
-        s = s.replace('ṙ', 'r̥')
-    if 'Ṙ' in s:
-        s = s.replace('Ṙ', 'R̥')
-    # ŕ > r˳́
-    if 'ŕ' in s:
-        s = s.replace('ṙ', 'ŕ̥')
-    if 'Ŕ' in s:
-        s = s.replace('Ŕ', 'Ŕ̥')
-
-    #if 'au' in s:
-    #    s = s.replace('au', 'au')
-
-    s = unicodedata.normalize('NFC', s)
-
-    return s
-
-
-def get_grassmann_entries(grassmann):
-    tree = etree.parse(grassmann)
-    r = tree.xpath('/ns:TEI/ns:text/ns:body/ns:entry', namespaces=namespaces)
-    print('len_entries', len(r))
+def get_entries(monier):
+    tree = etree.parse(monier)
+    r = tree.xpath('/TEI/text/body/div/entry')
+    print(len(r))
     return r
 
 
@@ -147,8 +74,8 @@ def transliterate_slp1_into_iso(to_trans, conv):
 
 
 def index_entries(entries, conv):
-    for i, e in enumerate(entries):
-        headword_slp1 = e.xpath('./ns:form/ns:orth', namespaces=namespaces)[0].text
+    for e in entries:
+        headword_slp1 = e.xpath('./form/orth')[0].text
         print(headword_slp1)
         # normalize_slp1
         headword_slp1 = unicodedata.normalize('NFC', headword_slp1)
@@ -165,7 +92,7 @@ def index_entries(entries, conv):
         headword_ascii = unicodedata.normalize('NFC', headword_ascii)
 
         # homographs
-        milestone = e.xpath('./ns:form/ns:milestone', namespaces=namespaces)
+        milestone = e.xpath('./form/milestone')
         if milestone:
             hom = milestone[0].attrib['unit']
             hom_num = milestone[0].attrib['n']
@@ -174,15 +101,13 @@ def index_entries(entries, conv):
 
         # entry_form_hyph = e.xpath('./form/hyph')[0].text
         tei_entry = e.xpath('.')[0]
-        tei_entry, headword_gra = prepare_gra_for_index(tei_entry)
 
-        gra_entry_to_index = GraEntry(meta={'id': e.attrib['{http://www.w3.org/XML/1998/namespace}id']})
-        gra_entry_to_index.sort_id = e.xpath('./ns:note/ns:idno', namespaces=namespaces)[0].text
+        gra_entry_to_index = PWGEntry(meta={'id': e.attrib['{http://www.w3.org/XML/1998/namespace}id']})
+        gra_entry_to_index.sort_id = e.xpath('./note/idno')[0].text
         gra_entry_to_index.headword_slp1 = headword_slp1
         gra_entry_to_index.headword_deva = headword_deva
         gra_entry_to_index.headword_hk = headword_hk
         gra_entry_to_index.headword_iso = headword_iso
-        gra_entry_to_index.headword_gra = headword_gra
         gra_entry_to_index.headword_ascii = headword_ascii
 
         if milestone:
@@ -190,8 +115,7 @@ def index_entries(entries, conv):
             gra_entry_to_index.hom_number = hom_num
         else:
             gra_entry_to_index.hom = False
-        gra_entry_to_index.entry_tei_gra = tei_entry
-        gra_entry_to_index.entry_tei_iso = gra_entry_to_iso(tei_entry)
+        gra_entry_to_index.entry_tei_iso = tei_entry
 
         gra_entry_to_index.created = datetime.now()
         gra_entry_to_index.save()
@@ -231,9 +155,9 @@ def transliterate_iast_slp1(input):
     return output
 
 
-def index_grasmann(conv, gra_tei):
-    GraEntry.init()
-    entries = get_grassmann_entries(gra_tei)
+def index_pwg(conv):
+    PWGEntry.init()
+    entries = get_entries('../../data/lazarus/pwg.tei')
     index_entries(entries, conv)
     print('done with it')
 
@@ -244,14 +168,10 @@ def delete_index(to_del):
     index_name.delete(ignore=404)
 
 
-def del_and_re_index_gra(gra_tei, slp1_iso_mapping):
-    delete_index('gra')
-    conv = get_slp1_to_iso_mapping(slp1_iso_mapping)
-    index_grasmann(conv, gra_tei)
+def del_and_re_index_pwg():
+    # delete_index('mw72')
+    conv = get_slp1_to_iso_mapping('../../data/slp1_romanpms.xml')
+    index_pwg(conv)
 
 
-slp1_iso_mapping = '../../../utils/slp1_romanpms.xml'
-gra_dir = '../../../../c-salt_sanskrit_data/sa_de/gra/'
-gra_tei = gra_dir + 'gra.tei'
-
-del_and_re_index_gra(gra_tei, slp1_iso_mapping)
+del_and_re_index_pwg()
