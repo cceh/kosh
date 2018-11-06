@@ -42,7 +42,7 @@ class MWEntry(DocType):
     created = Date()
 
     class Meta:
-        index = 'monier'
+        index = 'ae'
 
     def save(self, **kwargs):
         return super(MWEntry, self).save(**kwargs)
@@ -151,7 +151,7 @@ def transliterate_iast_slp1(input):
 
 def index_monier(conv):
     MWEntry.init()
-    entries = get_entries('../../data/lazarus/monier.tei')
+    entries = get_entries('../../data/lazarus/ae.tei')
     index_entries(entries, conv)
     print('done with it')
 
@@ -163,7 +163,7 @@ def delete_index(to_del):
 
 
 def del_and_re_index_monier():
-    # delete_index('monier')
+    # delete_index('mw72')
     conv = get_slp1_to_iso_mapping('../../data/slp1_romanpms.xml')
     index_monier(conv)
 
