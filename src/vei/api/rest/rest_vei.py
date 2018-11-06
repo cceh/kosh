@@ -196,7 +196,7 @@ def headwords_id_context(_id):
     if gte < 0:
         gte = 0
     size = lte - gte
-    res = client.search(index="bhs",
+    res = client.search(index="vei",
                         body={
                             "from": 0, "size": size,
 
