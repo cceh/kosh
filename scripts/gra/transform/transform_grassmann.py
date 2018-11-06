@@ -12,8 +12,6 @@ from pyuca import Collator
 
 from utils import input_output
 
-# Required mapping
-nsmap = {"xml": "http://www.w3.org/XML/1998/namespace"}
 
 
 def get_collection(database, collection):

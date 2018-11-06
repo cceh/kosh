@@ -1,21 +1,23 @@
 import json
+import sys
 import os
 import re
-import sys
 import urllib.parse
-
 import flask
+from unicodedata import normalize
 from elasticsearch import Elasticsearch
-from flask import make_response
+from elasticsearch_dsl import Search, Q
 from indic_transliteration.xsanscript import SchemeMap, SCHEMES, HK, SLP1, DEVANAGARI
-from werkzeug.routing import Map, Rule
+from lxml import etree
 from werkzeug.wsgi import DispatcherMiddleware
+from flask import make_response
+from werkzeug.routing import Map, Rule
 
 client = Elasticsearch()
 
 app = flask.Flask(__name__)
-app.config["APPLICATION_ROOT"] = "/dicts/vei/rest"
-app.config["APPLICATION_NAME"] = "VEI_REST_API"
+app.config["APPLICATION_ROOT"] = "/dicts/bhs/rest"
+app.config["APPLICATION_NAME"] = "BHS_REST_API"
 
 MAX_RESULTS = 100
 re_integer_arg = re.compile(r'^[0-9]+$')
@@ -49,7 +51,7 @@ def make_json_response(obj):
 
 def get_from_elastic(query, query_type=None, field=None):
     if query_type == 'ids':
-        res = client.search(index="vei",
+        res = client.search(index="bhs",
                             body={
                                 "query": {'ids': {'values': query}},
                                 "sort": [
@@ -57,7 +59,7 @@ def get_from_elastic(query, query_type=None, field=None):
                                 ]})
     else:
         if query_type == 'fuzzy':
-            res = client.search(index="vei",
+            res = client.search(index="bhs",
                                 body={
                                     "query": {"fuzzy": {field: {"value": query,
                                                                 "prefix_length": 1,
@@ -67,7 +69,7 @@ def get_from_elastic(query, query_type=None, field=None):
                                     ]
                                 })
         else:
-            res = client.search(index="vei",
+            res = client.search(index="bhs",
                                 body={
                                     "query": {query_type: {field: query}},
                                     "sort": [
@@ -156,7 +158,7 @@ def search():
                       Q(query_type, entry_tei_iso=query)],
               minimum_should_match=1)
         '''
-        res = client.search(index="vei",
+        res = client.search(index="bhs",
                             body={
                                 "query": {
                                     "bool": {
@@ -176,7 +178,7 @@ def search():
 
 @app.endpoint('headwords_id')
 def headwords_id(_id):
-    res = client.search(index="vei",
+    res = client.search(index="bhs",
                         body={
                             "query":
                                 {"term":
@@ -195,11 +197,11 @@ def headwords_id_context(_id):
     lte = _id + limit
     if gte < 0:
         gte = 0
-    print(gte, lte)
-    # s = Search(using=client, index='vei')
-    # q = Q("range", sort_id={"gte": gte, "lte": lte})
-    res = client.search(index="vei",
+    size = lte - gte
+    res = client.search(index="bhs",
                         body={
+                            "from": 0, "size": size,
+
                             "sort": [
                                 {"sort_id": {"order": "asc"}}
                             ],
@@ -210,11 +212,9 @@ def headwords_id_context(_id):
                                         "lte": lte
                                     }
                                 }
-                            },
-                            "from": gte, "size": lte
+                            }
                         })
 
-    # s = s[:lte]
     resp = make_json_response(select_from_elatic_response(res['hits']['hits']))
     return resp
 
@@ -232,9 +232,9 @@ def simple(env, resp):
     return [b'Hello WSGI World']
 
 
-app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/vei/rest': app.wsgi_app})
+app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/bhs/rest': app.wsgi_app})
 
 if __name__ == '__main__':
     app.config.update(
         DEBUG=True)
-    app.run(host='127.0.0.1', port=os.environ.get('PORT', 5006))
+    app.run(host='127.0.0.1', port=os.environ.get('PORT', 5002))

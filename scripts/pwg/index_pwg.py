@@ -18,6 +18,12 @@ scheme_slp1_deva = SchemeMap(SCHEMES[SLP1], SCHEMES[DEVANAGARI])
 scheme_slp1_hk = SchemeMap(SCHEMES[SLP1], SCHEMES[HK])
 scheme_iast_slp1 = SchemeMap(SCHEMES[IAST], SCHEMES[SLP1])
 
+ducet_analyzer = analyzer('ducet_sort',
+                          tokenizer="icu_tokenizer",
+                          filter=["icu_folding", "lowercase"],
+                          char_filter=["html_strip"]
+                          )
+
 html_strip = analyzer('html_strip',
                       tokenizer="standard",
                       filter=["standard", "lowercase"],
@@ -25,7 +31,7 @@ html_strip = analyzer('html_strip',
                       )
 
 
-class MWEntry(DocType):
+class PWGEntry(DocType):
     # TODO: add page number
     sort_id = Integer()
     headword_slp1 = Keyword(fields={'raw': Keyword()})
@@ -42,10 +48,10 @@ class MWEntry(DocType):
     created = Date()
 
     class Meta:
-        index = 'aptestud'
+        index = 'pwg'
 
     def save(self, **kwargs):
-        return super(MWEntry, self).save(**kwargs)
+        return super(PWGEntry, self).save(**kwargs)
 
     def is_published(self):
         return datetime.now() > self.created
@@ -96,7 +102,7 @@ def index_entries(entries, conv):
         # entry_form_hyph = e.xpath('./form/hyph')[0].text
         tei_entry = e.xpath('.')[0]
 
-        gra_entry_to_index = MWEntry(meta={'id': e.attrib['{http://www.w3.org/XML/1998/namespace}id']})
+        gra_entry_to_index = PWGEntry(meta={'id': e.attrib['{http://www.w3.org/XML/1998/namespace}id']})
         gra_entry_to_index.sort_id = e.xpath('./note/idno')[0].text
         gra_entry_to_index.headword_slp1 = headword_slp1
         gra_entry_to_index.headword_deva = headword_deva
@@ -149,9 +155,9 @@ def transliterate_iast_slp1(input):
     return output
 
 
-def index_monier(conv):
-    MWEntry.init()
-    entries = get_entries('../../data/lazarus/aptestud.tei')
+def index_pwg(conv):
+    PWGEntry.init()
+    entries = get_entries('../../data/lazarus/pwg.tei')
     index_entries(entries, conv)
     print('done with it')
 
@@ -162,10 +168,10 @@ def delete_index(to_del):
     index_name.delete(ignore=404)
 
 
-def del_and_re_index_monier():
-    # delete_index('monier')
+def del_and_re_index_pwg():
+    # delete_index('mw72')
     conv = get_slp1_to_iso_mapping('../../data/slp1_romanpms.xml')
-    index_monier(conv)
+    index_pwg(conv)
 
 
-del_and_re_index_monier()
+del_and_re_index_pwg()

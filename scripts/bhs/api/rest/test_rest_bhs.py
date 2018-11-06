@@ -30,9 +30,9 @@ def test_headword_id_context(id, limit):
 
 # print(test_headword_request('gat', 'prefix').json())
 
-#print(test_headword_id_context(id='4', limit=50))
+print(test_headword_id_context(id='30', limit=40))
 # agni
 # print(test_headword_request('agn.*','regexp'))
 # print(test_headword_request('अक्ष', 'prefix', 'deva'))
-print(test_standard_search('agni', 'term', 'iso'))
+#print(test_standard_search('agn', 'prefix', 'iso'))
 # print(test_headword_id(78))
