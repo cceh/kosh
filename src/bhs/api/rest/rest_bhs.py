@@ -143,7 +143,6 @@ def search():
         if input_translit == 'hk':
             res = get_from_elastic(headword, query_type, 'headword_hk')
 
-
     if entry is not None:
         print(entry, query_type)
         entry = urllib.parse.unquote(entry)
@@ -198,11 +197,11 @@ def headwords_id_context(_id):
     lte = _id + limit
     if gte < 0:
         gte = 0
-    print(gte, lte)
-    # s = Search(using=client, index='bhs')
-    # q = Q("range", sort_id={"gte": gte, "lte": lte})
+    size = lte - gte
     res = client.search(index="bhs",
                         body={
+                            "from": 0, "size": size,
+
                             "sort": [
                                 {"sort_id": {"order": "asc"}}
                             ],
@@ -213,11 +212,9 @@ def headwords_id_context(_id):
                                         "lte": lte
                                     }
                                 }
-                            },
-                            "from": gte, "size": lte
+                            }
                         })
 
-    # s = s[:lte]
     resp = make_json_response(select_from_elatic_response(res['hits']['hits']))
     return resp
 

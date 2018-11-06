@@ -201,11 +201,11 @@ def headwords_id_context(_id):
     lte = _id + limit
     if gte < 0:
         gte = 0
-    print(gte, lte)
-    # s = Search(using=client, index='gra')
-    # q = Q("range", sort_id={"gte": gte, "lte": lte})
-    res = client.search(index="gra",
+    size = lte - gte
+    res = client.search(index="bhs",
                         body={
+                            "from": 0, "size": size,
+
                             "sort": [
                                 {"sort_id": {"order": "asc"}}
                             ],
@@ -216,11 +216,9 @@ def headwords_id_context(_id):
                                         "lte": lte
                                     }
                                 }
-                            },
-                            "from": gte, "size": lte
+                            }
                         })
 
-    # s = s[:lte]
     resp = make_json_response(select_from_elatic_response(res['hits']['hits']))
     return resp
 
