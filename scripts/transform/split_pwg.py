@@ -51,7 +51,7 @@ def split_pwg(pwg_dir):
     for i, chunk in enumerate(chunks):
         i += 1
         et = create_tei_file(chunk, i)
-        et.write(pwg_dir + '/splitted/' + 'pwg_{}.tei'.format(str(i).zfill(2)), pretty_print=True,
+        et.write(pwg_dir + '/split/' + 'pwg_{}.tei'.format(str(i).zfill(2)), pretty_print=True,
                  xml_declaration=True,
                  encoding="utf-8")
 

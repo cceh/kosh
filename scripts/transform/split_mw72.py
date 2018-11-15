@@ -51,7 +51,7 @@ def split_mw72(mw72_dir):
     for i, chunk in enumerate(chunks):
         i += 1
         et = create_tei_file(chunk, i)
-        et.write(mw72_dir + '/splitted/' + 'mw72_{}.tei'.format(str(i).zfill(2)), pretty_print=True,
+        et.write(mw72_dir + '/split/' + 'mw72_{}.tei'.format(str(i).zfill(2)), pretty_print=True,
                  xml_declaration=True, encoding="utf-8")
 
 

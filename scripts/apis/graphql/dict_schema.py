@@ -1,11 +1,10 @@
+import graphene
 import json
 from collections import namedtuple
-from io import StringIO
-
-import graphene
-from bs4 import BeautifulSoup
 from elasticsearch import Elasticsearch
 from lxml import etree
+from io import StringIO
+from bs4 import BeautifulSoup
 
 client = Elasticsearch()
 namespaces = {'ns': 'http://www.tei-c.org/ns/1.0'}
@@ -30,13 +29,13 @@ parser = etree.XMLParser(recover=True)
 def extract_sense(entry_tei):
     tree = etree.parse(StringIO(entry_tei), parser)
     entry = tree.xpath('.')[0]
-    vei_sense = entry.xpath('./ns:sense', namespaces=namespaces)[0]
-    vei_sense = etree.tostring(vei_sense, encoding='unicode', pretty_print=True)
-    soup = BeautifulSoup(vei_sense, 'lxml')
-    vei_sense = soup.get_text()
+    entry_sense = entry.xpath('./ns:sense', namespaces=namespaces)[0]
+    entry_sense = etree.tostring(entry_sense, encoding='unicode', pretty_print=True)
+    soup = BeautifulSoup(entry_sense, 'lxml')
+    entry_sense = soup.get_text()
     # remove \n
-    vei_sense = vei_sense.replace('\n', '')
-    return vei_sense
+    entry_sense = entry_sense.replace('\n', '')
+    return entry_sense
 
 
 def select_from_elastic_response(elastic_raw):
@@ -57,7 +56,21 @@ def select_from_elastic_response(elastic_raw):
     return from_elastic
 
 
-class VEIEntry(graphene.ObjectType):
+class GraEntry(graphene.ObjectType):
+    id = graphene.String()
+    sort_id = graphene.Int()
+    headword_iso = graphene.String()
+    headword_slp1 = graphene.String()
+    headword_hk = graphene.String()
+    headword_deva = graphene.String()
+    headword_gra = graphene.String()
+    headword_ascii = graphene.String()
+    entry_tei_iso = graphene.String()
+    entry_tei_gra = graphene.String()
+    sense_txt_iso = graphene.String()
+    sense_txt_gra = graphene.String()
+
+class DictEntry(graphene.ObjectType):
     id = graphene.String()
     sort_id = graphene.Int()
     headword_iso = graphene.String()
@@ -71,13 +84,13 @@ class VEIEntry(graphene.ObjectType):
 
 # queries
 
-def get_from_elastic(query, size=None, query_type=None, field=None):
+def get_from_elastic(dict_id, query, size=None, query_type=None, field=None):
     # set max size auf 100:
     if size is not None and size > 100:
         size = 100
 
     if query_type == 'ids':
-        res = client.search(index="vei",
+        res = client.search(index=dict_id,
                             body={
                                 "query": {'ids': {'values': query}},
                                 "sort": [
@@ -86,7 +99,7 @@ def get_from_elastic(query, size=None, query_type=None, field=None):
                                 "from": 0, "size": size})
     else:
         if query_type == 'fuzzy':
-            res = client.search(index="vei",
+            res = client.search(index=dict_id,
                                 body={
                                     "query": {"fuzzy": {field: {"value": query,
                                                                 "prefix_length": 1,
@@ -98,7 +111,7 @@ def get_from_elastic(query, size=None, query_type=None, field=None):
                                     "from": 0, "size": size
                                 })
         else:
-            res = client.search(index="vei",
+            res = client.search(index=dict_id,
                                 body={
                                     "query": {query_type: {field: query}},
                                     "sort": [
@@ -108,19 +121,19 @@ def get_from_elastic(query, size=None, query_type=None, field=None):
     return res
 
 
-class VEIQuery(graphene.ObjectType):
-    entries = graphene.List(VEIEntry, query=graphene.String(), query_type=graphene.String(),
+class DictQuery(graphene.ObjectType):
+    entries = graphene.List(DictEntry, dict_id=graphene.String(), query=graphene.String(), query_type=graphene.String(),
                             field=graphene.String(),
                             size=graphene.Int())
 
-    ids = graphene.List(VEIEntry, lemma_id=graphene.List(graphene.String), size=graphene.Int())
+    ids = graphene.List(DictEntry, dict_id=graphene.String(), lemma_id=graphene.List(graphene.String), size=graphene.Int())
 
-    def resolve_entries(self, info, query, query_type, field, size):
-        res = get_from_elastic(query, size=size, query_type=query_type, field=field)
+    def resolve_entries(self, info, dict_id, query, query_type, field, size):
+        res = get_from_elastic(dict_id=dict_id, query=query, size=size, query_type=query_type, field=field)
         parsed_results = select_from_elastic_response(res['hits']['hits'])
         return json2obj(json.dumps(parsed_results))
 
-    def resolve_ids(self, info, lemma_id, size):
-        res = get_from_elastic(query=lemma_id, size=size, query_type='ids')
+    def resolve_ids(self, info, dict_id, lemma_id, size):
+        res = get_from_elastic(dict_id=dict_id, query=lemma_id, size=size, query_type='ids')
         parsed_results = select_from_elastic_response(res['hits']['hits'])
         return json2obj(json.dumps(parsed_results))

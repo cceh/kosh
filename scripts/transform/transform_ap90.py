@@ -1,7 +1,12 @@
-from lxml import etree
 from os import listdir
-
 from os.path import isfile, join, basename
+from lxml import etree
+import re
+
+NS_TEI = 'http://www.tei-c.org/ns/1.0'
+NS_HTML = 'http://www.w3.org/1999/xhtml'
+
+ns = {'tei': 'http://www.tei-c.org/ns/1.0', 'html': NS_HTML}
 
 
 def apte_csl_into_tei(apte_xml, path_to_pages):
@@ -170,10 +175,41 @@ def apte_csl_into_tei(apte_xml, path_to_pages):
     return et
 
 
+def get_all_tags(ap90_tei):
+    #tags_pattern = re.compile(r'<(.*?)>')
+    parser = etree.XMLParser(recover=True)
+    tree = etree.parse(ap90_tei, parser)
+    tags_set = set()
+    entries = tree.xpath('//tei:entry/tei:sense', namespaces=ns)
+    for e in entries:
+        e_as_s = etree.tounicode(e)
+        # tags = re.findall(tags_pattern, e_as_s)
+        # for tag in tags:
+        #   tags_set.add(tag)
+        e_as_s = re.sub(r'<hi rendition="#b">(.*?)</hi>', r'<b>\1</b>', e_as_s,
+                        flags=re.DOTALL)
+        e_as_s = re.sub(r'<hi rendition="#i">(.*?)</hi>', r'<i>\1</i>', e_as_s,
+                        flags=re.DOTALL)
+        e_as_s = re.sub(r'<sense xmlns="http://www.tei-c.org/ns/1.0">(.*?)</sense>', r'<div class="sense">\1</div>',
+                        e_as_s,
+                        flags=re.DOTALL)
+        e_as_s = re.sub(r'<lb/>', r'<br>', e_as_s, flags=re.DOTALL)
+        print(e_as_s)
+
+    return tags_set
+
+
 def transform_ap90_tei(ap90_dir):
     apte_xml = ap90_dir + 'ap90.xml'
     apte_csl_base = apte_csl_into_tei(apte_xml, ap90_dir + 'ap90_pages/')
     apte_csl_base.write(ap90_dir + 'ap90.tei', pretty_print=True, xml_declaration=True, encoding="utf-8")
 
-# ap90dir = '../../../c-salt_sanskrit_data/sa_en/ap90/'
+
+ap90dir = '../../../../c-salt_sanskrit_data/sa_en/ap90/'
 # transform_ap90_tei(ap90dir)
+
+
+tags_set = get_all_tags(ap90dir + 'ap90.tei')
+
+for tag in tags_set:
+    print(tag)
