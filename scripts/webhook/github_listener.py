@@ -10,7 +10,7 @@ from werkzeug.wsgi import DispatcherMiddleware
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
-conf_parser.read('../utils/github_listener.conf')
+conf_parser.read(r'../../utils/github_listener.conf')
 
 app = Flask(__name__)
 
@@ -32,7 +32,7 @@ def get_file_name(path_to_file):
     return file_name
 
 
-files_to_index = set(get_file_name(gra_tei), get_file_name(bhs_tei), get_file_name(ap90_tei), get_file_name(vei_tei))
+files_to_index = (get_file_name(gra_tei), get_file_name(bhs_tei), get_file_name(ap90_tei), get_file_name(vei_tei))
 
 
 def make_json_response(obj):
