@@ -3,7 +3,7 @@ import json
 import os
 import requests
 import git
-import index_tei
+from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
 from werkzeug.wsgi import DispatcherMiddleware
