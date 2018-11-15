@@ -2,6 +2,5 @@
 .idea
 *.conf
 data
-webhook/
 __pycache__
 input_output.py
