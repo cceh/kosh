@@ -4,3 +4,4 @@
 data
 __pycache__
 input_output.py
+.log
