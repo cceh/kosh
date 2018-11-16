@@ -64,10 +64,10 @@ def github_payload():
             if payload['action'] == 'closed':
                 merged_status = ['merged']
                 if merged_status == 'true':
-                    app.logger.log('INFO', 'merged_status:  ' + merged_status)
+                    logging.log('INFO', 'merged_status:  ' + merged_status)
                     g = git.cmd.Git(repo_dir)
                     g.pull()
-                    app.logger.log('INFO', 'c-salt_sanskrit_data pulled from upstream')
+                    logging.log('INFO', 'c-salt_sanskrit_data pulled from upstream')
                     # check which files have been updated and then reindex them
                     # merged_by = ['pull_request']['merged_by']
                     sha = ['pull_request']['head']['sha']
@@ -81,7 +81,7 @@ def github_payload():
                         filename = file['filename']
                         filename = filename.split['/']
                         filename = filename[-1]
-                        app.logger.log('INFO', filename)
+                        logging.log('INFO', filename)
                         if filename in files_to_index:
                             # reindex files
                             index_tei.del_and_re_index(filename.replace('.tei', ''),
