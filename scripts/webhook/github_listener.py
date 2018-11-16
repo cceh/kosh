@@ -10,13 +10,13 @@ from werkzeug.wsgi import DispatcherMiddleware
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
-conf_parser.read(r'../../utils/github_listener.conf')
+conf_path = r'../../utils/github_listener.conf'
+conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
 
 app = Flask(__name__)
 
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
-
 repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
 ssh_executable = conf_parser.get('PATHS', 'SSH_EXEC')
 
