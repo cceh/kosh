@@ -1,14 +1,13 @@
 import configparser
 import json
+import logging
 import os
-import requests
 import git
+import requests
 from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
 from werkzeug.wsgi import DispatcherMiddleware
-import logging
-from logging.config import dictConfig
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
@@ -100,7 +99,7 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='logger.log', level=logging.DEBUG)
+    logging.basicConfig(filename='webhook_logger.log', level=logging.DEBUG)
     app.config.update(
         DEBUG=True,
         JSON_AS_ASCII=False)
