@@ -79,7 +79,7 @@ def github_payload():
         if payload:
             print(payload)
             if payload['action'] == 'closed':
-                merged_status = ['pull_request']['merged']
+                merged_status = ['merged']
                 if merged_status == 'true':
                     app.logger.log('INFO', 'merged_status:  ' + merged_status)
                     g = git.cmd.Git(repo_dir)
@@ -94,10 +94,11 @@ def github_payload():
                     commits_json = json.loads(req.json)
                     files = commits_json['files']
                     for file in files:
-                        app.logger.log('INFO', file)
+                        #
                         filename = file['filename']
                         filename = filename.split['/']
                         filename = filename[-1]
+                        app.logger.log('INFO', filename)
                         if filename in files_to_index:
                             # reindex files
                             index_tei.del_and_re_index(filename.replace('.tei', ''),
