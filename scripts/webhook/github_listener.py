@@ -13,6 +13,24 @@ conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
 
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
 app = Flask(__name__)
 
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
@@ -58,28 +76,33 @@ def github_payload():
         return jsonify({'msg': 'Ok'})
     if request.headers.get('X-GitHub-Event') == "pull_request":
         payload = request.get_json()
-        if payload['action'] == 'closed':
-            merged_status = ['pull_request']['merged']
-            if merged_status == 'true':
-                g = git.cmd.Git(repo_dir)
-                g.pull()
-            # check which files have been updated and then reindex them
-            # merged_by = ['pull_request']['merged_by']
-            sha = ['pull_request']['head']['sha']
-            commits_url = ['pull_request']['head']['repo']['commits_url']
-            commits_url = commits_url.replace('{/sha}', '/' + sha)
-            req = requests.get(commits_url)
-            commits_json = json.loads(req.json)
-            files = commits_json['files']
-            for file in files:
-                filename = file['filename']
-                filename = filename.split['/']
-                filename = filename[-1]
-                if filename in files_to_index:
-                    # reindex files
-                    index_tei.del_and_re_index(filename.replace('.tei', ''),
-                                               conf_parser.get('PATHS', filename.replace('.', '_')),
-                                               conf_parser.get('PATHS', 'slp1_iso_mapping'))
+        if payload:
+            print(payload)
+            if payload['action'] == 'closed':
+                merged_status = ['pull_request']['merged']
+                if merged_status == 'true':
+                    app.logger.log('INFO', 'merged_status:  ' + merged_status)
+                    g = git.cmd.Git(repo_dir)
+                    g.pull()
+                    app.logger.log('INFO', 'c-salt_sanskrit_data pulled from upstream')
+                    # check which files have been updated and then reindex them
+                    # merged_by = ['pull_request']['merged_by']
+                    sha = ['pull_request']['head']['sha']
+                    commits_url = ['pull_request']['head']['repo']['commits_url']
+                    commits_url = commits_url.replace('{/sha}', '/' + sha)
+                    req = requests.get(commits_url)
+                    commits_json = json.loads(req.json)
+                    files = commits_json['files']
+                    for file in files:
+                        app.logger.log('INFO', file)
+                        filename = file['filename']
+                        filename = filename.split['/']
+                        filename = filename[-1]
+                        if filename in files_to_index:
+                            # reindex files
+                            index_tei.del_and_re_index(filename.replace('.tei', ''),
+                                                       conf_parser.get('PATHS', filename.replace('.', '_')),
+                                                       conf_parser.get('PATHS', 'slp1_iso_mapping'))
 
     return data
 
