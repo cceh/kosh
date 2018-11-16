@@ -7,29 +7,13 @@ from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
 from werkzeug.wsgi import DispatcherMiddleware
+import logging
+from logging.config import dictConfig
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
-
-from logging.config import dictConfig
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
 
 app = Flask(__name__)
 
@@ -116,6 +100,7 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='logger.log', level=logging.DEBUG)
     app.config.update(
         DEBUG=True,
         JSON_AS_ASCII=False)
