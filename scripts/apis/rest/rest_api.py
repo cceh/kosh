@@ -13,7 +13,8 @@ from werkzeug.wsgi import DispatcherMiddleware
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
-conf_parser.read(r'../../../utils/rest.conf')
+conf_path = r'../../../utils/rest.conf'
+conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
 
 app = flask.Flask(__name__)
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
