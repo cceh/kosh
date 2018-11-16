@@ -73,6 +73,7 @@ def github_payload():
                     sha = ['pull_request']['head']['sha']
                     commits_url = ['pull_request']['head']['repo']['commits_url']
                     commits_url = commits_url.replace('{/sha}', '/' + sha)
+                    logging.log('INFO', 'commits_url:   ' + commits_url)
                     req = requests.get(commits_url)
                     commits_json = json.loads(req.json)
                     files = commits_json['files']
@@ -99,7 +100,7 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='webhook_logger.log', level=logging.DEBUG)
+    logging.basicConfig(filename='webhook_logger.log', level=logging.INFO)
     app.config.update(
         DEBUG=True,
         JSON_AS_ASCII=False)
