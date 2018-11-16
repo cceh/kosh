@@ -1,6 +1,7 @@
 import configparser
 import json
 import logging
+from logging.config import dictConfig
 import os
 import git
 import requests
@@ -8,6 +9,22 @@ from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
 from werkzeug.wsgi import DispatcherMiddleware
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s.%(funcName)s Line %(lineno)s: %(message)s',
+    }},
+    'handlers': {'file': {
+        'class': 'logging.handlers.RotatingFileHandler',
+        'filename': 'logs/admin.log',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wh_logger.log']
+    }
+})
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
@@ -100,7 +117,7 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='webhook_logger.log', level=logging.INFO)
+    logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
     app.config.update(
         DEBUG=True,
         JSON_AS_ASCII=False)
