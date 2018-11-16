@@ -1,7 +1,6 @@
 import configparser
 import json
 import logging
-from logging.config import dictConfig
 import os
 import git
 import requests
@@ -9,22 +8,6 @@ from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
 from werkzeug.wsgi import DispatcherMiddleware
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s.%(funcName)s Line %(lineno)s: %(message)s',
-    }},
-    'handlers': {'file': {
-        'class': 'logging.handlers.RotatingFileHandler',
-        'filename': 'logs/admin.log',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wh_logger.log']
-    }
-})
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
@@ -81,16 +64,16 @@ def github_payload():
             if payload['action'] == 'closed':
                 merged_status = ['merged']
                 if merged_status == 'true':
-                    logging.log('INFO', 'merged_status:  ' + merged_status)
+                    logging.log(logging.INFO, 'merged_status:  ' + merged_status)
                     g = git.cmd.Git(repo_dir)
                     g.pull()
-                    logging.log('INFO', 'c-salt_sanskrit_data pulled from upstream')
+                    logging.log(logging.INFO, 'c-salt_sanskrit_data pulled from upstream')
                     # check which files have been updated and then reindex them
                     # merged_by = ['pull_request']['merged_by']
                     sha = ['pull_request']['head']['sha']
                     commits_url = ['pull_request']['head']['repo']['commits_url']
                     commits_url = commits_url.replace('{/sha}', '/' + sha)
-                    logging.log('INFO', 'commits_url:   ' + commits_url)
+                    logging.log(logging.INFO, 'commits_url:   ' + commits_url)
                     req = requests.get(commits_url)
                     commits_json = json.loads(req.json)
                     files = commits_json['files']
@@ -99,7 +82,7 @@ def github_payload():
                         filename = file['filename']
                         filename = filename.split['/']
                         filename = filename[-1]
-                        logging.log('INFO', filename)
+                        logging.log(logging.INFO, filename)
                         if filename in files_to_index:
                             # reindex files
                             index_tei.del_and_re_index(filename.replace('.tei', ''),
