@@ -27,6 +27,8 @@ ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
 
 
+
+
 def get_file_name(path_to_file):
     file_name = path_to_file.split('/')
     file_name = file_name[-1]
@@ -100,6 +102,7 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
+    logging.setLevel(logging.INFO)
     logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
     app.config.update(
         DEBUG=True,
