@@ -62,7 +62,7 @@ def github_payload():
         if payload:
             print(payload)
             if payload['action'] == 'closed':
-                merged_status = ['merged']
+                merged_status = payload['pull_request']['merged']
                 if merged_status == 'true':
                     logging.log(logging.INFO, 'merged_status:  ' + merged_status)
                     g = git.cmd.Git(repo_dir)
@@ -70,8 +70,8 @@ def github_payload():
                     logging.log(logging.INFO, 'c-salt_sanskrit_data pulled from upstream')
                     # check which files have been updated and then reindex them
                     # merged_by = ['pull_request']['merged_by']
-                    sha = ['pull_request']['head']['sha']
-                    commits_url = ['pull_request']['head']['repo']['commits_url']
+                    sha = payload['pull_request']['head']['sha']
+                    commits_url = payload['pull_request']['head']['repo']['commits_url']
                     commits_url = commits_url.replace('{/sha}', '/' + sha)
                     logging.log(logging.INFO, 'commits_url:   ' + commits_url)
                     req = requests.get(commits_url)
@@ -89,7 +89,7 @@ def github_payload():
                                                        conf_parser.get('PATHS', filename.replace('.', '_')),
                                                        conf_parser.get('PATHS', 'slp1_iso_mapping'))
 
-    return data
+            return data
 
 
 def simple(env, resp):
