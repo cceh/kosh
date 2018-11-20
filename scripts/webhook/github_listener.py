@@ -26,9 +26,7 @@ logger = logging.getLogger('server')
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
 repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
-logger.info(repo_dir)
-repo = git.Repo(os.path.join(os.path.abspath(os.path.dirname(__file__)), repo_dir))
-
+repo = git.Repo(repo_dir)
 ssh_executable = conf_parser.get('PATHS', 'SSH_EXEC')
 
 gra_tei = conf_parser.get('PATHS', 'gra_tei')
