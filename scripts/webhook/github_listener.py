@@ -90,7 +90,7 @@ def github_payload():
                         filename = file['filename']
                         filename = filename.split('/')
                         filename = filename[-1]
-                        logger.info(filename)
+                        #logger.info(filename)
                         if filename in files_to_index:
                             re_indexed.append(filename)
                             # reindex files
