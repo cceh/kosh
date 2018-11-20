@@ -13,7 +13,6 @@ client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
-#repo_path = os.getenv('GIT_REPO_PATH')
 
 app = Flask(__name__)
 
@@ -23,7 +22,6 @@ logging.basicConfig(filename='wh_logger.log', level=logging.INFO,
 logging.getLogger('server').setLevel(level=logging.INFO)
 logger = logging.getLogger('server')
 
-app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
 repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
 repo = git.Repo(repo_dir)
@@ -33,8 +31,6 @@ gra_tei = conf_parser.get('PATHS', 'gra_tei')
 bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
-
-
 
 
 def get_file_name(path_to_file):
@@ -87,7 +83,7 @@ def github_payload():
                     commits_url = commits_url.replace('{/sha}', '/' + sha)
                     logger.info('commits_url:   ' + commits_url)
                     req = requests.get(commits_url)
-                    commits_json = json.loads(req.json)
+                    commits_json = json.loads(req.json())
                     files = commits_json['files']
                     re_indexed = []
                     for file in files:
