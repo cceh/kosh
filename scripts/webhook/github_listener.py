@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
-repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
+repo_dir = (conf_parser.get('PATHS', 'REPO_DIR'))
 ssh_executable = conf_parser.get('PATHS', 'SSH_EXEC')
 
 gra_tei = conf_parser.get('PATHS', 'gra_tei')
@@ -26,7 +26,9 @@ bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
 
-logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
+logging.basicConfig(filename='wh_logger.log', level=logging.INFO,
+                    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+                    datefmt="%Y-%m-%d %H:%M:%S")
 logging.getLogger('server').setLevel(level=logging.INFO)
 logger = logging.getLogger('server')
 
