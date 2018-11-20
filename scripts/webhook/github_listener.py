@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
-repo_dir = (conf_parser.get('PATHS', 'REPO_DIR'))
+repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
 ssh_executable = conf_parser.get('PATHS', 'SSH_EXEC')
 
 gra_tei = conf_parser.get('PATHS', 'gra_tei')
@@ -71,8 +71,10 @@ def github_payload():
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
                     logger.info('merged_status:  ' + str(merged_status))
-                    g = git.cmd.Git(repo_dir)
-                    g.pull()
+                    repo = git.Repo(repo_dir)
+                    with repo.git.custom_environment(GIT_SSH=ssh_executable):
+                        o = repo.remotes.origin
+                        o.pull()
                     logger.info('c-salt_sanskrit_data pulled from upstream')
                     # check which files have been updated and then reindex them
                     # merged_by = ['pull_request']['merged_by']
