@@ -88,7 +88,6 @@ def github_payload():
                     re_indexed = []
                     for file in files:
                         filename = file['filename']
-                        logger.info(filename)
                         filename = filename.split('/')
                         filename = filename[-1]
                         logger.info(filename)
@@ -100,7 +99,7 @@ def github_payload():
                                                        conf_parser.get('PATHS', 'slp1_iso_mapping'))
                             logger.info(filename + ' has been reindexed')
 
-                    return re_indexed
+                    #return jsonify({'msg': filename + ' has been reindexed'})
 
     return jsonify({'msg': 'Nothing happened :)'})
 
