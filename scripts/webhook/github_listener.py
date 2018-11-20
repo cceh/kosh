@@ -26,7 +26,9 @@ bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
 
-logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
+logging.basicConfig(filename='wh_logger.log', level=logging.INFO,
+                    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+                    datefmt="%Y-%m-%d %H:%M:%S")
 logging.getLogger('server').setLevel(level=logging.INFO)
 logger = logging.getLogger('server')
 
