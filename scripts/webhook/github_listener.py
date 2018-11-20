@@ -26,6 +26,10 @@ bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
 
+logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
+logging.getLogger('server').setLevel(level=logging.INFO)
+logger = logging.getLogger('server')
+
 
 def get_file_name(path_to_file):
     file_name = path_to_file.split('/')
@@ -55,12 +59,12 @@ def home():
 def github_payload():
     # signature = request.headers.get('X-Hub-Signature')
     # data = request.data
+    logger.info('incoming payload')
     if request.headers.get('X-GitHub-Event') == "ping":
         return jsonify({'msg': 'Ok'})
     if request.headers.get('X-GitHub-Event') == "pull_request":
         payload = request.get_json()
         if payload:
-            print(payload)
             if payload['action'] == 'closed':
                 merged_status = payload['pull_request']['merged']
                 if merged_status == 'true':
@@ -104,9 +108,6 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
-    logging.getLogger('server').setLevel(level=logging.INFO)
-    logger = logging.getLogger('server')
 
     app.config.update(
         DEBUG=True,
