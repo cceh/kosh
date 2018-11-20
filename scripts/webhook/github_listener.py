@@ -27,8 +27,6 @@ ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
 
 
-
-
 def get_file_name(path_to_file):
     file_name = path_to_file.split('/')
     file_name = file_name[-1]
@@ -56,7 +54,7 @@ def home():
 @app.route("/payload", methods=['POST'])
 def github_payload():
     # signature = request.headers.get('X-Hub-Signature')
-    data = request.data
+    # data = request.data
     if request.headers.get('X-GitHub-Event') == "ping":
         return jsonify({'msg': 'Ok'})
     if request.headers.get('X-GitHub-Event') == "pull_request":
@@ -66,32 +64,36 @@ def github_payload():
             if payload['action'] == 'closed':
                 merged_status = payload['pull_request']['merged']
                 if merged_status == 'true':
-                    logging.log(logging.INFO, 'merged_status:  ' + merged_status)
+                    logger.info('merged_status:  ' + merged_status)
                     g = git.cmd.Git(repo_dir)
                     g.pull()
-                    logging.log(logging.INFO, 'c-salt_sanskrit_data pulled from upstream')
+                    logger.info('c-salt_sanskrit_data pulled from upstream')
                     # check which files have been updated and then reindex them
                     # merged_by = ['pull_request']['merged_by']
                     sha = payload['pull_request']['head']['sha']
                     commits_url = payload['pull_request']['head']['repo']['commits_url']
                     commits_url = commits_url.replace('{/sha}', '/' + sha)
-                    logging.log(logging.INFO, 'commits_url:   ' + commits_url)
+                    logger.info('commits_url:   ' + commits_url)
                     req = requests.get(commits_url)
                     commits_json = json.loads(req.json)
                     files = commits_json['files']
+                    re_indexed = []
                     for file in files:
-                        #
                         filename = file['filename']
                         filename = filename.split['/']
                         filename = filename[-1]
-                        logging.log(logging.INFO, filename)
+                        logger.info(filename)
                         if filename in files_to_index:
+                            re_indexed.append(filename)
                             # reindex files
                             index_tei.del_and_re_index(filename.replace('.tei', ''),
                                                        conf_parser.get('PATHS', filename.replace('.', '_')),
                                                        conf_parser.get('PATHS', 'slp1_iso_mapping'))
+                            logger.info(filename + ' has been reindexed')
 
-            return data
+                    return re_indexed
+
+    return jsonify({'msg': 'Nothing happened :)'})
 
 
 def simple(env, resp):
@@ -102,8 +104,10 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
-    logging.setLevel(logging.INFO)
     logging.basicConfig(filename='wh_logger.log', level=logging.INFO)
+    logging.getLogger('server').setLevel(level=logging.INFO)
+    logger = logging.getLogger('server')
+
     app.config.update(
         DEBUG=True,
         JSON_AS_ASCII=False)
