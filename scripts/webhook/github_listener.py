@@ -69,7 +69,7 @@ def github_payload():
             if payload['action'] == 'closed':
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
-                if merged_status == 'true':
+                if merged_status == True:
                     logger.info('merged_status:  ' + merged_status)
                     g = git.cmd.Git(repo_dir)
                     g.pull()
@@ -110,7 +110,6 @@ def simple(env, resp):
 app.wsgi_app = DispatcherMiddleware(simple, {'/dicts/github-webhooks': app.wsgi_app})
 
 if __name__ == '__main__':
-
     app.config.update(
         DEBUG=True,
         JSON_AS_ASCII=False)
