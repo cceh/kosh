@@ -4,6 +4,7 @@ import logging
 import os
 import git
 import requests
+import asyncio
 from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
@@ -42,6 +43,35 @@ def get_file_name(path_to_file):
 files_to_index = (get_file_name(gra_tei), get_file_name(bhs_tei), get_file_name(ap90_tei), get_file_name(vei_tei))
 
 
+async def index_files(payload):
+    with repo.git.custom_environment(GIT_SSH=ssh_executable):
+        o = repo.remotes.origin
+        o.pull()
+        logger.info('c-salt_sanskrit_data pulled from upstream')
+    # check which files have been updated and then reindex them
+    # merged_by = ['pull_request']['merged_by']
+    sha = payload['pull_request']['head']['sha']
+    commits_url = payload['pull_request']['head']['repo']['commits_url']
+    commits_url = commits_url.replace('{/sha}', '/' + sha)
+    logger.info('commits_url:   ' + commits_url)
+    req = requests.get(commits_url)
+    commits_json = req.json()
+    files = commits_json['files']
+    re_indexed = []
+    for file in files:
+        filename = file['filename']
+        filename = filename.split('/')
+        filename = filename[-1]
+        # logger.info(filename)
+        if filename in files_to_index:
+            re_indexed.append(filename)
+            # reindex files
+            index_tei.del_and_re_index(filename.replace('.tei', ''),
+                                       conf_parser.get('PATHS', filename.replace('.', '_')),
+                                       conf_parser.get('PATHS', 'slp1_iso_mapping'))
+            logger.info(filename + ' has been reindexed')
+
+
 def make_json_response(obj):
     resp = Response(json.dumps(obj, indent=2, ensure_ascii=False), mimetype='application/json')
     resp.headers['Access-Control-Allow-Origin'] = '*'
@@ -58,7 +88,7 @@ def home():
 
 
 @app.route("/payload", methods=['POST'])
-def github_payload():
+async def github_payload():
     # signature = request.headers.get('X-Hub-Signature')
     logger.info('incoming payload')
     if request.headers.get('X-GitHub-Event') == "ping":
@@ -71,35 +101,8 @@ def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    logger.info('merged_status:  ' + str(merged_status))
-                    with repo.git.custom_environment(GIT_SSH=ssh_executable):
-                        o = repo.remotes.origin
-                        o.pull()
-                        logger.info('c-salt_sanskrit_data pulled from upstream')
-                    # check which files have been updated and then reindex them
-                    # merged_by = ['pull_request']['merged_by']
-                    sha = payload['pull_request']['head']['sha']
-                    commits_url = payload['pull_request']['head']['repo']['commits_url']
-                    commits_url = commits_url.replace('{/sha}', '/' + sha)
-                    logger.info('commits_url:   ' + commits_url)
-                    req = requests.get(commits_url)
-                    commits_json = req.json()
-                    files = commits_json['files']
-                    re_indexed = []
-                    for file in files:
-                        filename = file['filename']
-                        filename = filename.split('/')
-                        filename = filename[-1]
-                        #logger.info(filename)
-                        if filename in files_to_index:
-                            re_indexed.append(filename)
-                            # reindex files
-                            index_tei.del_and_re_index(filename.replace('.tei', ''),
-                                                       conf_parser.get('PATHS', filename.replace('.', '_')),
-                                                       conf_parser.get('PATHS', 'slp1_iso_mapping'))
-                            logger.info(filename + ' has been reindexed')
-
-                    #return jsonify({'msg': filename + ' has been reindexed'})
+                    await index_files(payload)
+                    # return jsonify({'msg': filename + ' has been reindexed'})
 
     return jsonify({'msg': 'Nothing happened :)'})
 
