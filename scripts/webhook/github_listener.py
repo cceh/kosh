@@ -83,7 +83,7 @@ def github_payload():
                     commits_url = commits_url.replace('{/sha}', '/' + sha)
                     logger.info('commits_url:   ' + commits_url)
                     req = requests.get(commits_url)
-                    commits_json = json.loads(req.json())
+                    commits_json = json.loads(req)
                     files = commits_json['files']
                     re_indexed = []
                     for file in files:
