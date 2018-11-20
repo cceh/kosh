@@ -63,9 +63,11 @@ def github_payload():
     if request.headers.get('X-GitHub-Event') == "ping":
         return jsonify({'msg': 'Ok'})
     if request.headers.get('X-GitHub-Event') == "pull_request":
+        logger.info('incoming pull_request')
         payload = request.get_json()
         if payload:
             if payload['action'] == 'closed':
+                logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == 'true':
                     logger.info('merged_status:  ' + merged_status)
