@@ -70,7 +70,7 @@ def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    logger.info('merged_status:  ' + merged_status)
+                    logger.info('merged_status:  ' + str(merged_status))
                     g = git.cmd.Git(repo_dir)
                     g.pull()
                     logger.info('c-salt_sanskrit_data pulled from upstream')
