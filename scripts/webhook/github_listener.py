@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
-repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
+repo_dir = (conf_parser.get('PATHS', 'REPO_DIR'))
 ssh_executable = conf_parser.get('PATHS', 'SSH_EXEC')
 
 gra_tei = conf_parser.get('PATHS', 'gra_tei')
