@@ -4,7 +4,7 @@ import logging
 import os
 import git
 import requests
-import asyncio
+from celery import Celery
 from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
@@ -16,6 +16,10 @@ conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
 
 app = Flask(__name__)
+
+# Celery configuration
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 
 logging.basicConfig(filename='wh_logger.log', level=logging.INFO,
                     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
@@ -33,6 +37,10 @@ bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
 
+# Initialize Celery
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+
 
 def get_file_name(path_to_file):
     file_name = path_to_file.split('/')
@@ -43,7 +51,8 @@ def get_file_name(path_to_file):
 files_to_index = (get_file_name(gra_tei), get_file_name(bhs_tei), get_file_name(ap90_tei), get_file_name(vei_tei))
 
 
-async def index_files(payload):
+@celery.task
+def index_files(payload):
     with repo.git.custom_environment(GIT_SSH=ssh_executable):
         o = repo.remotes.origin
         o.pull()
@@ -100,9 +109,7 @@ def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    loop.run_until_complete(index_files(payload))
+                    index_files.apply_async(payload)
                     return jsonify({'msg': 'indexed!'})
 
     return jsonify({'msg': 'Nothing happened :)'})
