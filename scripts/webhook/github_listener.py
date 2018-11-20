@@ -13,12 +13,15 @@ client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
+#repo_path = os.getenv('GIT_REPO_PATH')
 
 app = Flask(__name__)
 
 app.config["APPLICATION_ROOT"] = conf_parser.get('APP_INFO', 'APPLICATION_ROOT')
 app.config["APPLICATION_NAME"] = conf_parser.get('APP_INFO', 'APPLICATION_NAME')
-repo_dir = (conf_parser.get('PATHS', 'REPO_DIR'))
+repo_dir = conf_parser.get('PATHS', 'REPO_DIR')
+repo_path = os.getenv(repo_dir)
+repo = git.Repo(repo_path)
 ssh_executable = conf_parser.get('PATHS', 'SSH_EXEC')
 
 gra_tei = conf_parser.get('PATHS', 'gra_tei')
@@ -60,7 +63,6 @@ def home():
 @app.route("/payload", methods=['POST'])
 def github_payload():
     # signature = request.headers.get('X-Hub-Signature')
-    # data = request.data
     logger.info('incoming payload')
     if request.headers.get('X-GitHub-Event') == "ping":
         return jsonify({'msg': 'Ok'})
@@ -73,11 +75,10 @@ def github_payload():
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
                     logger.info('merged_status:  ' + str(merged_status))
-                    repo = git.Repo(repo_dir)
                     with repo.git.custom_environment(GIT_SSH=ssh_executable):
                         o = repo.remotes.origin
                         o.pull()
-                    logger.info('c-salt_sanskrit_data pulled from upstream')
+                        logger.info('c-salt_sanskrit_data pulled from upstream')
                     # check which files have been updated and then reindex them
                     # merged_by = ['pull_request']['merged_by']
                     sha = payload['pull_request']['head']['sha']
