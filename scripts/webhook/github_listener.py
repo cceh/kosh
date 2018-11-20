@@ -88,8 +88,7 @@ def home():
 
 
 @app.route("/payload", methods=['POST'])
-async def github_payload():
-    # signature = request.headers.get('X-Hub-Signature')
+def github_payload():
     logger.info('incoming payload')
     if request.headers.get('X-GitHub-Event') == "ping":
         return jsonify({'msg': 'Ok'})
@@ -101,8 +100,10 @@ async def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    await index_files(payload)
-                    # return jsonify({'msg': filename + ' has been reindexed'})
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    loop.run_until_complete(index_files(payload))
+                    return jsonify({'msg': 'indexed!'})
 
     return jsonify({'msg': 'Nothing happened :)'})
 
