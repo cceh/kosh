@@ -88,7 +88,8 @@ def github_payload():
                     re_indexed = []
                     for file in files:
                         filename = file['filename']
-                        filename = filename.split['/']
+                        logger.info(filename)
+                        filename = filename.split('/')
                         filename = filename[-1]
                         logger.info(filename)
                         if filename in files_to_index:
