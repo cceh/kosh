@@ -53,7 +53,6 @@ class StandardEntry(DocType):
 
 def create_index_man(es_client, index_name):
     # create ES client, create index
-
     if es_client.indices.exists(index_name):
         print("deleting '%s' index..." % (index_name))
         res = es_client.indices.delete(index=index_name)
@@ -108,22 +107,20 @@ def prepare_entry_for_index(entry):
 
 def prepare_gra_for_index(entry):
     # get headword in gra_notation
-
     boo = r'.)'
     rgx = re.compile('[%s]' % boo)
     gra_headword = entry.xpath('./ns:sense/ns:hi', namespaces=namespaces)[0]
-    gra_sense = entry.xpath('./ns:sense', namespaces=namespaces)[0]
 
-    # remove headword from sense
-    gra_sense.remove(gra_headword)
+    # process sense
+    gra_sense = entry.xpath('./ns:sense', namespaces=namespaces)[0]
     gra_sense = etree.tostring(gra_sense, encoding='unicode')
     soup = BeautifulSoup(gra_sense, 'lxml')
     gra_sense = soup.get_text()
     # remove \n
     gra_sense = gra_sense.replace('\n', '')
 
+    # process headword
     gra_headword = rgx.sub('', gra_headword.text)
-    # gra_headword = etree.tostring(gra_headword, encoding='unicode')
     gra_headword = gra_headword.strip(string.punctuation)
     # remove pronunciation mark '-' from lemma
     gra_headword = gra_headword.replace('-', '')
@@ -133,7 +130,7 @@ def prepare_gra_for_index(entry):
         gra_headword = [e.strip(string.punctuation) for e in gra_headword]
 
     gra_entry = etree.tostring(entry, encoding='unicode')
-    ##entries in gra.xml have too many whitespaces
+    #entries in gra.xml have too many whitespaces
     gra_entry = ' '.join(gra_entry.split())
     # '|' is used in the transcription to mark a line break within a word
     gra_entry = gra_entry.replace('|', '')
