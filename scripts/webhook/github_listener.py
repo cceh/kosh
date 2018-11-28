@@ -69,6 +69,7 @@ def index_files(payload):
                                        conf_parser.get('PATHS', filename.replace('.', '_')),
                                        conf_parser.get('PATHS', 'slp1_iso_mapping'))
             logger.info(filename + ' has been reindexed')
+    return re_indexed
 
 
 def make_json_response(obj):
@@ -99,7 +100,7 @@ def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    index_files.apply_async(payload)
+                    index_files(payload)
                     return jsonify({'msg': 'indexed!'})
 
     return jsonify({'msg': 'Nothing happened :)'})
