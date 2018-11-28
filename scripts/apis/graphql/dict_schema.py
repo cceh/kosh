@@ -23,7 +23,73 @@ def json2obj(data):
 # Schema for entries in elastic
 
 
-parser = etree.XMLParser(recover=True)
+parser = etree.XMLParser(ns_clean=True, recover=True, encoding='utf-8')
+
+style = '''
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ns="http://www.tei-c.org/ns/1.0" version="1.0"
+  exclude-result-prefixes="ns">
+
+ <xsl:output method="html"/>
+
+  <xsl:template match="ns:entry">
+    <div>
+    <xsl:apply-templates select="ns:sense"/>
+    </div>
+   </xsl:template> 
+
+   <xsl:template match="ns:sense">
+   <xsl:apply-templates/>
+   </xsl:template>
+
+   <xsl:template match="ns:hi[@rendition='#b']">
+   <b>
+      <xsl:apply-templates/>
+    </b>
+   </xsl:template>
+
+   <xsl:template match="ns:hi[@rendition='#i']">
+   <i>
+      <xsl:apply-templates/>
+    </i>
+   </xsl:template>
+
+
+   <xsl:template match="ns:hi[@rendition='#wide']">
+   <i>
+      <xsl:apply-templates/>
+    </i>
+   </xsl:template>
+
+   <xsl:template match="ns:w[@xml:lang='el']">
+    <i>
+      <xsl:apply-templates/>
+    </i>
+   </xsl:template>
+
+   <xsl:template match="ns:w[@xml:lang='he']">
+    <i>
+      <xsl:apply-templates/>
+    </i>
+   </xsl:template>
+
+   <xsl:template match="ns:lb">
+      <br/>
+   </xsl:template>
+
+</xsl:stylesheet>
+'''
+
+
+def sense_as_html(entry_tei):
+    tree = etree.parse(StringIO(entry_tei), parser)
+    entry = tree.xpath('.')[0]
+    xslt_root = etree.XML(style, parser)
+    transform = etree.XSLT(xslt_root)
+    f = StringIO(entry)
+    doc = etree.parse(f)
+    result_tree = transform(doc)
+    return (str(result_tree))
 
 
 def extract_sense(entry_tei):
@@ -52,6 +118,7 @@ def select_from_elastic_response(elastic_raw):
         entry_tei_iso = e['_source']['entry_tei_iso']
         elastic_result['entry_tei_iso'] = entry_tei_iso
         elastic_result['sense_txt_iso'] = extract_sense(entry_tei_iso)
+        elastic_result['sense_html_iso'] = sense_as_html(entry_tei_iso)
         from_elastic.append(elastic_result)
     return from_elastic
 
@@ -70,6 +137,7 @@ class GraEntry(graphene.ObjectType):
     sense_txt_iso = graphene.String()
     sense_txt_gra = graphene.String()
 
+
 class DictEntry(graphene.ObjectType):
     id = graphene.String()
     sort_id = graphene.Int()
@@ -80,6 +148,7 @@ class DictEntry(graphene.ObjectType):
     headword_ascii = graphene.String()
     entry_tei_iso = graphene.String()
     sense_txt_iso = graphene.String()
+    sense_html_iso = graphene.String()
 
 
 # queries
@@ -126,7 +195,8 @@ class DictQuery(graphene.ObjectType):
                             field=graphene.String(),
                             size=graphene.Int())
 
-    ids = graphene.List(DictEntry, dict_id=graphene.String(), lemma_id=graphene.List(graphene.String), size=graphene.Int())
+    ids = graphene.List(DictEntry, dict_id=graphene.String(), lemma_id=graphene.List(graphene.String),
+                        size=graphene.Int())
 
     def resolve_entries(self, info, dict_id, query, query_type, field, size):
         res = get_from_elastic(dict_id=dict_id, query=query, size=size, query_type=query_type, field=field)
