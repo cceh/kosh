@@ -89,7 +89,7 @@ def sense_as_html(entry_tei):
     f = StringIO(entry)
     doc = etree.parse(f)
     result_tree = transform(doc)
-    return (str(result_tree))
+    return str(result_tree)
 
 
 def extract_sense(entry_tei):
