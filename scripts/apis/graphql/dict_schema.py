@@ -86,9 +86,7 @@ def sense_as_html(entry_tei):
     entry = tree.xpath('.')[0]
     xslt_root = etree.XML(style, parser)
     transform = etree.XSLT(xslt_root)
-    f = StringIO(entry)
-    doc = etree.parse(f)
-    result_tree = transform(doc)
+    result_tree = transform(entry)
     return str(result_tree)
 
 
