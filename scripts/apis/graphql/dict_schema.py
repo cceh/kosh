@@ -87,7 +87,9 @@ def sense_as_html(entry_tei):
     xslt_root = etree.XML(style, parser)
     transform = etree.XSLT(xslt_root)
     result_tree = transform(entry)
-    return str(result_tree)
+    result_tree = str(result_tree)
+    result_tree = result_tree.replace('\n', '')
+    return result_tree
 
 
 def extract_sense(entry_tei):
