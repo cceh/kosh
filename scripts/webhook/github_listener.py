@@ -4,10 +4,11 @@ import logging
 import os
 import git
 import requests
-import threading
 from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
+from redis import Redis
+from rq import Queue
 from werkzeug.wsgi import DispatcherMiddleware
 
 client = Elasticsearch()
@@ -32,6 +33,8 @@ gra_tei = conf_parser.get('PATHS', 'gra_tei')
 bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
+
+q = Queue(connection=Redis())
 
 
 def get_file_name(path_to_file):
@@ -101,8 +104,9 @@ def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    reindex = threading.Thread(target=index_files, args=payload)
-                    reindex.start()
+                    logger.info('reindex = started')
+                    q.enqueue(
+                        index_files, payload)
                     return jsonify({'msg': 'indexed!'})
 
     return jsonify({'msg': 'Nothing happened :)'})
