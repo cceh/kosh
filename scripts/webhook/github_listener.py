@@ -15,6 +15,7 @@ client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
+redis_conn = Redis()
 
 app = Flask(__name__)
 
@@ -33,8 +34,6 @@ gra_tei = conf_parser.get('PATHS', 'gra_tei')
 bhs_tei = conf_parser.get('PATHS', 'bhs_tei')
 ap90_tei = conf_parser.get('PATHS', 'ap90_tei')
 vei_tei = conf_parser.get('PATHS', 'vei_tei')
-
-q = Queue(connection=Redis())
 
 
 def get_file_name(path_to_file):
@@ -105,6 +104,7 @@ def github_payload():
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
                     logger.info('reindex = started')
+                    q = Queue(connection=redis_conn)
                     q.enqueue(
                         index_files, payload)
                     return jsonify({'msg': 'indexed!'})
