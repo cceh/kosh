@@ -2,21 +2,17 @@ import configparser
 import json
 import logging
 import os
-import git
-import requests
-from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
 from redis import Redis
+from reindex import re_index_files
 from rq import Queue
 from werkzeug.wsgi import DispatcherMiddleware
-from reindex import re_index_files
 
 client = Elasticsearch()
 conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
 conf_parser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), conf_path))
-
 
 app = Flask(__name__)
 
@@ -60,10 +56,8 @@ def github_payload():
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
                     logger.info('reindex = started')
-
                     q.enqueue(
                         re_index_files, payload)
-                    logger.info('reindex = started')
                     return jsonify({'msg': 'indexed!'})
 
     return jsonify({'msg': 'Nothing happened :)'})

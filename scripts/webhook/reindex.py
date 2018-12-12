@@ -3,6 +3,10 @@ import configparser
 import requests
 import git
 from elastic import index_tei
+import logging
+
+logging.getLogger('server').setLevel(level=logging.INFO)
+logger = logging.getLogger('server')
 
 conf_parser = configparser.ConfigParser()
 conf_path = r'../../utils/github_listener.conf'
@@ -32,11 +36,13 @@ def re_index_files(payload):
     with repo.git.custom_environment(GIT_SSH=ssh_executable):
         o = repo.remotes.origin
         o.pull()
+        logger.info('c-salt_sanskrit_data pulled from upstream')
     # check which files have been updated and then reindex them
     # merged_by = ['pull_request']['merged_by']
     sha = payload['pull_request']['head']['sha']
     commits_url = payload['pull_request']['head']['repo']['commits_url']
     commits_url = commits_url.replace('{/sha}', '/' + sha)
+    logger.info('commits_url:   ' + commits_url)
     req = requests.get(commits_url)
     commits_json = req.json()
     files = commits_json['files']
@@ -52,4 +58,5 @@ def re_index_files(payload):
             index_tei.del_and_re_index(filename.replace('.tei', ''),
                                        conf_parser.get('PATHS', filename.replace('.', '_')),
                                        conf_parser.get('PATHS', 'slp1_iso_mapping'))
+            logger.info(filename + ' has been reindexed')
     return re_indexed
