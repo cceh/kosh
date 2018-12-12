@@ -4,6 +4,7 @@ import logging
 import os
 import git
 import requests
+import threading
 from elastic import index_tei
 from elasticsearch import Elasticsearch
 from flask import Flask, Response, request, jsonify
@@ -100,7 +101,8 @@ def github_payload():
                 logger.info('action = closed')
                 merged_status = payload['pull_request']['merged']
                 if merged_status == True:
-                    index_files(payload)
+                    reindex = threading.Thread(target=index_files, args=payload)
+                    reindex.start()
                     return jsonify({'msg': 'indexed!'})
 
     return jsonify({'msg': 'Nothing happened :)'})
