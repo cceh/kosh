@@ -12,6 +12,10 @@ from pyuca import Collator
 
 from utils import input_output
 
+NS_TEI = 'http://www.tei-c.org/ns/1.0'
+NS_HTML = 'http://www.w3.org/1999/xhtml'
+
+ns = {'tei': 'http://www.tei-c.org/ns/1.0', 'html': NS_HTML}
 
 
 def get_collection(database, collection):
@@ -554,7 +558,9 @@ def add_gr_data(grassmann_tei, gr_data):
 
     for e in gr_data:
         # print(e, gr_data.get(e))
-        gr_entry = tree.xpath("/TEI/text/body/entry[@xml:id='" + e + "']/sense/w[@xml:lang='el']")
+        print(e)
+        gr_entry = tree.xpath(
+            "/tei:TEI/tei:text/tei:body/tei:entry[@xml:id='" + e + "']/tei:sense/tei:w[@xml:lang='el']", namespaces=ns)
 
         if len(gr_entry) != len(gr_data.get(e)):
             print(e, len(gr_entry), len(gr_data.get(e)))
@@ -592,23 +598,23 @@ def grassmann_zuerich():
 
 
 def process_grassmann(gra_dir):
-    gra_csl_base = grassmann_csl_into_tei(gra_dir + 'gra.xml', gra_dir + 'gra_pages/')
-    gra_csl_base.write('../data/gra_csl_base.xml', pretty_print=True, xml_declaration=True, encoding="utf-8")
-    print('step_1_done')
+    # gra_csl_base = grassmann_csl_into_tei(gra_dir + 'gra.xml', gra_dir + 'gra_pages/')
+    # gra_csl_base.write('../../data/gra/gra_csl_base.xml', pretty_print=True, xml_declaration=True, encoding="utf-8")
+    # print('step_1_done')
 
     # remove emtpy tags such as <H/>
-    gra_csl_with_cleaned_tags = clean_up_tags('../data/gra_csl_base.xml')
-    input_output.to_file('../data/gra_csl_with_cleaned_tags.xml', gra_csl_with_cleaned_tags)
-    print('step_2_done')
+    # gra_csl_with_cleaned_tags = clean_up_tags('../../data/gra/gra_csl_base.xml')
+    # input_output.to_file('../../data/gra/gra_csl_with_cleaned_tags.xml', gra_csl_with_cleaned_tags)
+    # print('step_2_done')
 
     # replace Molten's ASCII-based notation with its ISO counterpart
-    diacs = get_diacritics('../data/gra_to_diacs.txt')
-    gra_csl_decoded = decode_diacritics(diacs, '../data/gra_csl_with_cleaned_tags.xml')
-    input_output.print_list('../data/gra_csl_decoded.xml', gra_csl_decoded)
-    print('step_3_done')
+    # diacs = get_diacritics('../../data/gra/gra_to_diacs.txt')
+    # gra_csl_decoded = decode_diacritics(diacs, '../../data/gra/gra_csl_with_cleaned_tags.xml')
+    # input_output.print_list('../../data/gra/gra_csl_decoded.xml', gra_csl_decoded)
+    # print('step_3_done')
 
-    greek_entries_filled = process_greek_references('../data/entries_with_gr_tags_filled_1')
-    root = add_gr_data('../data/gra_csl_decoded.xml', greek_entries_filled)
+    greek_entries_filled = process_greek_references('../../data/gra/entries_with_gr_tags_filled_1')
+    root = add_gr_data('../../data/gra/gra_csl_decoded.xml', greek_entries_filled)
     root.write(gra_dir + 'gra.tei', pretty_print=True, xml_declaration=True, encoding="utf-8")
     print('step_4_done')
 
@@ -643,6 +649,6 @@ def get_lemmata_grass_notation_csl():
     input_output.print_list('data/gra_csl_lemmata_grass_notation_sorted_nodups.txt', lemmata)
 
 
-gra_dir = '../../../../c-salt_sanskrit_data/sa_de/gra/'
+gra_dir = '../../../c-salt_sanskrit_data/sa_de/gra/'
 
 process_grassmann(gra_dir)
