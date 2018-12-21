@@ -143,6 +143,11 @@ def search(dict_id):
             res = get_from_elastic(dict_id, headword, query_type, 'headword_deva')
         if input_translit == 'hk':
             res = get_from_elastic(dict_id, headword, query_type, 'headword_hk')
+        if input_translit == 'gra':
+            if dict_id == 'gra':
+                res = get_from_elastic(dict_id, headword, query_type, 'headword_gra')
+            else:
+                return make_response(flask.jsonify({'error': 'Transliterarion not available for this dictionary'}), 404)
 
     if entry is not None:
         print(entry, query_type)
