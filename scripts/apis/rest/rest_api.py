@@ -129,7 +129,7 @@ def search(dict_id):
     if query_type is None:
         query_type = 'term'
 
-    if headword:
+    if headword is not None:
         # headword = transliterate_slp1_into_iso(headword, conv)
         print(headword, query_type)
         headword = urllib.parse.unquote(headword)
@@ -150,14 +150,14 @@ def search(dict_id):
                 return make_response(flask.jsonify({'error': 'Transliterarion not available for this dictionary'}),
                                      404)
 
-    if entry:
+    if entry is not None:
         print(entry, query_type)
         entry = urllib.parse.unquote(entry)
         entry = entry.lower()
         res = get_from_elastic(dict_id, entry, query_type, 'entry_tei_iso')
 
     # default search
-    if query:
+    if query is not None:
         query = urllib.parse.unquote(query)
         '''
         q = Q('bool',
