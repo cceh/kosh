@@ -129,7 +129,7 @@ def search(dict_id):
     if query_type is None:
         query_type = 'term'
 
-    if headword is not None:
+    if headword:
         # headword = transliterate_slp1_into_iso(headword, conv)
         print(headword, query_type)
         headword = urllib.parse.unquote(headword)
@@ -147,16 +147,17 @@ def search(dict_id):
             if dict_id == 'gra':
                 res = get_from_elastic(dict_id, headword, query_type, 'headword_gra')
             else:
-                return make_response(flask.jsonify({'error': 'Transliterarion not available for this dictionary'}), 404)
+                return make_response(flask.jsonify({'error': 'Transliterarion not available for this dictionary'}),
+                                     404)
 
-    if entry is not None:
+    if entry:
         print(entry, query_type)
         entry = urllib.parse.unquote(entry)
         entry = entry.lower()
         res = get_from_elastic(dict_id, entry, query_type, 'entry_tei_iso')
 
     # default search
-    if query is not None:
+    if query:
         query = urllib.parse.unquote(query)
         '''
         q = Q('bool',
@@ -178,7 +179,17 @@ def search(dict_id):
                                         ],
                                         "minimum_should_match": 1
                                     }}})
-    resp = make_json_response(select_from_elatic_response(res['hits']['hits']))
+
+    if 'res' in locals():
+        resp = make_json_response(select_from_elatic_response(res['hits']['hits']))
+
+    else:
+        info_input = {
+            'you need to specify which type of query you want to execute!': 'see some examples in the documentation',
+            "documentation's current URL": "https://hackmd.io/s/SJUgBEs9m"
+        }
+        resp = make_json_response(info_input)
+
     return resp
 
 
