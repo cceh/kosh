@@ -1,0 +1,52 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 5,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {
+    "entry": {
+      "_meta": {
+        "_paths": {
+          "entry_xpath": "//tei:entry",
+          "entry_id_xpath": ".tei:[@xml:id]",
+          "lemma_xpath": "./tei:form[@type='lemma']/orth",
+          "variant_xpath": ".//tei:form[@type='variant']/orth"
+        },
+        "properties": {
+          "lemma": {
+            "type": "keyword"
+          },
+          "variant": {
+            "type": "keyword"
+          },
+          "created": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+          }
+        }
+      }
+    },
+    "example": {
+      "_meta": {
+        "_paths": {
+          "example_xpath": "//tei:cit[@type='example']/tei:quote",
+          "example_id_xpath": "./tei:[@xml:id']"
+        }
+      },
+      "properties": {
+        "example_ar": {
+          "type": "keyword"
+        },
+        "example_xml": {
+          "type": "text"
+        },
+        "created": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        }
+      }
+    }
+  }
+}
