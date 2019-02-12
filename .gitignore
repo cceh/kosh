@@ -1,8 +1,5 @@
-.DS_Store
-.idea
-*.conf
-data
 __pycache__
-input_output.py
-*.log
-test_index.py
+build
+dist
+kosh.egg-info
+kosh/docs/*.html
