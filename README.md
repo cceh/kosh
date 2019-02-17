@@ -4,15 +4,34 @@
 ## ElasticSearch and XPath JSON Schema example
 ```
 {
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "markup_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": [
+            "html_strip"
+          ],
+          "filter": [
+            "standard",
+            "lowercase"
+          ]
+        }
+      }
+    }
+  },
   "mappings": {
     "entry": {
       "_meta": {
         "_xpaths": {
-          "id": ".tei:[@xml:id]",
+          "id": "./@xml:id",
           "root": "//tei:entry",
           "fields": {
-            "lemma": "./tei:form[@type='lemma']/orth",
-            "variants": ".//tei:form[@type='variant']/orth"
+            "lemma": "./tei:form[@type='lemma']/tei:orth",
+            "variant": "./tei:form[@type='variant']/tei:orth",
+            "multiword": "./tei:form[@type='multiWordUnit']/tei:orth",
+            "as_xml": "."
           }
         }
       },
@@ -20,27 +39,33 @@
         "lemma": {
           "type": "keyword"
         },
-        "variants": {
+        "multiword": {
           "type": "keyword"
+        },
+        "variant": {
+          "type": "keyword"
+        },
+        "as_xml": {
+          "type": "text"
         }
       }
     },
     "example": {
       "_meta": {
         "_xpaths": {
-          "id": "./tei:[@xml:id']",
+          "id": "./@xml:id",
           "root": "//tei:cit[@type='example']",
           "fields": {
-            "example_ar": "./tei:quote",
-            "example_xml": "."
+            "example_text": "./tei:quote",
+            "as_xml": "."
           }
         }
       },
       "properties": {
-        "example_ar": {
+        "example_text": {
           "type": "keyword"
         },
-        "example_xml": {
+        "as_xml": {
           "type": "text"
         }
       }
