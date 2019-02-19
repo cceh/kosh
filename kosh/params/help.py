@@ -1,7 +1,9 @@
-import os
+from sys import exit
+from typing import List
 
-from kosh.utils import *
 from kosh.params._param import _param
+from kosh.utils import concretemethod
+
 
 class help(_param):
   '''
@@ -13,5 +15,4 @@ class help(_param):
     '''
     todo: docs
     '''
-    print('Work in progress')
-    os._exit(0)
+    exit('Work in progress')

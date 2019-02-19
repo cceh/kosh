@@ -1,10 +1,9 @@
-import re
-import sys
+from sys import exit
+from typing import List
 
-from configparser import ConfigParser
-
-from kosh.utils import *
 from kosh.params._param import _param
+from kosh.utils import concretemethod, logger, store
+
 
 class config(_param):
   '''
@@ -16,8 +15,7 @@ class config(_param):
     '''
     todo: docs
     '''
-    self.config = ConfigParser()
-    self.config.read_dict(default_config)
+    try: store().config.read_string(params[0])
+    except: exit('Invalid config string {}'.format(params[0]))
 
-    try: self.config.read_string(params[0])
-    except: sys.exit('Invalid config string: {}'.format(params[0]))
+    logger().info('Read config string %s', params[0])

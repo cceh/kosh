@@ -1,13 +1,13 @@
 from configparser import ConfigParser
-from setuptools import find_packages, setup
 
-from kosh.utils import *
+from kosh.utils import defaultconfig
+from setuptools import find_packages, setup
 
 with open('LICENSE') as f: legal = f.read()
 with open('README.md') as f: readme = f.read()
 
 config = ConfigParser()
-config.read_dict(default_config)
+config.read_dict(defaultconfig())
 
 setup(
   author = 'Francisco Mondaca, Philip Schildkamp',

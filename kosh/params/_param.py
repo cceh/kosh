@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from importlib import import_module
+from typing import List
 
-from kosh.utils import *
+from kosh.utils import logger, store
+
 
 class _param(ABC):
   '''
@@ -15,11 +17,9 @@ class _param(ABC):
     todo: docs
     '''
     args = []
-    params.pop(0)
-
-    while params and not params[0].startswith('--'):
-        args += [params.pop(0)]
-
+    logger().debug('Parsing cli param %s', params.pop(0)[2:])
+    while params and not params[0].startswith('--'): args += [params.pop(0)]
+    logger().debug('Passing cli args %s', str(args))
     self._parse(args)
 
   @abstractmethod
