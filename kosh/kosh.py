@@ -5,7 +5,7 @@ from os import getpid, path
 from sys import argv, exit
 from threading import Thread
 
-from elasticsearch_dsl import connections
+from elasticsearch_dsl import Document, connections
 
 from kosh.elastic.entry import entry
 from kosh.elastic.index import index
@@ -39,17 +39,17 @@ class kosh():
     logger().info('Started kosh with pid %s', getpid())
 
     try:
-      self.__params()
-      self.__initdb()
-      self.__notify()
-      self.__server()
+      self.params()
+      self.initdb()
+      self.notify()
+      self.server()
 
     except KeyboardInterrupt: print('\N{bomb}')
     except Exception as exception: logger().exception(exception)
     except SystemExit as exception: logger().critical(str(exception))
     finally: logger().info('Stopped kosh with pid %s', getpid())
 
-  def __initdb(self) -> None:
+  def initdb(self) -> None:
     '''
     todo: docs
     '''
@@ -59,22 +59,18 @@ class kosh():
     connections.create_connection(hosts = [data.host])
 
     for elex in index.lookup(data.root, data.spec):
-      index.delete(elex.uid)
-      index.create(elex)
-      for ntry in entry(elex).parser(): ntry.save()
+      index.update(elex)
 
-  def __notify(self) -> None:
+  def notify(self) -> None:
     class thread(Thread):
       def run(self) -> None:
         data = dotdict(instance.config['data'])
         for elex in index.worker(data.root, data.spec):
-          index.delete(elex.uid)
-          index.create(elex)
-          for ntry in entry(elex).parser(): ntry.save()
+          index.update(elex)
 
     thread(daemon = True).start()
 
-  def __params(self) -> None:
+  def params(self) -> None:
     '''
     todo: docs
     '''
@@ -85,10 +81,8 @@ class kosh():
       except: exit('Invalid parameter: {}'.format(param[2:]))
       module(params)
 
-  def __server(self) -> None:
+  def server(self) -> None:
     '''
     todo: docs
     '''
-    from time import sleep
-    sleep(5)
-    input('kosh is served')
+    input('You got served (by kosh)')

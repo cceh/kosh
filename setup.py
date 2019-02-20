@@ -19,7 +19,7 @@ setup(
   long_description = readme,
   name = config.get('info', 'name'),
   packages = find_packages(),
-  platforms = ['any'],
+  platforms = ['linux'],
   url = config.get('info', 'repo'),
   version = '0.0.1'
 )

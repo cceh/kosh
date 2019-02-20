@@ -4,10 +4,12 @@ from json import load, loads
 from os import path
 from typing import Any, Dict, Iterable, List
 
+from elasticsearch import helpers
 from elasticsearch_dsl import connections
 from inotify.adapters import InotifyTree
 from inotify.constants import IN_CLOSE_WRITE
 
+from kosh.elastic.entry import entry
 from kosh.utils import dotdict, logger
 
 
@@ -17,22 +19,28 @@ class index():
   '''
 
   @classmethod
-  def create(cls, elex: object) -> None:
-    '''
-    todo: docs
-    '''
-    logger().info('Creating elastic index %s', elex.uid)
-    indices = connections.get_connection().indices
-    indices.create(index = elex.uid, body = elex.schema)
+  def append(cls, elex: Dict[str, Any]) -> None:
+    bulk = [ntry.to_dict(include_meta = True) for ntry in entry(elex).parser()]
+    logger().info('Adding %i items to elastic index %s', len(bulk), elex.uid)
+    helpers.bulk(connections.get_connection(), bulk)
 
   @classmethod
-  def delete(cls, name: str) -> None:
+  def create(cls, elex: Dict[str, Any]) -> None:
     '''
     todo: docs
     '''
-    logger().info('Dropping elastic index %s', name)
+    logger().debug('Creating elastic index %s', elex.uid)
     indices = connections.get_connection().indices
-    indices.delete(ignore = 404, index = name)
+    indices.create(index = elex.uid, body = cls.__schema(elex))
+
+  @classmethod
+  def delete(cls, elex: Dict[str, Any]) -> None:
+    '''
+    todo: docs
+    '''
+    logger().debug('Dropping elastic index %s', elex.uid)
+    indices = connections.get_connection().indices
+    indices.delete(ignore = 404, index = elex.uid)
 
   @classmethod
   def lookup(cls, root: str, spec: str) -> List[Dict[str, Any]]:
@@ -45,11 +53,18 @@ class index():
     for file in glob('{}/**/{}'.format(root, spec), recursive = True):
       try:
         indices += cls.__parser(file)
-        logger().debug('Found dict definition in %s', file)
+        logger().info('Found dict definition in %s', file)
       except:
         logger().warn('Corrupt dict definition in %s', file)
 
     return indices
+
+  @classmethod
+  def update(cls, elex: Dict[str, Any]) -> None:
+    logger().info('Updating elastic index %s', elex.uid)
+    cls.delete(elex)
+    cls.create(elex)
+    cls.append(elex)
 
   @classmethod
   def worker(cls, root: str, spec: str) -> Iterable[Dict[str, Any]]:
@@ -83,17 +98,23 @@ class index():
 
     return indices
 
-  # @classmethod
-  # def __notify(cls) -> None:
-  #   file = instance.config.get('data', 'file')
-  #   root = instance.config.get('data', 'root')
-  #   tree = InotifyTree(root, IN_CLOSE_WRITE)
+  @classmethod
+  def __schema(cls, elex: Dict[str, Any]) -> Dict[str, Any]:
+    emap = elex.schema.mappings.entry.properties
+    emap.created = { 'type': 'date' }
+    emap.xml = { 'analyzer': 'xml', 'type': 'text' }
 
-  #   try:
-  #     for (_, _, path, item) in tree.event_gen(yield_nones = False):
-  #       if path.isfile('{}/{}'.format(path, file)):
-  #         print('path:' + str(path))
-  #         print('file:' + str(file))
+    elex.schema.settings = {
+      'analysis': {
+        'analyzer': {
+          'xml': {
+            'type': 'custom',
+            'tokenizer': 'standard',
+            'char_filter': ['html_strip'],
+            'filter': ['standard', 'lowercase' ]
+          }
+        }
+      }
+    }
 
-  #   except:
-  #     print('exception')
+    return elex.schema

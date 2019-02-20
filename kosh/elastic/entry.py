@@ -1,10 +1,11 @@
 from datetime import datetime
-from hashlib import sha256
+from hashlib import sha1
 from typing import Any, Dict
 from unicodedata import normalize
 
 from elasticsearch_dsl import (Boolean, Date, Document, Float, Integer,
-                               Keyword, Text)
+                               Keyword, Mapping, Text)
+from elasticsearch_dsl.analysis import CustomAnalyzer
 from lxml import etree
 
 from kosh.utils import dotdict, logger
@@ -15,15 +16,6 @@ class entry():
   '''
   todo: docs
   '''
-
-  uid = Keyword()
-  created = Date()
-
-  # headword_ascii = Keyword()
-  # headword_deva = Keyword()
-  # headword_hk = Keyword()
-  # headword_iso = Keyword()
-  # headword_slp1 = Keyword()
 
   def __init__(self, elex: Dict[str, Any]) -> None:
     '''
@@ -38,9 +30,10 @@ class entry():
     docs = []
     xmap = self.elex.schema.mappings.entry._meta._xpaths
 
-    logger().info('Parsing dictionary entries for %s', self.elex.uid)
+    logger().debug('Parsing dictionary entries for %s', self.elex.uid)
     for file in self.elex.files:
-      for item in etree.parse(file).xpath(xmap.root, namespaces = ns()):
+      elem = etree.parse(file, etree.XMLParser(remove_blank_text = True))
+      for item in elem.xpath(xmap.root, namespaces = ns()):
         docs += [self.__record(item)]
 
     logger().debug('Found %i entries for %s', len(docs), self.elex.uid)
@@ -49,27 +42,23 @@ class entry():
   def __record(self, root: etree.Element) -> Document:
     class entry(Document):
       class Meta: doc_type = 'entry'
-      created = Date()
 
-    emap = self.elex.schema.mappings.entry.properties
-    xmap = self.elex.schema.mappings.entry._meta._xpaths
+    elem = etree.tostring(root, encoding = 'utf-8')
+    emap = dotdict(self.elex.schema.mappings.entry.properties)
+    xmap = dotdict(self.elex.schema.mappings.entry._meta._xpaths)
     find = lambda s: next(iter(root.xpath(s, namespaces = ns())), None)
 
-    item = entry(meta = {
-      'id': find(xmap.id) or sha256(etree.tostring(root)),
-      'index': self.elex.uid
-    })
+    item = entry(
+      meta = {
+        'id': find(xmap.id) or sha1(elem).hexdigest(),
+        'index': self.elex.uid
+      },
+      created = datetime.now(),
+      xml = elem.decode('unicode_escape')
+    )
 
-    item.created = datetime.now()
-
-    for prop in emap: item._doc_type.mapping.field(prop, {
-      'boolean': Boolean,
-      'date': Date,
-      'float': Float,
-      'integer': Integer,
-      'keyword': Keyword,
-      'text': Text
-    }[emap[prop].type]())
+    for prop in emap:
+      item._doc_type.mapping.field(prop, emap[prop].type)
 
     for prop in xmap.fields:
       data = find(xmap.fields[prop])

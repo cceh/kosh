@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from importlib import import_module
 from typing import List
 
-from kosh.utils import logger, instance
+from kosh.utils import instance, logger
 
 
 class _param(ABC):
