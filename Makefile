@@ -1,7 +1,9 @@
 .PHONY: clean install
+.SILENT: clean install
 default: clean install
 
 clean:
+	pip3 uninstall -y kosh
 	rm -fr \
 		__pycache__ \
 		build \

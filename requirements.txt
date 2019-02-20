@@ -4,5 +4,6 @@ flask>=1.0.0
 flask_graphql>=2.0.0
 graphene>=2.1.0
 indic_transliteration>=1.7.0
+inotify>=0.2.0
 lxml>=4.2.0
 setuptools>=40.8.0

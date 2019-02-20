@@ -2,10 +2,13 @@ from configparser import ConfigParser
 from glob import glob
 from json import load, loads
 from os import path
-from typing import Dict, List, Union
+from typing import Any, Dict, Iterable, List
 
-from elasticsearch import Elasticsearch
-from kosh.utils import dotdict, logger, store
+from elasticsearch_dsl import connections
+from inotify.adapters import InotifyTree
+from inotify.constants import IN_CLOSE_WRITE
+
+from kosh.utils import dotdict, logger
 
 
 class index():
@@ -13,63 +16,84 @@ class index():
   todo: docs
   '''
 
-  def append(self, name: str) -> None:
+  @classmethod
+  def create(cls, elex: object) -> None:
     '''
     todo: docs
     '''
-    pass
+    logger().info('Creating elastic index %s', elex.uid)
+    indices = connections.get_connection().indices
+    indices.create(index = elex.uid, body = elex.schema)
 
   @classmethod
-  def create(self, link: Elasticsearch, spec: object) -> None:
-    '''
-    todo: docs
-    '''
-    logger().info('Creating elastic index %s', spec.uid)
-    link.indices.create(index = spec.uid, body = spec.schema)
-
-  @classmethod
-  def delete(self, link: Elasticsearch, name: str) -> None:
+  def delete(cls, name: str) -> None:
     '''
     todo: docs
     '''
     logger().info('Dropping elastic index %s', name)
-    link.indices.delete(ignore = 404, index = name)
+    indices = connections.get_connection().indices
+    indices.delete(ignore = 404, index = name)
 
   @classmethod
-  def search(self) -> List[Dict[str, Union[object, str]]]:
+  def lookup(cls, root: str, spec: str) -> List[Dict[str, Any]]:
     '''
     todo: docs
     '''
-    file = store().config.get('data', 'file')
-    root = store().config.get('data', 'root')
-    logger().debug('Scanning for dicts in %s', root)
+    indices = []
 
-    items = []
+    logger().debug('Looking for dicts definitions in %s', root)
+    for file in glob('{}/**/{}'.format(root, spec), recursive = True):
+      try:
+        indices += cls.__parser(file)
+        logger().debug('Found dict definition in %s', file)
+      except:
+        logger().warn('Corrupt dict definition in %s', file)
 
-    for spec in glob('{}/**/{}'.format(root, file), recursive = True):
-      try: items += self.__format(spec)
-      except: continue
-      logger().debug('Found dict specification in %s', spec)
-
-    return items
+    return indices
 
   @classmethod
-  def __format(self, spec: str) -> List[Dict[str, Union[object, str]]]:
+  def worker(cls, root: str, spec: str) -> Iterable[Dict[str, Any]]:
     '''
     todo: docs
     '''
-    item = ConfigParser()
-    root = path.dirname(spec)
-    item.read_file(open(spec))
+    task = InotifyTree(root, IN_CLOSE_WRITE)
 
-    items = []
+    for (_, _, part, _) in task.event_gen(yield_nones = False):
+      file = '{}/{}'.format(part, spec)
 
-    for uid in item.sections():
-      file = item.get(uid, 'schema')
-      items += [dotdict({
-        'uid': uid,
-        'files': loads(item.get(uid, 'files')),
-        'schema': load(open('{}/{}'.format(root, file)))
-      })]
+      if path.isfile(file):
+        logger().info('Observed change of dict %s', file)
+        for elex in cls.__parser(file): yield elex
 
-    return items
+  @classmethod
+  def __parser(cls, file: str) -> List[Dict[str, Any]]:
+    '''
+    todo: docs
+    '''
+    conf = ConfigParser()
+    root = path.dirname(file)
+    conf.read_file(open(file))
+
+    indices = []
+
+    for uid in conf.sections():
+      files = ['{}/{}'.format(root, i) for i in loads(conf.get(uid, 'files'))]
+      schema = load(open('{}/{}'.format(root, conf.get(uid, 'schema'))))
+      indices += [dotdict({ 'uid': uid, 'files': files, 'schema': schema })]
+
+    return indices
+
+  # @classmethod
+  # def __notify(cls) -> None:
+  #   file = instance.config.get('data', 'file')
+  #   root = instance.config.get('data', 'root')
+  #   tree = InotifyTree(root, IN_CLOSE_WRITE)
+
+  #   try:
+  #     for (_, _, path, item) in tree.event_gen(yield_nones = False):
+  #       if path.isfile('{}/{}'.format(path, file)):
+  #         print('path:' + str(path))
+  #         print('file:' + str(file))
+
+  #   except:
+  #     print('exception')

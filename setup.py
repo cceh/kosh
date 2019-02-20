@@ -1,7 +1,8 @@
 from configparser import ConfigParser
 
-from kosh.utils import defaultconfig
 from setuptools import find_packages, setup
+
+from kosh.utils import defaultconfig
 
 with open('LICENSE') as f: legal = f.read()
 with open('README.md') as f: readme = f.read()
