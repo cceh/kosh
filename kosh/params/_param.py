@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from importlib import import_module
 from typing import List
 
-from kosh.utils import instance, logger
+from kosh.utils import logger
 
 
 class _param(ABC):

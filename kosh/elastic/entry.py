@@ -3,13 +3,10 @@ from hashlib import sha1
 from typing import Any, Dict
 from unicodedata import normalize
 
-from elasticsearch_dsl import (Boolean, Date, Document, Float, Integer,
-                               Keyword, Mapping, Text)
-from elasticsearch_dsl.analysis import CustomAnalyzer
-from lxml import etree
-
+from elasticsearch_dsl import Document
 from kosh.utils import dotdict, logger
 from kosh.utils import namespaces as ns
+from lxml import etree
 
 
 class entry():
@@ -40,6 +37,9 @@ class entry():
     return docs
 
   def __record(self, root: etree.Element) -> Document:
+    '''
+    todo: docs
+    '''
     class entry(Document):
       class Meta: doc_type = 'entry'
 

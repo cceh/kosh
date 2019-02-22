@@ -1,7 +1,51 @@
+from flask import Flask, Response, request
 from kosh.api._api import _api
+from kosh.utils import concretemethod, logger
+
 
 class restful(_api):
-  pass
+  '''
+  todo: docs
+  '''
+
+  @concretemethod
+  def deploy(self, flsk: Flask) -> None:
+    '''
+    todo: docs
+    '''
+    path = lambda p: '{}/{}'.format(self.path, p)
+    logger().info('Deploying RESTful endpoint %s', self.path)
+
+    flsk.add_url_rule(self.path, self.path, self.info)
+    flsk.add_url_rule(path('ids'), path('ids'), self.ids)
+    flsk.add_url_rule(path('entries'), path('entries'), self.entries)
+
+  def info(self) -> Response:
+    '''
+    todo: docs
+    '''
+    return self.respond_json({
+      'dict': self.elex.uid,
+      'fields': self.emap
+    })
+
+  def ids(self):
+    ids = request.args.getlist('ids')
+
+    print(ids)
+
+    return self.respond_json({ })
+
+  def entries(self):
+    field = request.args.get('field')
+    query = request.args.get('query')
+    query_type = request.args.get('query_type')
+    size = request.args.get('size')
+
+    print(field, query, query_type, size)
+
+    return self.respond_json({ })
+
 
 # import json
 # import os

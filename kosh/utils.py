@@ -1,10 +1,9 @@
-from functools import partial
 from inspect import getmodule, stack
 from logging import Logger, getLevelName, getLogger
 from re import search
 from typing import Any, Callable, Dict, Union, get_type_hints
 
-from graphene import Boolean, Float, Int, String
+from graphene import Boolean, Date, Float, Int, String
 
 
 def concretemethod(method: Callable) -> Callable:
@@ -58,15 +57,15 @@ def defaultconfig() -> Dict[str, Dict[str, str]]:
       'name': 'kosh'
     },
     'api': {
-      'ipv4': '0.0.0.0',
-      'ipv6': '::/0',
+      'host': '0.0.0.0',
       'port': 5000,
       'root': '/api'
     },
     'data': {
       'host': 'localhost',
       'root': '/var/lib/%(name)s',
-      'spec': '.%(name)s'
+      'spec': '.%(name)s',
+      'sync': True
     },
     'info': {
       'desc': '%(name)s - APIs for Dictionaries',
@@ -88,12 +87,13 @@ def graphenemap() -> Dict[str, Union[Boolean, Float, Int, String]]:
     A dotdict containing the Elastic to Graphene type mapping.
   '''
   return dotdict({
-    'keyword': String,
-    'text': String,
-    'short': Int,
-    'integer': Int,
+    'boolean': Boolean,
+    'date': Date,
     'float': Float,
-    'boolean': Boolean
+    'integer': Int,
+    'keyword': String,
+    'short': Int,
+    'text': String
   })
 
 def namespaces() -> Dict[str, str]:
