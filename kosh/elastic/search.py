@@ -1,3 +1,5 @@
+from datetime import datetime
+from re import split
 from typing import Any, Dict, List
 
 from elasticsearch_dsl import Search
@@ -19,13 +21,12 @@ class search():
     '''
     todo: docs
     '''
-    entries = entry(elex).schema().mget(ids)
+    query = entry(elex).schema()
 
     return [dotdict({
       **i.to_dict(),
-      'id': i.meta.id,
-      'created': i.created.isoformat()
-    }) for i in entries]
+      'id': i.meta.id
+    }) for i in query.mget(ids)]
 
   @classmethod
   def entries(cls,
@@ -37,9 +38,10 @@ class search():
     '''
     todo: docs
     '''
-    search = Search(index = elex.uid).query(query_type, **{ field: query })
+    query = Search(index = elex.uid).query(query_type, **{ field: query })
 
     return [dotdict({
       **i.to_dict(),
-      'id': i.meta.id
-    }) for i in search.execute()]
+      'id': i.meta.id,
+      'created': datetime(*map(int, split(r'\D', i.created)))
+    }) for i in query.execute()]

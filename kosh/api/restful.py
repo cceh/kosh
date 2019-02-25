@@ -1,3 +1,4 @@
+from datetime import datetime
 from inspect import stack
 from json import dumps
 from typing import Any, Dict, List
@@ -81,8 +82,15 @@ class restful(_api):
     todo: docs
     '''
     return Response(
-      dumps(body, ensure_ascii = False),
+      dumps(body, default = self.__time, ensure_ascii = False),
       headers = { 'Content-Type': 'application/json; charset=utf-8' },
       mimetype = 'application/json',
       status = code
     )
+
+  def __time(self, body: Any) -> str:
+      '''
+      todo: docs
+      '''
+      if isinstance(body, datetime): return body.isoformat()
+      raise TypeError('Type {} not serializable'.format(type(body)))
