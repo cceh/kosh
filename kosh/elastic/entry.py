@@ -1,12 +1,13 @@
 from datetime import datetime
 from hashlib import sha1
-from typing import Any, Dict
+from typing import Any, Dict, List
 from unicodedata import normalize
 
 from elasticsearch_dsl import Document
+from lxml import etree
+
 from kosh.utils import dotdict, logger
 from kosh.utils import namespaces as ns
-from lxml import etree
 
 
 class entry():
@@ -20,7 +21,7 @@ class entry():
     '''
     self.elex = elex
 
-  def parser(self) -> None:
+  def parser(self) -> List[Document]:
     '''
     todo: docs
     '''
@@ -36,29 +37,32 @@ class entry():
     logger().debug('Found %i entries for %s', len(docs), self.elex.uid)
     return docs
 
-  def __record(self, root: etree.Element) -> Document:
+  def schema(self, *args, **kwargs) -> Document:
     '''
     todo: docs
     '''
     class entry(Document):
+      class Index: name = self.elex.uid
       class Meta: doc_type = 'entry'
 
-    elem = etree.tostring(root, encoding = 'utf-8')
     emap = dotdict(self.elex.schema.mappings.entry.properties)
+    for prop in emap: entry._doc_type.mapping.field(prop, emap[prop].type)
+
+    return entry(*args, **kwargs)
+
+  def __record(self, root: etree.Element) -> Document:
+    '''
+    todo: docs
+    '''
+    elem = etree.tostring(root, encoding = 'utf-8')
     xmap = dotdict(self.elex.schema.mappings.entry._meta._xpaths)
     find = lambda s: next(iter(root.xpath(s, namespaces = ns())), None)
 
-    item = entry(
-      meta = {
-        'id': find(xmap.id) or sha1(elem).hexdigest(),
-        'index': self.elex.uid
-      },
+    item = self.schema(
+      meta = { 'id': find(xmap.id) or sha1(elem).hexdigest() },
       created = datetime.now(),
       xml = elem.decode('unicode_escape')
     )
-
-    for prop in emap:
-      item._doc_type.mapping.field(prop, emap[prop].type)
 
     for prop in xmap.fields:
       data = find(xmap.fields[prop])

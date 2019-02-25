@@ -9,6 +9,7 @@ from threading import Thread
 
 from elasticsearch_dsl import connections
 from flask import Flask
+
 from kosh.elastic.index import index
 from kosh.utils import defaultconfig, dotdict, instance, logger
 

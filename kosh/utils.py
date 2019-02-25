@@ -1,9 +1,10 @@
+from enum import Enum
 from inspect import getmodule, stack
 from logging import Logger, getLevelName, getLogger
 from re import search
 from typing import Any, Callable, Dict, Union, get_type_hints
 
-from graphene import Boolean, Date, Float, Int, String
+from graphene import Boolean, DateTime, Float, Int, String
 
 
 def concretemethod(method: Callable) -> Callable:
@@ -28,14 +29,14 @@ def concretemethod(method: Callable) -> Callable:
 
 class dotdict(dict):
   '''
-  ``dict`` wrapper class to allow dot-operator access to values.
+  ``dotdict`` wrapper class to allow dot-operator access to ``dict`` values.
 
   See:
     https://stackoverflow.com/a/23689767
   And:
     https://stackoverflow.com/a/13520518
   '''
-  __getattr__ = dict.__getitem__
+  __getattr__ = dict.get
   __setattr__ = dict.__setitem__
   __delattr__ = dict.__delitem__
 
@@ -88,7 +89,7 @@ def graphenemap() -> Dict[str, Union[Boolean, Float, Int, String]]:
   '''
   return dotdict({
     'boolean': Boolean,
-    'date': Date,
+    'date': DateTime,
     'float': Float,
     'integer': Int,
     'keyword': String,
@@ -109,7 +110,6 @@ class instance():
   ``instance`` class, containing a dotdict sigleton. This singleton data
   storage, shared throughout kosh, is the runtime-storage for all components.
   '''
-
   __data = dotdict()
 
   @classmethod
@@ -158,3 +158,15 @@ def logger() -> Logger:
   item = getLogger(getmodule(stack()[1].frame).__name__)
   item.setLevel(getLevelName(instance.config.get('logs', 'elvl')))
   return item
+
+class querytypes(Enum):
+  '''
+  ``querytypes`` class extending Enum to implement an enumeration of allowed
+  types of queries against the elastic search data host.
+  '''
+  fuzzy = 10
+  prefix = 20
+  regex = 30
+  term = 40
+  terms = 50
+  wildcard = 60

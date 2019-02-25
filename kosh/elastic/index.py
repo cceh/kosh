@@ -8,6 +8,7 @@ from elasticsearch import helpers
 from elasticsearch_dsl import connections
 from inotify.adapters import InotifyTree
 from inotify.constants import IN_CLOSE_WRITE
+
 from kosh.elastic.entry import entry
 from kosh.utils import dotdict, logger
 

@@ -3,7 +3,7 @@ from sys import exit
 from typing import List
 
 from kosh.params._param import _param
-from kosh.utils import concretemethod, logger, instance
+from kosh.utils import concretemethod, instance, logger
 
 
 class log_level(_param):
