@@ -6,8 +6,6 @@ from typing import Any, Dict, Iterable, List
 
 from elasticsearch import helpers
 from elasticsearch_dsl import connections
-from inotify.adapters import InotifyTree
-from inotify.constants import IN_CLOSE_WRITE
 
 from kosh.elastic.entry import entry
 from kosh.utils import dotdict, logger
@@ -77,6 +75,9 @@ class index():
     '''
     todo: docs
     '''
+    from inotify.adapters import InotifyTree
+    from inotify.constants import IN_CLOSE_WRITE
+
     task = InotifyTree(root, IN_CLOSE_WRITE)
 
     for _, _, part, _ in task.event_gen(yield_nones = False):

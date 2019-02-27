@@ -54,18 +54,19 @@ class entry():
     '''
     todo: docs
     '''
-    elem = etree.tostring(root, encoding = 'utf-8')
+    elem = etree.tostring(root, encoding = 'unicode')
     xmap = dotdict(self.elex.schema.mappings.entry._meta._xpaths)
     find = lambda s: next(iter(root.xpath(s, namespaces = ns())), None)
 
     item = self.schema(
-      meta = { 'id': find(xmap.id) or sha1(elem).hexdigest() },
+      meta = { 'id': find(xmap.id) or sha1(elem.encode('utf-8')).hexdigest() },
       created = datetime.now(),
-      xml = elem.decode('unicode_escape')
+      xml = elem
     )
 
     for prop in xmap.fields:
       data = find(xmap.fields[prop])
-      if data is not None: item[prop] = normalize('NFC', data.text)
+      if data is not None and data.text is not None:
+        item[prop] = normalize('NFC', data.text)
 
     return item

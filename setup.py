@@ -14,7 +14,7 @@ setup(
   author = 'Francisco Mondaca, Philip Schildkamp',
   author_email = 'f.mondaca@uni-koeln.de, philip.schildkamp@uni-koeln.de',
   description = config.get('info', 'desc'),
-  entry_points = { 'console_scripts': ['kosh  =  kosh.kosh:main'] },
+  entry_points = { 'console_scripts': ['kosh = kosh.kosh:main'] },
   license = legal,
   long_description = readme,
   name = config.get('info', 'name'),
