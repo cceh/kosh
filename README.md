@@ -1,6 +1,6 @@
 # Kosh - APIs for Dictionaries
 
-##How to run Kosh (Linux, OSX) with data from [kosh_data](https://github.com/cceh/kosh_data):
+## How to run Kosh (Linux, OSX) with data from [kosh_data](https://github.com/cceh/kosh_data):
 
 1. [elasticsearch](https://www.elastic.co/downloads/elasticsearch)  must be running on your computer
 2. `git clone https://github.com/cceh/kosh`
@@ -17,11 +17,13 @@
      
     `kosh --log_level DEBUG --data_root ../kosh_data --data_host localhost --data_sync off`
 
-##Query samples:
+## Query samples:
 
-###Hönig (Kölsch-Deutsch)
+### Hönig (Kölsch-Deutsch)
 
 * REST: <http://kosh.uni-koeln.de/api/hoenig/restful/entries?query=scha&query_type=prefix&field=lemma_ksh>
+
+___
 
 * GraphQL: <http://kosh.uni-koeln.de/api/hoenig/graphql>
 ```
@@ -35,11 +37,12 @@
 ```
 
 
-###TuniCo ([A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37))
+### TuniCo ([A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37))
 
 
 * REST: <http://kosh.uni-koeln.de/api/tunico/restful/entries?query=.*ung&query_type=regexp&field=trans_de>
 
+___
 
 * GraphQL: <http://kosh.uni-koeln.de/api/tunico/graphql>
 
@@ -54,7 +57,11 @@
 }
 ```
 
+### ([Freedict German - Dutch](https://github.com/freedict/fd-dictionaries/tree/master/deu-nld))
+
 * REST: <http://kosh.uni-koeln.de/api/freedict_deu_nld/restful/entries?query=lieben&query_type=term&field=lemma_deu>
+
+___
 
 * GraphQL:  <http://kosh.uni-koeln.de/api/freedict_deu_nld/graphql>
 ```
