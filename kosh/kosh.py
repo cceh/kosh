@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from importlib import import_module
 from logging import basicConfig, getLogger
-from os import environ, getpid
+from os import environ, getpid, path
 from pkgutil import iter_modules
 from signal import pause
 from sys import argv, exit
@@ -70,7 +70,8 @@ class kosh():
     todo: docs
     '''
     data = dotdict(instance.config['data'])
-    mods = [i for _, i, _ in iter_modules(['kosh/api']) if not i[0] is ('_')]
+    root = path.join(path.dirname(__file__), 'api')
+    mods = [i for _, i, _ in iter_modules([root]) if not i[0] is ('_')]
     apis = [import_module('kosh.api.{}'.format(i)).__dict__[i] for i in mods]
 
     getLogger('elasticsearch').disabled = True
