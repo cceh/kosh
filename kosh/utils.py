@@ -166,7 +166,7 @@ class querytypes(Enum):
   '''
   fuzzy = 10
   prefix = 20
-  regex = 30
+  regexp = 30
   term = 40
   terms = 50
   wildcard = 60
