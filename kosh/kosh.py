@@ -61,7 +61,7 @@ class kosh():
     params = argv[1:]
     for param in [i for i in params if i.startswith('--')]:
       module = '.'.join(__name__.split('.')[:-1] + ['params', param[2:]])
-      try: module = list(import_module(module).__dict__.values())[-1]
+      try: module = import_module(module).__dict__[param[2:]]
       except: exit('Invalid parameter: {}'.format(param[2:]))
       module(params)
 
