@@ -34,7 +34,7 @@
 }
 ```
 
-### TuniCo [A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37))
+### TuniCo - [A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37)
 
 
 * REST: <http://kosh.uni-koeln.de/api/tunico/restful/entries?query=.*ung&query_type=regexp&field=trans_de>
@@ -67,7 +67,7 @@
 ```
 
 
-### [Hiztegi Batu Oinarriduna](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) (Basque/Euskara)
+### [Hiztegi Batu Oinarriduna](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) (Basque)
 
 * REST: <http://kosh.uni-koeln.de/api/hiztegibatua/restful/entries?query=*etsu&query_type=wildcard&field=lemma>
 
