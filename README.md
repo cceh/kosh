@@ -34,7 +34,7 @@
 }
 ```
 
-### TuniCo ([A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37))
+### TuniCo [A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37))
 
 
 * REST: <http://kosh.uni-koeln.de/api/tunico/restful/entries?query=.*ung&query_type=regexp&field=trans_de>
@@ -52,7 +52,7 @@
 }
 ```
 
-### ([Freedict German - Dutch](https://github.com/freedict/fd-dictionaries/tree/master/deu-nld))
+### [Freedict German - Dutch](https://github.com/freedict/fd-dictionaries/tree/master/deu-nld)
 
 * REST: <http://kosh.uni-koeln.de/api/freedict_deu_nld/restful/entries?query=lieben&query_type=term&field=lemma_deu>
 
@@ -64,4 +64,21 @@
     translationNld
   }
 }
+```
+
+
+### [Hiztegi Batu Oinarriduna](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) (Basque/Euskera)
+
+* REST: <http://kosh.uni-koeln.de/api/hiztegibatua/restful/entries?query=*etsu&query_type=wildcard&field=lemma>
+
+* GraphQL:  <http://kosh.uni-koeln.de/api/hiztegibatua/graphql>
+```
+{
+  entries(queryType: wildcard, query: "*etsu", field: lemma) {
+    id 
+    lemma
+    sensePos
+    xml
+  }
+}}
 ```
