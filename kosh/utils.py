@@ -175,6 +175,5 @@ class querytypes(Enum):
   match_phrase_prefix = 40
   multi_match = 40
   common = 40
-  terms = 40
   query_string = 40
   simple_query_string = 40
