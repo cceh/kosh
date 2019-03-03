@@ -170,3 +170,11 @@ class querytypes(Enum):
   term = 40
   terms = 50
   wildcard = 60
+  match = 40
+  match_phrase = 40
+  match_phrase_prefix = 40
+  multi_match = 40
+  common = 40
+  terms = 40
+  query_string = 40
+  simple_query_string = 40
