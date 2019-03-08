@@ -17,7 +17,7 @@
      
     `kosh --log_level DEBUG --data_root ../kosh_data --data_host localhost --data_sync off`
 
-## Query samples:
+## Query examples:
 
 ### Hönig (Kölsch-Deutsch)
 
@@ -67,6 +67,21 @@
 ```
 
 
+### [Freedict Breton - French](https://github.com/freedict/fd-dictionaries/tree/master/bre-fra)
+
+* REST: <http://kosh.uni-koeln.de/api/freedict_bre_fra/restful/entries?query=*eler&query_type=wildcard&field=lemma_bre>
+
+* GraphQL:  <http://kosh.uni-koeln.de/api/freedict_bre_fra/graphql>
+```
+{
+  entries(queryType: wildcard, query: "*eler", field: lemma_bre) {
+    id 
+    lemmaBre
+    translationFra
+  }
+}
+```
+
 ### [Hiztegi Batu Oinarriduna](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) (Basque)
 
 * REST: <http://kosh.uni-koeln.de/api/hiztegibatua/restful/entries?query=*etsu&query_type=wildcard&field=lemma>
@@ -78,6 +93,23 @@
     id 
     lemma
     sensePos
+    xml
+  }
+}
+```
+
+
+
+### Diccionario Geográfico-Histórico de las Indias Occidentales ó América (1786-1789) de Antonio de Alcedo
+
+* REST: <http://kosh.uni-koeln.de/api/de_alcedo/restful/entries?query=*HUE&query_type=wildcard&field=lemma>
+
+* GraphQL:  <http://kosh.uni-koeln.de/api/de_alcedo/graphql>
+```
+{
+  entries(queryType: wildcard, query: "*HUE", field: lemma) {
+    id 
+    lemma
     xml
   }
 }
