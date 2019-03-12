@@ -21,12 +21,12 @@ class search():
     '''
     todo: docs
     '''
-    query = entry(elex).schema()
+    find = entry(elex).schema()
 
     return [dotdict({
-      **i.to_dict(),
-      'id': i.meta.id
-    }) for i in query.mget(ids)]
+      **item.to_dict(),
+      'id': item.meta.id
+    }) for item in find.mget(ids)]
 
   @classmethod
   def entries(cls,
@@ -38,10 +38,10 @@ class search():
     '''
     todo: docs
     '''
-    query = Search(index = elex.uid).query(query_type, **{ field: query })
+    find = Search(index = elex.uid).query(query_type, **{ field: query })
 
     return [dotdict({
-      **i.to_dict(),
-      'id': i.meta.id,
-      'created': datetime(*map(int, split(r'\D', i.created)))
-    }) for i in query.execute()]
+      **item.to_dict(),
+      'id': item.meta.id,
+      'created': datetime(*map(int, split(r'\D', item.created)))
+    }) for item in find.execute()]

@@ -16,16 +16,16 @@ class restful(_api):
   '''
 
   @concretemethod
-  def deploy(self, flask: Flask) -> None:
+  def deploy(self, wapp: Flask) -> None:
     '''
     todo: docs
     '''
     path = lambda p: '{}/{}'.format(self.path, p)
-    logger().info('Deploying RESTful endpoint %s', self.path)
+    logger().debug('Deploying RESTful endpoint %s', self.path)
 
-    flask.add_url_rule(self.path, self.path, self.info)
-    flask.add_url_rule(path('entries'), path('entries'), self.entries)
-    flask.add_url_rule(path('ids'), path('ids'), self.ids)
+    wapp.add_url_rule(self.path, self.path, self.info)
+    wapp.add_url_rule(path('entries'), path('entries'), self.entries)
+    wapp.add_url_rule(path('ids'), path('ids'), self.ids)
 
   def info(self) -> Response:
     '''
@@ -53,15 +53,15 @@ class restful(_api):
     todo: docs
     '''
     field = request.args.get('field')
-    query_type = request.args.get('query_type')
     query = request.args.get('query')
+    query_type = request.args.get('query_type')
 
-    if not field in self.emap:
-      return self.__fail('Missing or invalid parameter: field')
-    if not query_type in [i.name for i in querytypes]:
-      return self.__fail('Missing or invalid parameter: query_type')
     if not query:
-      return self.__fail('Missing parameter: query')
+      return self.__fail('Missing query parameter')
+    if not field in self.emap:
+      return self.__fail('Missing or invalid field parameter')
+    if not query_type in [i.name for i in querytypes]:
+      return self.__fail('Missing or invalid query_type parameter')
 
     return self.__data(search.entries(self.elex, field, query, query_type))
 

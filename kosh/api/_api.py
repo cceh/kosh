@@ -14,7 +14,7 @@ class _api(ABC):
   '''
 
   @abstractmethod
-  def deploy(self, flask: Flask) -> None:
+  def deploy(self, wapp: Flask) -> None:
     '''
     todo: docs
     '''
@@ -24,17 +24,18 @@ class _api(ABC):
     '''
     todo: docs
     '''
+    self.conf = dotdict(instance.config['api'])
     self.elex = elex
 
     self.emap = dotdict({
       'id': { 'type': 'keyword' },
-      **elex.schema.mappings.entry.properties,
+      **self.elex.schema.mappings.entry.properties,
       'created': { 'type': 'date' },
       'xml': { 'type': 'text' }
     })
 
     self.path = '{}/{}/{}'.format(
-      instance.config.get('api', 'root'),
-      elex.uid,
+      self.conf.root,
+      self.elex.uid,
       self.__class__.__name__.split('.')[-1]
     )

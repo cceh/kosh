@@ -6,7 +6,7 @@ from unicodedata import normalize
 from elasticsearch_dsl import Document
 from lxml import etree
 
-from kosh.utils import dotdict, logger
+from kosh.utils import logger
 from kosh.utils import namespaces as ns
 
 
@@ -34,7 +34,7 @@ class entry():
       for item in elem.xpath(xmap.root, namespaces = ns()):
         docs += [self.__record(item)]
 
-    logger().debug('Found %i entries for %s', len(docs), self.elex.uid)
+    logger().info('Found %i entries for %s', len(docs), self.elex.uid)
     return docs
 
   def schema(self, *args, **kwargs) -> Document:
@@ -45,8 +45,8 @@ class entry():
       class Index: name = self.elex.uid
       class Meta: doc_type = 'entry'
 
-    emap = dotdict(self.elex.schema.mappings.entry.properties)
-    for prop in emap: entry._doc_type.mapping.field(prop, emap[prop].type)
+    emap = self.elex.schema.mappings.entry.properties
+    for i in emap: entry._doc_type.mapping.field(i, emap[i].type)
 
     return entry(*args, **kwargs)
 
@@ -55,18 +55,22 @@ class entry():
     todo: docs
     '''
     elem = etree.tostring(root, encoding = 'unicode')
-    xmap = dotdict(self.elex.schema.mappings.entry._meta._xpaths)
-    find = lambda s: next(iter(root.xpath(s, namespaces = ns())), None)
+    xmap = self.elex.schema.mappings.entry._meta._xpaths
+    euid = next(iter(root.xpath(xmap.id, namespaces = ns())), None) \
+      or sha1(elem.encode('utf-8')).hexdigest()
 
     item = self.schema(
-      meta = { 'id': find(xmap.id) or sha1(elem.encode('utf-8')).hexdigest() },
+      meta = { 'id': euid },
       created = datetime.now(),
       xml = elem
     )
 
     for prop in xmap.fields:
-      data = find(xmap.fields[prop])
-      if data is not None and data.text is not None:
-        item[prop] = normalize('NFC', data.text)
+      for data in root.xpath(xmap.fields[prop], namespaces = ns()):
+        if data is not None and data.text is not None:
+          data = normalize('NFC', data.text)
+          if not prop.endswith('[]'): item[prop] = data
+          else: item[prop[:-2]] = [*item[prop[:-2]], data] \
+            if prop[:-2] in item else [data]
 
     return item

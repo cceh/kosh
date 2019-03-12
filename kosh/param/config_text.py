@@ -1,11 +1,11 @@
 from sys import exit
 from typing import List
 
-from kosh.params._param import _param
+from kosh.param._param import _param
 from kosh.utils import concretemethod, instance, logger
 
 
-class config(_param):
+class config_text(_param):
   '''
   todo: docs
   '''
