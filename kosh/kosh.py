@@ -4,16 +4,15 @@ from logging import basicConfig, getLogger
 from multiprocessing import Process
 from os import environ, getpid, path
 from pkgutil import iter_modules
+from queue import Empty, Queue
 from signal import pause
 from sys import argv, exit
 from threading import Thread
 from time import sleep
-from typing import Any, Callable, Dict, List
 
 from elasticsearch_dsl import connections
 from flask import Flask
 
-from kosh.api._api import _api
 from kosh.elastic.index import index
 from kosh.utils import defaultconfig, dotdict, instance, logger
 
@@ -60,11 +59,10 @@ class kosh():
       conf = dotdict(instance.config['data'])
       connections.create_connection(hosts = [conf.host])
       instance.elexes = { i.uid: i for i in index.lookup(conf.root, conf.spec) }
-      # for elex in instance.elexes.values(): index.update(elex)
+      for elex in instance.elexes.values(): index.update(elex)
 
       self.serve()
-      self.watch()
-      pause()
+      self.watch() if conf.sync else pause()
 
     except KeyboardInterrupt: print('\N{bomb}')
     except Exception as exception: logger().exception(exception)
@@ -101,15 +99,20 @@ class kosh():
     todo: docs
     '''
     conf = dotdict(instance.config['data'])
-    this = self
+    tick = Queue()
+
+    def lexer(elex):
+      instance.elexes[elex.uid] = elex
+      index.update(elex)
+      self.serve()
 
     class thread(Thread):
       def run(self) -> None:
         logger().info('Starting data sync in %s', conf.root)
-        for elex in index.notify(conf.root, conf.spec):
-          logger().info('Sync of dict %s triggered', elex.uid)
-          index.update(instance.elexes.update({ elex.uid: elex }) or elex)
-          this.serve()
+        for call in index.notify(conf.root, conf.spec): tick.put(call)
 
-    if instance.config.getboolean('data', 'sync'):
-      thread(daemon = True, name = 'update').start()
+    thread(daemon = True, name = 'update').start()
+
+    while True:
+      try: [lexer(i) for i in tick.get(False)()]
+      except Empty: sleep(1)

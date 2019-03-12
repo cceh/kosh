@@ -2,10 +2,9 @@ from configparser import ConfigParser
 from glob import glob
 from itertools import groupby
 from json import load, loads
-from operator import itemgetter as get
 from os import path
-from time import sleep, time
-from typing import Any, Dict, Iterable, List
+from time import time
+from typing import Any, Callable, Dict, List
 
 from elasticsearch import helpers
 from elasticsearch_dsl import connections
@@ -61,7 +60,7 @@ class index():
     return idxs
 
   @classmethod
-  def notify(cls, root: str, spec: str) -> Iterable[Dict[str, Any]]:
+  def notify(cls, root: str, spec: str) -> Callable:
     '''
     todo: docs
     '''
@@ -69,14 +68,14 @@ class index():
     from inotify.constants import IN_CLOSE_WRITE, IN_CREATE
 
     task = InotifyTree(root, IN_CLOSE_WRITE | IN_CREATE)
-    uniq = lambda i: (i[2], int(time() / 60), sleep(1), print(i))
+    uniq = lambda i: (i[2], int(time() / 60))
 
-    for key, _ in groupby(task.event_gen(yield_nones = 0), key = uniq):
-      file = '{}/{}'.format(key[0], spec)
+    for tick, _ in groupby(task.event_gen(yield_nones = 0), key = uniq):
+      file = '{}/{}'.format(tick[0], spec)
 
       if not '.git' in file and path.isfile(file):
-        logger().debug('Observed change in %s', key[0])
-        for elex in cls.__parser(file): yield elex
+        logger().debug('Observed change in %s', tick[0])
+        yield lambda i = file: cls.__parser(i)
 
   @classmethod
   def update(cls, elex: Dict[str, Any]) -> None:
@@ -89,7 +88,7 @@ class index():
     cls.append(elex)
 
   @classmethod
-  def __parser(cls, file: str, buff: int = 0) -> List[Dict[str, Any]]:
+  def __parser(cls, file: str) -> List[Dict[str, Any]]:
     '''
     todo: docs
     '''

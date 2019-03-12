@@ -45,10 +45,10 @@ class graphql(_api):
         ids = List(NonNull(String))
       )
 
-      def resolve_ids(self, info, ids):
+      def resolve_ids(self, _, ids):
         return search.ids(elex, ids)
 
-      def resolve_entries(self, info, field, query, query_type):
+      def resolve_entries(self, _, field, query, query_type):
         field = next(i for i in emap if i[1] == field)[0]
         query_type = querytypes(query_type).name
         return search.entries(elex, field, query, query_type)
@@ -64,7 +64,7 @@ class graphql(_api):
 
     for prop in self.emap:
       gmap = graphenemap()[self.emap[prop].type]
-      if '{}[]'.format(prop) in fmap: tmap[prop] = List(gmap)
+      if '[{}]'.format(prop) in fmap: tmap[prop] = List(gmap)
       else: tmap[prop] = gmap()
 
     return tmap

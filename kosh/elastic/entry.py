@@ -1,5 +1,6 @@
 from datetime import datetime
 from hashlib import sha1
+from re import search
 from typing import Any, Dict, List
 from unicodedata import normalize
 
@@ -69,8 +70,8 @@ class entry():
       for data in root.xpath(xmap.fields[prop], namespaces = ns()):
         if data is not None and data.text is not None:
           data = normalize('NFC', data.text)
-          if not prop.endswith('[]'): item[prop] = data
-          else: item[prop[:-2]] = [*item[prop[:-2]], data] \
-            if prop[:-2] in item else [data]
+          if not search(r'^\[.*\]$', prop): item[prop] = data
+          elif prop[1:-1] in item: item[prop[1:-1]] = [*item[prop[1:-1]], data]
+          else: item[prop[1:-1]] = [data]
 
     return item
