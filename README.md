@@ -21,7 +21,7 @@
 
 For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http://localhost:5000/` in the URLs of the next examples.
 
-### Hönig (Kölsch-Deutsch)
+### Wörterbuch der Kölner Mundart - Fritz Hönig (Kölsch-Deutsch)
 
 * REST: <http://kosh.uni-koeln.de/api/hoenig/restful/entries?query=scha&query_type=prefix&field=lemma_ksh>
 
