@@ -131,6 +131,8 @@ class instance():
 
     Param ``attr<str>``:
       The key whos associated value shall be returned.
+    Return<``Any``>:
+      The value associated with the passed in key.
     '''
     return cls.__data[attr]
 
@@ -155,9 +157,10 @@ def logger() -> Logger:
   Return<``Logger``>:
     A Logger instence for the caller.
   '''
-  item = getLogger(getmodule(stack()[1].frame).__name__)
-  item.setLevel(getLevelName(instance.config.get('logs', 'elvl')))
-  return item
+  conf = dotdict(instance.config['logs'])
+  unit = getLogger(getmodule(stack()[1].frame).__name__)
+  unit.setLevel(getLevelName(conf.elvl))
+  return unit
 
 class querytypes(Enum):
   '''

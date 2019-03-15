@@ -1,7 +1,7 @@
 from distutils.util import strtobool
 from typing import List
 
-from kosh.params._param import _param
+from kosh.param._param import _param
 from kosh.utils import concretemethod, instance, logger
 
 

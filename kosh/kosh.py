@@ -1,11 +1,15 @@
 from configparser import ConfigParser
-from importlib import import_module
+from distutils.util import strtobool
+from importlib import import_module as mod
 from logging import basicConfig, getLogger
+from multiprocessing import Process
 from os import environ, getpid, path
 from pkgutil import iter_modules
+from queue import Empty, Queue
 from signal import pause
 from sys import argv, exit
 from threading import Thread
+from time import sleep
 
 from elasticsearch_dsl import connections
 from flask import Flask
@@ -13,10 +17,6 @@ from flask import Flask
 from kosh.elastic.index import index
 from kosh.utils import defaultconfig, dotdict, instance, logger
 
-basicConfig(
-  datefmt = '%Y-%m-%d %H:%M:%S',
-  format = '%(asctime)s [%(levelname)s] <%(name)s> %(message)s'
-)
 
 def main() -> None: kosh().main()
 if __name__ == '__main__': main()
@@ -30,23 +30,40 @@ class kosh():
     '''
     todo: docs
     '''
-    instance.config = ConfigParser()
-    instance.config.read_dict(defaultconfig())
-
-    instance.server = Flask(instance.config.get('api', 'name'))
-    instance.server.config['PROPAGATE_EXCEPTIONS'] = True
+    argv.pop(0)
+    basicConfig(
+      datefmt = '%Y-%m-%d %H:%M:%S',
+      format = '%(asctime)s [%(levelname)s] <%(name)s> %(message)s'
+    )
+    environ['WERKZEUG_RUN_MAIN'] = 'true'
+    getLogger('elasticsearch').disabled = True
+    getLogger('werkzeug').disabled = True
 
   def main(self) -> None:
     '''
     todo: docs
     '''
     try:
+      instance.config = ConfigParser()
+      instance.config.read_dict(defaultconfig())
       logger().info('Started kosh with pid %s', getpid())
-      self.__params()
-      self.__readdb()
-      self.__update()
-      self.__websrv()
-      pause()
+
+      root = '{}/{}'.format(path.dirname(__file__), 'api')
+      mods = [i for _, i, _ in iter_modules([root]) if not i[0] is ('_')]
+      instance.echoes = [mod('kosh.api.{}'.format(i)).__dict__[i] for i in mods]
+      logger().info('Loaded API endpoint modules %s', mods)
+
+      for i in [i for i in argv if i.startswith('--')]:
+        try: mod('kosh.param.{}'.format(i[2:])).__dict__[i[2:]](argv)
+        except: exit('Invalid parameter or argument to {}'.format(i[2:]))
+
+      conf = dotdict(instance.config['data'])
+      connections.create_connection(hosts = [conf.host])
+      instance.elexes = { i.uid: i for i in index.lookup(conf.root, conf.spec) }
+      for elex in instance.elexes.values(): index.update(elex)
+
+      self.serve()
+      self.watch() if strtobool(conf.sync) else pause()
 
     except KeyboardInterrupt: print('\N{bomb}')
     except Exception as exception: logger().exception(exception)
@@ -54,56 +71,49 @@ class kosh():
 
     finally: logger().info('Stopped kosh with pid %s', getpid())
 
-  def __params(self) -> None:
+  def serve(self) -> None:
     '''
     todo: docs
     '''
-    params = argv[1:]
-    for param in [i for i in params if i.startswith('--')]:
-      module = '.'.join(__name__.split('.')[:-1] + ['params', param[2:]])
-      try: module = import_module(module).__dict__[param[2:]]
-      except: exit('Invalid parameter: {}'.format(param[2:]))
-      module(params)
+    conf = dotdict(instance.config['api'])
+    wapp = Flask(conf.name)
+    wapp.config['PROPAGATE_EXCEPTIONS'] = True
 
-  def __readdb(self) -> None:
+    for elex in instance.elexes.values():
+      for echo in instance.echoes: echo(elex).deploy(wapp)
+
+    class process(Process):
+      def run(self) -> None:
+        logger().info('Deploying web server at %s:%s', conf.host, conf.port)
+        wapp.run(host = conf.host, port = conf.port)
+
+    try:
+      instance.server.terminate()
+      instance.server.join()
+    except: pass
+
+    instance.server = process(daemon = True, name = 'server')
+    instance.server.start()
+
+  def watch(self) -> None:
     '''
     todo: docs
     '''
-    data = dotdict(instance.config['data'])
-    root = path.join(path.dirname(__file__), 'api')
-    mods = [i for _, i, _ in iter_modules([root]) if not i[0] is ('_')]
-    apis = [import_module('kosh.api.{}'.format(i)).__dict__[i] for i in mods]
+    conf = dotdict(instance.config['data'])
+    tick = Queue()
 
-    getLogger('elasticsearch').disabled = True
-    connections.create_connection(hosts = [data.host])
-
-    for elex in index.lookup(data.root, data.spec):
-      for api in apis: api(elex).deploy(instance.server)
+    def lexer(elex):
+      instance.elexes[elex.uid] = elex
       index.update(elex)
+      self.serve()
 
-  def __update(self) -> None:
-    '''
-    todo: docs
-    '''
     class thread(Thread):
       def run(self) -> None:
-        data = dotdict(instance.config['data'])
-        logger().info('Starting data sync in %s', data.root)
-        for elex in index.worker(data.root, data.spec): index.update(elex)
+        logger().info('Starting data sync in %s', conf.root)
+        for call in index.notify(conf.root, conf.spec): tick.put(call)
 
-    if instance.config.getboolean('data', 'sync'):
-      thread(daemon = True).start()
+    thread(daemon = True, name = 'update').start()
 
-  def __websrv(self) -> None:
-    '''
-    todo: docs
-    '''
-    class thread(Thread):
-      def run(self) -> None:
-        api = dotdict(instance.config['api'])
-        logger().info('Starting kosh server on %s:%s', api.host, api.port)
-        instance.server.run(host = api.host, port = api.port)
-
-    environ['WERKZEUG_RUN_MAIN'] = 'true'
-    getLogger('werkzeug').disabled = True
-    thread(daemon = True).start()
+    while True:
+      try: [lexer(i) for i in tick.get(False)()]
+      except Empty: sleep(1)
