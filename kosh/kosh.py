@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from distutils.util import strtobool
 from importlib import import_module as mod
 from logging import basicConfig, getLogger
 from multiprocessing import Process
@@ -54,7 +55,7 @@ class kosh():
 
       for i in [i for i in argv if i.startswith('--')]:
         try: mod('kosh.param.{}'.format(i[2:])).__dict__[i[2:]](argv)
-        except: exit('Invalid parameter {}'.format(i[2:]))
+        except: exit('Invalid parameter or argument to {}'.format(i[2:]))
 
       conf = dotdict(instance.config['data'])
       connections.create_connection(hosts = [conf.host])
@@ -62,7 +63,7 @@ class kosh():
       for elex in instance.elexes.values(): index.update(elex)
 
       self.serve()
-      self.watch() if conf.sync else pause()
+      self.watch() if strtobool(conf.sync) else pause()
 
     except KeyboardInterrupt: print('\N{bomb}')
     except Exception as exception: logger().exception(exception)
