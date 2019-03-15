@@ -167,16 +167,16 @@ class querytypes(Enum):
   ``querytypes`` class extending Enum to implement an enumeration of allowed
   types of queries against the elastic search data host.
   '''
-  fuzzy = 10
-  prefix = 20
-  regexp = 30
-  term = 40
-  terms = 50
-  wildcard = 60
-  match = 40
-  match_phrase = 40
-  match_phrase_prefix = 40
-  multi_match = 40
-  common = 40
-  query_string = 40
-  simple_query_string = 40
+  fuzzy = 1
+  prefix = 2
+  regexp = 3
+  term = 4
+  terms = 5
+  wildcard = 6
+  match = 7
+  match_phrase = 8
+  match_phrase_prefix = 9
+  multi_match = 10
+  common = 11
+  query_string = 12
+  simple_query_string = 13
