@@ -97,6 +97,27 @@ def graphenemap() -> Dict[str, Union[Boolean, Float, Int, String]]:
     'text': String
   })
 
+def swaggermap() -> Dict[str, object]:
+  '''
+  ``swaggermap`` method, returning the Elastic to Swagger type mapping as
+  dotdict, containing Elastic types as string keys and Swagger definitions as
+  values.
+
+  Return``<Dict[str, object]>``:
+    A dotdict containing the Elastic to Swagger type mapping.
+  '''
+  return dotdict({
+    'boolean': { 'type': 'boolean' },
+    'date': { 'type': 'string', 'format': 'date-time' },
+    'float': { 'type': 'number', 'format': 'float' },
+    'integer': { 'type': 'integer' },
+    'keyword': { 'type': 'string' },
+    'short': { 'type': 'integer' },
+    'text': { 'type': 'string' }
+  })
+
+
+
 def namespaces() -> Dict[str, str]:
   '''
   todo: docs
