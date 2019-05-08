@@ -33,7 +33,8 @@ class search():
     elex: Dict[str, Any],
     field: str,
     query: str,
-    query_type: str
+    query_type: str,
+    size: int
   ) -> List[Dict[str, str]]:
     '''
     todo: docs
@@ -44,4 +45,4 @@ class search():
       **item.to_dict(),
       'id': item.meta.id,
       'created': datetime(*map(int, split(r'\D', item.created)))
-    }) for item in find.execute()]
+    }) for item in find[:size].execute()]

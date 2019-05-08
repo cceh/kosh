@@ -2,7 +2,7 @@ from typing import Type
 
 from flask import Flask
 from flask_graphql import GraphQLView as ql
-from graphene import Enum, List, NonNull, ObjectType, Schema, String
+from graphene import Enum, Int, List, NonNull, ObjectType, Schema, String
 
 from kosh.api._api import _api
 from kosh.elastic.search import search
@@ -37,7 +37,8 @@ class graphql(_api):
         etyp,
         field = NonNull(Enum('field', emap)),
         query = NonNull(String),
-        query_type = NonNull(Enum.from_enum(querytypes))
+        query_type = NonNull(Enum.from_enum(querytypes)),
+        size = Int()
       )
 
       ids = List(
@@ -48,10 +49,10 @@ class graphql(_api):
       def resolve_ids(self, _, ids):
         return search.ids(elex, ids)
 
-      def resolve_entries(self, _, field, query, query_type):
+      def resolve_entries(self, _, field, query, query_type, size = 10):
         field = next(i for i in emap if i[1] == field)[0]
         query_type = querytypes(query_type).name
-        return search.entries(elex, field, query, query_type)
+        return search.entries(elex, field, query, query_type, size)
 
     return Schema(query = query)
 

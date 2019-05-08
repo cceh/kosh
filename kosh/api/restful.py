@@ -53,6 +53,7 @@ class restful(_api):
     field = request.args.get('field')
     query = request.args.get('query')
     query_type = request.args.get('query_type')
+    size = request.args.get('size')
 
     if not query:
       return self.__fail('Missing query parameter')
@@ -61,12 +62,24 @@ class restful(_api):
     if not query_type in [i.name for i in querytypes]:
       return self.__fail('Missing or invalid query_type parameter')
 
-    return self.__data(search.entries(self.elex, field, query, query_type))
+    return self.__data(search.entries(
+      self.elex, field, query, query_type,
+      int(size) if size else 10
+    ))
 
   def spec(self) -> Response:
     '''
     todo: docs
     '''
+    def field(name):
+      fmap = self.elex.schema.mappings.entry._meta._xpaths.fields
+      swag = swaggermap()[self.emap[name].type]
+
+      return swag if not '[{}]'.format(name) in fmap else {
+        'type': 'array',
+        'items': swag
+      }
+
     def param(name):
       return {
         'name': name,
@@ -116,7 +129,8 @@ class restful(_api):
             'parameters': [
               { **param('field'), 'enum': list(self.emap.keys()) },
               { **param('query') },
-              { **param('query_type'), 'enum': [i.name for i in querytypes] }
+              { **param('query_type'), 'enum': [i.name for i in querytypes] },
+              { **param('size'), 'required': False, 'type': 'integer' }
             ],
             'responses': reply('Entries')
           }
@@ -137,7 +151,7 @@ class restful(_api):
       'definitions': {
         'Entry': {
           'properties': {
-            **{ k: swaggermap()[self.emap[k].type] for k in self.emap.keys() },
+            **{ i: field(i) for i in self.emap.keys() },
             'xml': { 'type': 'string', 'format': 'xml' }
           }
         },
