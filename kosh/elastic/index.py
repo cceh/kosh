@@ -107,9 +107,10 @@ class index():
     '''
     todo: docs
     '''
-    emap = dotdict(elex.schema.mappings.entry.properties)
+    emap = elex.schema.mappings.properties
     emap.created = { 'type': 'date' }
     emap.xml = { 'analyzer': 'strip_tags', 'type': 'text' }
+    elex.schema.mappings.properties = dotdict(emap)
 
     elex.schema.settings = {
       'analysis': {
@@ -118,7 +119,7 @@ class index():
             'type': 'custom',
             'tokenizer': 'standard',
             'char_filter': ['html_strip'],
-            'filter': ['standard', 'lowercase' ]
+            'filter': ['lowercase' ]
           }
         }
       }

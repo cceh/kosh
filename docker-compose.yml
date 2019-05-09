@@ -1,0 +1,19 @@
+version: '2.3'
+services:
+  elastic:
+    image: elasticsearch:7.0.0
+    networks: ['network']
+    environment: ['discovery.type=single-node', 'logger.level=error']
+    healthcheck:
+      test: curl localhost:9200
+  kosh:
+    image: cceh/kosh:latest
+    command: ['--data_host', 'elastic']
+    ports: ['5000:5000']
+    networks: ['network']
+    depends_on:
+      elastic:
+        condition: service_healthy
+networks:
+  network:
+    driver: bridge

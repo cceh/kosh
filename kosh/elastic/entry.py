@@ -27,7 +27,7 @@ class entry():
     todo: docs
     '''
     docs = []
-    xmap = self.elex.schema.mappings.entry._meta._xpaths
+    xmap = self.elex.schema.mappings._meta._xpaths
 
     logger().debug('Parsing dictionary entries for %s', self.elex.uid)
     for file in self.elex.files:
@@ -44,9 +44,8 @@ class entry():
     '''
     class entry(Document):
       class Index: name = self.elex.uid
-      class Meta: doc_type = 'entry'
 
-    emap = self.elex.schema.mappings.entry.properties
+    emap = self.elex.schema.mappings.properties
     for i in emap: entry._doc_type.mapping.field(i, emap[i].type)
 
     return entry(*args, **kwargs)
@@ -56,7 +55,7 @@ class entry():
     todo: docs
     '''
     elem = etree.tostring(root, encoding = 'unicode')
-    xmap = self.elex.schema.mappings.entry._meta._xpaths
+    xmap = self.elex.schema.mappings._meta._xpaths
     euid = next(iter(root.xpath(xmap.id, namespaces = ns())), None) \
       or sha1(elem.encode('utf-8')).hexdigest()
 

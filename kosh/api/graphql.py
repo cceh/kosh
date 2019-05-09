@@ -60,7 +60,7 @@ class graphql(_api):
     '''
     todo: docs
     '''
-    fmap = self.elex.schema.mappings.entry._meta._xpaths.fields
+    fmap = self.elex.schema.mappings._meta._xpaths.fields
     tmap = {}
 
     for prop in self.emap:

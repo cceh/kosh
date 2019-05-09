@@ -72,7 +72,7 @@ class restful(_api):
     todo: docs
     '''
     def field(name):
-      fmap = self.elex.schema.mappings.entry._meta._xpaths.fields
+      fmap = self.elex.schema.mappings._meta._xpaths.fields
       swag = swaggermap()[self.emap[name].type]
 
       return swag if not '[{}]'.format(name) in fmap else {

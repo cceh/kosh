@@ -29,7 +29,7 @@ class _api(ABC):
 
     self.emap = dotdict({
       'id': { 'type': 'keyword' },
-      **self.elex.schema.mappings.entry.properties,
+      **self.elex.schema.mappings.properties,
       'created': { 'type': 'date' },
       'xml': { 'type': 'text' }
     })
