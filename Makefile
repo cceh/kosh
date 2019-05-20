@@ -1,5 +1,4 @@
 .PHONY: clean install image
-.SILENT: clean install image
 default: clean install
 
 clean:
