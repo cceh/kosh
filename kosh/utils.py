@@ -190,14 +190,12 @@ class querytypes(Enum):
   '''
   fuzzy = 1
   prefix = 2
-  regexp = 3
-  term = 4
-  terms = 5
-  wildcard = 6
-  match = 7
-  match_phrase = 8
-  match_phrase_prefix = 9
-  multi_match = 10
-  common = 11
-  query_string = 12
-  simple_query_string = 13
+  term = 3
+  terms = 4
+  match = 5
+  match_phrase = 6
+  match_phrase_prefix = 7
+  # next query_types must be blocked if data access must be retricted
+  wildcard = 8
+  regexp = 9
+
