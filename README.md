@@ -15,7 +15,7 @@ Requirements:
      
     `kosh --log_level DEBUG --data_root ../kosh_data --data_host localhost`
     
-    on OSX:
+    on OSX (if modified, the respective index will not be updated):
      
     `kosh --log_level DEBUG --data_root ../kosh_data --data_host localhost --data_sync off`
 
