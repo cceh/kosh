@@ -23,7 +23,7 @@ For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http:
 
 ### Wörterbuch der Kölner Mundart - Fritz Hönig (Kölsch-Deutsch)
 
-* REST: <http://kosh.uni-koeln.de/api/hoenig/restful/entries?query=scha&query_type=prefix&field=lemma_ksh>
+* REST: <http://kosh.uni-koeln.de/api/hoenig/restful>
 
 * GraphQL: <http://kosh.uni-koeln.de/api/hoenig/graphql>
 ```
@@ -39,7 +39,7 @@ For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http:
 ### TuniCo - [A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37)
 
 
-* REST: <http://kosh.uni-koeln.de/api/tunico/restful/entries?query=.*ung&query_type=regexp&field=trans_de>
+* REST: <http://kosh.uni-koeln.de/api/tunico/restful>
 
 * GraphQL: <http://kosh.uni-koeln.de/api/tunico/graphql>
 
@@ -56,8 +56,7 @@ For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http:
 
 ### [Freedict German - Dutch](https://github.com/freedict/fd-dictionaries/tree/master/deu-nld)
 
-* REST: <http://kosh.uni-koeln.de/api/freedict_deu_nld/restful/entries?query=lieben&query_type=term&field=lemma_deu>
-
+* REST: <http://kosh.uni-koeln.de/api/freedict_deu_nld/restful>
 * GraphQL:  <http://kosh.uni-koeln.de/api/freedict_deu_nld/graphql>
 ```
 {
@@ -71,7 +70,7 @@ For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http:
 
 ### [Freedict Breton - French](https://github.com/freedict/fd-dictionaries/tree/master/bre-fra)
 
-* REST: <http://kosh.uni-koeln.de/api/freedict_bre_fra/restful/entries?query=*eler&query_type=wildcard&field=lemma_bre>
+* REST: <http://kosh.uni-koeln.de/api/freedict_bre_fra/restful>
 
 * GraphQL:  <http://kosh.uni-koeln.de/api/freedict_bre_fra/graphql>
 ```
@@ -86,7 +85,7 @@ For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http:
 
 ### [Hiztegi Batu Oinarriduna](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) (Basque)
 
-* REST: <http://kosh.uni-koeln.de/api/hiztegibatua/restful/entries?query=*etsu&query_type=wildcard&field=lemma>
+* REST: <http://kosh.uni-koeln.de/api/hiztegibatua/restful>
 
 * GraphQL:  <http://kosh.uni-koeln.de/api/hiztegibatua/graphql>
 ```
@@ -104,8 +103,7 @@ For testing your local instance, replace `http://kosh.uni-koeln.de/` with `http:
 
 ### Diccionario Geográfico-Histórico de las Indias Occidentales ó América (1786-1789) de Antonio de Alcedo
 
-* REST: <http://kosh.uni-koeln.de/api/de_alcedo/restful/entries?query=*HUE&query_type=wildcard&field=lemma>
-
+* REST: <http://kosh.uni-koeln.de/api/de_alcedo/restful>
 * GraphQL:  <http://kosh.uni-koeln.de/api/de_alcedo/graphql>
 ```
 {
