@@ -123,6 +123,7 @@ def namespaces() -> Dict[str, str]:
   todo: docs
   '''
   return dotdict({
+    'dc': 'http://purl.org/dc/elements/1.1',
     'tei': 'http://www.tei-c.org/ns/1.0'
   })
 
@@ -186,7 +187,12 @@ def logger() -> Logger:
 class querytypes(Enum):
   '''
   ``querytypes`` class extending Enum to implement an enumeration of allowed
-  types of queries against the elastic search data host.
+  types of queries against the elasticsearch data host.
+
+  To prevent easy crawling of the all datasets, disable the following entries:
+  - ``prefix``
+  - ``regex``
+  - ``wildcard``
   '''
   term = 1
   fuzzy = 2
@@ -194,8 +200,6 @@ class querytypes(Enum):
   match = 4
   match_phrase = 5
   match_phrase_prefix = 6
-  # next query_types must be blocked if data access must be retricted
   wildcard = 7
   regexp = 8
   prefix = 9
-
