@@ -67,8 +67,13 @@ class entry():
 
     for prop in xmap.fields:
       for data in root.xpath(xmap.fields[prop], namespaces = ns()):
-        if data is not None and data.text is not None:
+        if isinstance(data, etree._Element) and data.text is not None:
           data = normalize('NFC', data.text)
+        elif isinstance(data, etree._ElementUnicodeResult):
+          data = normalize('NFC', data)
+        else: data = None
+
+        if data is not None:
           if not search(r'^\[.*\]$', prop): item[prop] = data
           elif prop[1:-1] in item: item[prop[1:-1]] = [*item[prop[1:-1]], data]
           else: item[prop[1:-1]] = [data]
