@@ -103,7 +103,6 @@ For testing your local deployment, replace `http://kosh.uni-koeln.de/` with `htt
 ```
 
 
-
 ### Diccionario Geográfico-Histórico de las Indias Occidentales ó América (1786-1789) de Antonio de Alcedo
 
 * Swagger UI: <http://kosh.uni-koeln.de/api/de_alcedo/restful>
@@ -117,3 +116,16 @@ For testing your local deployment, replace `http://kosh.uni-koeln.de/` with `htt
   }
 }
 ```
+
+### [English Wordnet](https://en-word.net/)
+
+Entries Index:
+
+* Swagger UI: <http://kosh.uni-koeln.de/api/wordnet_en_entry/restful>
+* GraphiQL:  <http://kosh.uni-koeln.de/api/wordnet_en_entry/graphql>
+
+Synsets Index:
+
+* Swagger UI: <http://kosh.uni-koeln.de/api/wordnet_en_synset/restful>
+* GraphiQL:  <http://kosh.uni-koeln.de/api/wordnet_en_synset/graphql>
+
