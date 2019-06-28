@@ -23,9 +23,16 @@ class index():
     '''
     todo: docs
     '''
-    bulk = [i.to_dict(include_meta = True) for i in entry(elex).parser()]
-    logger().debug('Adding %i items to elastic index %s', len(bulk), elex.uid)
-    helpers.bulk(connections.get_connection(), bulk)
+    edef = entry(elex)
+    size = 0
+
+    for file in elex.files:
+      bulk = [i.to_dict(include_meta = True) for i in edef.parse(file)]
+      logger().debug('Adding %i entries to index %s', len(bulk), elex.uid)
+      helpers.bulk(connections.get_connection(), bulk)
+      size += len(bulk)
+
+    logger().info('Found %i entries for dictionary %s', size, elex.uid)
 
   @classmethod
   def create(cls, elex: Dict[str, Any]) -> None:
@@ -33,7 +40,7 @@ class index():
     todo: docs
     '''
     idxs = connections.get_connection().indices
-    logger().debug('Creating elastic index %s', elex.uid)
+    logger().debug('Creating index %s', elex.uid)
     idxs.create(index = elex.uid, body = cls.__schema(elex))
 
   @classmethod
@@ -42,7 +49,7 @@ class index():
     todo: docs
     '''
     idxs = connections.get_connection().indices
-    logger().debug('Dropping elastic index %s', elex.uid)
+    logger().debug('Dropping index %s', elex.uid)
     idxs.delete(ignore = 404, index = elex.uid)
 
   @classmethod
@@ -82,7 +89,7 @@ class index():
     '''
     todo: docs
     '''
-    logger().info('Updating elastic index %s', elex.uid)
+    logger().info('Updating index %s', elex.uid)
     cls.delete(elex)
     cls.create(elex)
     cls.append(elex)

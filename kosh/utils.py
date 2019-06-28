@@ -116,8 +116,6 @@ def swaggermap() -> Dict[str, object]:
     'text': { 'type': 'string' }
   })
 
-
-
 def namespaces() -> Dict[str, str]:
   '''
   todo: docs
