@@ -199,7 +199,6 @@ class querytypes(Enum):
   terms = 3
   match = 4
   match_phrase = 5
-  match_phrase_prefix = 6
-  wildcard = 7
-  regexp = 8
-  prefix = 9
+  wildcard = 6
+  regexp = 7
+  prefix = 8
