@@ -3,5 +3,16 @@
 
 @import "{{ site.theme }}";
 
-body{font-family: 'Dosis', sans-serif;}
-h1 h2 h3 h4 h5 h6 {font-family: 'Dosis', sans-serif}
+body {
+  font-family: 20px 'Dosis', sans-serif;
+}
+
+h1 h2 h3 h4 h5 h6 {
+  font-family: 'Dosis', sans-serif;
+}
+
+code {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 15px;
+  color: #fbfbfb;
+}
