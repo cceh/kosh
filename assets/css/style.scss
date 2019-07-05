@@ -4,10 +4,4 @@
 @import "{{ site.theme }}";
 
 body{font-family: 'Dosis', sans-serif;}
-
-@font-face {
-    font-family: 'Dosis';
-    src: url("../fonts/dosis-v8-latin-regular.woff"),format("woff");
-    font-weight: bold;
-    font-style: italic
-}
+h1 h2 h3 h4 h5 h6 {font-family: 'Dosis', sans-serif}
