@@ -5,7 +5,7 @@ Kosh is an open-source software framework developed for creating and maintining 
 ## Overview
 
 
-<img src="drawing.jpg" alt="img/kosh_core_overview.png" width="200"/>
+<img src="img/kosh_core_overview.png" width="200"/>
 
 
 * Kosh processes as input lexical data in XML format.
