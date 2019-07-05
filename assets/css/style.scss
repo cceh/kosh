@@ -11,6 +11,7 @@ nav {
   top: 50px
 }
 
+
 body {
   font-family: 'Dosis', sans-serif;
   font-size: 19px;
@@ -18,6 +19,11 @@ body {
 
 h1 h2 h3 h4 h5 h6 {
   font-family: 'Dosis', sans-serif;
+}
+
+nav ul li.tag-h1 {
+  font-size: 24px;
+  line-height: 28px;
 }
 
 h1 {
