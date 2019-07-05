@@ -3,6 +3,14 @@
 
 @import "{{ site.theme }}";
 
+section {
+  margin-top: 20px
+}
+
+nav {
+  top: 50px
+}
+
 body {
   font-family: 'Dosis', sans-serif;
   font-size: 19px;

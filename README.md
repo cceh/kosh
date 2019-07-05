@@ -215,4 +215,4 @@ Feel free to test your API with GraphiQL: `http://localhost:5000/[your_index_nam
 
 
 ## Contact 
-If you have any questions, please contact the Kosh team: info-kosh[a]uni-koeln.de
+If you have any questions, contact the Kosh team: info-kosh[a]uni-koeln.de
