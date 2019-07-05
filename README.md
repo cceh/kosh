@@ -1,6 +1,6 @@
 # Kosh - APIs for Dictionaries
 
-Kosh is an open-source framework developed for creating and maintining APIs for dictionaries
+Kosh is an open-source framework developed for creating and maintaining APIs for dictionaries
 
 ## Overview
 
