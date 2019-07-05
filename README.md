@@ -1,28 +1,10 @@
 # Kosh - APIs for Dictionaries
 
-## How to deploy Kosh (Linux, OSX) with data from [kosh_data](https://github.com/cceh/kosh_data):
-
-Requirements:    
-  * python 3
-  * [elasticsearch](https://www.elastic.co/downloads/elasticsearch) 7.0
-1. `git clone https://github.com/cceh/kosh`
-2. `git clone https://github.com/cceh/kosh_data`
-3. `cd kosh`
-4. `make`
-5. start kosh:
-
-    on Linux: 
-     
-    `kosh --log_level DEBUG --data_root ../kosh_data --data_host localhost`
-    
-    on OSX (if modified, the respective index will not be updated):
-     
-    `kosh --log_level DEBUG --data_root ../kosh_data --data_host localhost --data_sync off`
+The following examples are based on data modules found in the repository [kosh_data](http://github/cceh/kosh_data)
 
 ## API Interaction:
 
 Kosh offers instances of Swagger UI and  GraphiQL per indexed dataset.
-For testing your local deployment, replace `http://kosh.uni-koeln.de/` with `http://localhost:5000/` in the following URLs.
 
 ### Wörterbuch der Kölner Mundart - Fritz Hönig (Kölsch-Deutsch)
 
