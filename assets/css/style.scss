@@ -5,15 +5,28 @@
 
 body {
   font-family:'Dosis', sans-serif;
-  font-size: 20px;
+  font-size: 19px;
 }
 
 h1 h2 h3 h4 h5 h6 {
   font-family: 'Dosis', sans-serif;
 }
 
+h3 {
+  font-size: 21px;
+}
+
+h5 {
+  font-size: 20px;
+}
 code {
   font-family: 'Source Code Pro', monospace;
-  font-size: 15px;
+  font-size: 13px;
   color: #fbfbfb;
+}
+
+nav ul li {
+    padding: 8px 4px;
+    line-height: 22px;
+    font-size: 19px;
 }
