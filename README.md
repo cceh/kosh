@@ -213,6 +213,9 @@ Graphql offers only one endpointm but two query types: `entries` and `ids`.
 
 Feel free to test your API with GraphiQL: `http://localhost:5000/[your_index_name_here]/api/graphql`
 
+### Kosh Data
+You can test Kosh APIs with different datasets available at <a href="https://cceh.github.io/kosh_data/">Kosh Data</a>.
+
 
 ## Contact 
 If you have any questions, contact the Kosh team: info-kosh[a]uni-koeln.de

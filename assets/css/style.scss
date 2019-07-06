@@ -4,11 +4,11 @@
 @import "{{ site.theme }}";
 
 section {
-  margin-top: 20px
+  margin-top: 4px
 }
 
 nav {
-  top: 50px
+  top: 22px
 }
 
 
@@ -56,4 +56,8 @@ nav ul li {
   padding: 8px 4px;
   line-height: 22px;
   font-size: 19px;
+}
+
+#fork_github{
+  float:right;
 }
