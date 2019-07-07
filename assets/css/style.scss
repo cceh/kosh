@@ -61,3 +61,13 @@ nav ul li {
 #fork_github{
   float:right;
 }
+
+#banner{
+  position: relative;
+  top: 0px;
+  background: #2960a5;
+}
+
+#banner.fork{
+  position: absolute;
+}
