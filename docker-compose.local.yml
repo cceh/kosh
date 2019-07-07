@@ -1,4 +1,0 @@
-version: '2.3'
-services:
-  kosh:
-    volumes: ['../kosh_data:/var/lib/kosh:ro']
