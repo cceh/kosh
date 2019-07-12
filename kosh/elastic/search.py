@@ -23,10 +23,11 @@ class search():
     '''
     find = entry(elex).schema()
 
-    return [dotdict({
+    try: return [dotdict({
       **item.to_dict(),
       'id': item.meta.id
     }) for item in find.mget(ids)]
+    except: return []
 
   @classmethod
   def entries(cls,
@@ -39,10 +40,13 @@ class search():
     '''
     todo: docs
     '''
-    find = Search(index = elex.uid).query(query_type, **{ field: query })
+    find = Search(index = elex.uid).query(query_type, **{
+      field if field != 'id' else '_id': query
+    })
 
-    return [dotdict({
+    try: return [dotdict({
       **item.to_dict(),
       'id': item.meta.id,
       'created': datetime(*map(int, split(r'\D', item.created)))
     }) for item in find[:size].execute()]
+    except: return []
