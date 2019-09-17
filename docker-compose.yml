@@ -5,6 +5,8 @@ services:
     networks: ['network']
     environment: ['discovery.type=single-node', 'logger.level=error']
     healthcheck:
+      interval: 5s
+      retries: 500
       test: curl localhost:9200
   kosh:
     image: cceh/kosh:latest
@@ -12,6 +14,8 @@ services:
     ports: ['5000:5000']
     networks: ['network']
     healthcheck:
+      interval: 5s
+      retries: 500
       test: wget -q localhost:5000 2>&1 | grep -q HTTP
     depends_on:
       elastic:
