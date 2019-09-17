@@ -11,6 +11,8 @@ services:
     command: ['--data_host', 'elastic']
     ports: ['5000:5000']
     networks: ['network']
+    healthcheck:
+      test: wget -q localhost:5000 2>&1 | grep -q HTTP
     depends_on:
       elastic:
         condition: service_healthy
