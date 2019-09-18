@@ -244,7 +244,9 @@ services:
 3. Deploy Kosh Sync together with Kosh:
 
 *   Go to your local Kosh folder
-*   And in your terminal type: `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml -f docker-compose.sync.yml up -d`
+*   And in your terminal type: 
+
+ `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml -f docker-compose.sync.yml up -d`
 
 
 ### Kosh Data
