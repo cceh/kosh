@@ -225,7 +225,9 @@ Setup:
 1. Clone kosh_sync: `git clone https://github.com/cceh/kosh_sync` 
 2. Modify `docker-compose.sync.yml` to your requirements: 
 
-```version: '2.3'
+
+```
+version: '2.3'
 services:
  sync:
     build: ../kosh_sync
@@ -238,7 +240,9 @@ services:
       KOSH_SYNC_BRANCH: master
       KOSH_SYNC_ORIGIN: URL_REPO
       KOSH_SYNC_REPOSE: 1h
+      
  ```
+ 
 ` KOSH_SYNC_REPOSE`, the time-interval used to call the external GIT repo, is set here to one hour (1h). You can employ values following values:  (s)econds, (m)inutes, (h)ours, or (d)ays.
 
 3. Deploy Kosh Sync together with Kosh:
