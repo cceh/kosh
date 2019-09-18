@@ -243,7 +243,7 @@ services:
       
  ```
  
-` KOSH_SYNC_REPOSE`, the time-interval used to call the external GIT repo, is set here to one hour (1h). You can employ values following values:  (s)econds, (m)inutes, (h)ours, or (d)ays.
+` KOSH_SYNC_REPOSE`, the time-interval used to call the external GIT repo, is set here to one hour (1h). You can employ the following values: (s)econds, (m)inutes, (h)ours, or (d)ays.
 
 {:start="3"}
 3. Deploy Kosh Sync together with Kosh:
