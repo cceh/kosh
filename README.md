@@ -213,6 +213,40 @@ Graphql offers only one endpointm but two query types: `entries` and `ids`.
 
 Feel free to test your API with GraphiQL: `http://localhost:5000/[your_index_name_here]/api/graphql`
 
+
+### Kosh Sync
+In your local Kosh instance, if any dataset is modified, Kosh updates the related index automatically.  
+
+If you are working with GIT repositories, you can use <a href="https://www.github.com/cceh/kosh">Kosh Sync</a>, a Docker container, to synchronize datasets located 
+on a GIT cloud repository, e.g. GitHub.
+
+Setup: 
+
+1. Clone kosh_sync: `git clone https://github.com/cceh/kosh_sync` 
+2. Modify `docker-compose.sync.yml` to your requirements: 
+
+```version: '2.3'
+services:
+ sync:
+    build: ../kosh_sync
+    networks: ['network']
+    volumes: ['PATH_TO_LOCAL_GIT_REPO:/var/lib/kosh']
+    depends_on:
+      kosh:
+        condition: service_healthy
+    environment:
+      KOSH_SYNC_BRANCH: master
+      KOSH_SYNC_ORIGIN: URL_REPO
+      KOSH_SYNC_REPOSE: 1h
+ ```
+` KOSH_SYNC_REPOSE`, the time-interval used to call the external GIT repo, is set here to one hour (1h). You can employ values following values:  (s)econds, (m)inutes, (h)ours, or (d)ays.
+
+3. Deploy Kosh Sync together with Kosh:
+
+*   Go to your local Kosh folder
+*   And in your terminal type: `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml -f docker-compose.sync.yml up -d`
+
+
 ### Kosh Data
 You can test Kosh APIs with different datasets available at <a href="https://cceh.github.io/kosh_data/">Kosh Data</a>.
 
