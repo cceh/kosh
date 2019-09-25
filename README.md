@@ -251,7 +251,7 @@ services:
 *   Go to your local Kosh folder
 *   And in your terminal type: 
 
- `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml -f docker-compose.sync.yml up -d`
+ `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml -f [PATH_TO_KOSH_SYNC]/docker-compose.sync.yml up -d`
 
 
 ### Kosh Data
