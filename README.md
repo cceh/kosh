@@ -261,11 +261,10 @@ You can test Kosh APIs with different datasets available at <a href="https://cce
 ## Cite
 
 
-Mondaca, F., Schildkamp, P., & Rau, F. (2019). Introducing Kosh, a Framework for 
-Creating and Maintaining APIs for Lexical Data. 
-In:  _Electronic Lexicography in the 21st Century. 
-Proceedings of the eLex 2019 Conference_, pp. 907–921. 1-3 October 2019, Sintra, Portugal. 
-Brno: Lexical Computing CZ, s.r.o.
+Mondaca, Francisco, Philip Schildkamp, and Felix Rau. 2019. 
+“Introducing Kosh, a Framework for Creating and Maintaining APIs for Lexical Data.” 
+_In Electronic Lexicography in the 21st Century. Proceedings of the eLex 2019 Conference_, Sintra, Portugal. 
+Brno: Lexical Computing CZ, s.r.o., 907–21. 
 
 ## Contact 
 If you have any questions, contact the Kosh team: info-kosh[a]uni-koeln.de
