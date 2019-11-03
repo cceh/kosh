@@ -217,7 +217,7 @@ Feel free to test your API with GraphiQL: `http://localhost:5000/[your_index_nam
 ### Kosh Sync
 In your local Kosh instance, if any dataset is modified, Kosh updates the related index automatically.  
 
-If you are working with GIT repositories, you can use <a href="https://www.github.com/cceh/kosh">Kosh Sync</a>, a Docker container, to synchronize datasets located 
+If you are working with GIT repositories, you can use <a href="https://www.github.com/cceh/kosh_sync">Kosh Sync</a>, a Docker container, to synchronize datasets located 
 on a GIT cloud repository, e.g. GitHub.
 
 Setup: 
@@ -258,13 +258,13 @@ services:
 You can test Kosh APIs with different datasets available at <a href="https://cceh.github.io/kosh_data/">Kosh Data</a>.
 
 
-## Cite
+## References
 
 
 Mondaca, Francisco, Philip Schildkamp, and Felix Rau. 2019. 
 “Introducing Kosh, a Framework for Creating and Maintaining APIs for Lexical Data.” 
 _In Electronic Lexicography in the 21st Century. Proceedings of the eLex 2019 Conference_, Sintra, Portugal. 
-Brno: Lexical Computing CZ, s.r.o., 907–21. 
+Brno: Lexical Computing CZ, s.r.o., 907–21. [(PDF)](https://elex.link/elex2019/wp-content/uploads/2019/09/eLex_2019_51.pdf)
 
 ## Contact 
 If you have any questions, contact the Kosh team: info-kosh[a]uni-koeln.de
