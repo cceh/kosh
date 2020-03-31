@@ -12,7 +12,7 @@ services:
     image: cceh/kosh:latest
     command: ['--data_host', 'elastic']
     ## the first value is the port used by the host and the second by docker internally
-    ports: ['5007:5000']
+    ports: ['5000:5000']
     networks: ['network']
     healthcheck:
       interval: 5s
