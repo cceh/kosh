@@ -197,9 +197,9 @@ To stop and later rebuild:
 
 `sudo docker-compose down`
 
-### Sample datasets
+## Sample datasets: [Kosh Data](https://cceh.github.io/kosh_data/)
 
 In [Kosh Data](https://cceh.github.io/kosh_data/) you can find different datasets available to be deployed with Kosh. 
 For each of them you will find the required files by Kosh: lexical data encoded in XML, a JSON config file and a '.kosh' file.
-You can have a look at them to configure your own Kosh data module. 
+You can have a look at them to configure your own Kosh data modules. 
   
