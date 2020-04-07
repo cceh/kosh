@@ -1,1 +1,6 @@
-theme: jekyll-theme-leap-day
+remote_theme: pmarsceill/just-the-docs
+logo: "/assets/images/kosh.png"
+# Aux links for the upper right navigation
+aux_links:
+  "Kosh on GitHub":
+    - "//github.com/cceh/kosh"
