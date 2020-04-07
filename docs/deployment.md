@@ -18,7 +18,10 @@ A Kosh data module consists of:
 3. ['.kosh' file](#kosh_file)
 
 ### <a name="data_xml"></a>Lexical data in XML 
-You can index any kind of **valid** XML files. The following entry belongs to the dictionary [hiztegibatua](https://github.com/cceh/kosh_data/blob/master/hiztegibatua/hiztegibatua.xml) :
+You can index any kind of **valid** XML files. The following entry belongs to the the Basque dictionary [Hiztegi Batua](https://github.com/cceh/kosh_data/blob/master/hiztegibatua/hiztegibatua.xml).
+This dictionary has been compiled by the Royal Academie of the Basque Language, Euzkaltzaindia. It is available in 
+[PDF](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.pdf) and in [XML](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) format. 
+A copy of the XML version and Kosh-backed APIs for it are available at [Kosh Data](https://cceh.github.io/kosh_data/)
 
 ```xml
  <entry id="13">
@@ -193,3 +196,10 @@ To check the logs:
 To stop and later rebuild:
 
 `sudo docker-compose down`
+
+### Sample datasets
+
+In [Kosh Data](https://cceh.github.io/kosh_data/) you can find different datasets available to be deployed with Kosh. 
+For each of them you will find the required files by Kosh: lexical data encoded in XML, a JSON config file and a '.kosh' file.
+You can have a look at them to configure your own Kosh data module. 
+  
