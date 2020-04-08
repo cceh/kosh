@@ -16,9 +16,10 @@ Kosh is an open-source framework developed for creating and maintaining APIs for
 <img src="img/kosh_core.png"/>
 
 Kosh has been conceived to provide API access to any XML-encoded lexical dataset. 
-Its name Kosh derives from the Hindi word for dictionary or lexicon, {\dn kof} \textit{koś} or \textit{kosh}, which in turn derives from Sanskrit {\dn kof} \textit{kośa} with the same meaning. 
-Kosh’s origin is related to API development for TEI-encoded Sanskrit dictionaries at the University of Cologne, where the most important 
-digital collection of Sanskrit dictionaries worldwide is hosted.
+Its name Kosh derives from the Hindi word for dictionary or lexicon, कोश _koś_ or _kosh_, which in turn derives from Sanskrit कोश 
+_kośa_ with the same meaning. 
+Kosh’s origin is related to API development for [TEI-encoded Sanskrit dictionaries](https://cceh.github.io/c-salt_sanskrit_data/) at the University of Cologne, where the most important 
+digital collection of Sanskrit dictionaries worldwide, the [Cologne Digital Sanskrit Dictionaries](https://www.sanskrit-lexicon.uni-koeln.de/) is hosted.
 
 ## Features
 
@@ -29,7 +30,7 @@ digital collection of Sanskrit dictionaries worldwide is hosted.
 
 ## How to run Kosh
 
-You can configurate Kosh to create APIs for any XML-encoded lexical resource. Learn how to configurate Kosh for your own lexical resources in [Deployment](/docs/deployment.md)
+You can configurate Kosh to create APIs for any XML-encoded lexical resource. Learn how to do it for your own resources in [deployment](/docs/deployment.md)
 
 ## References
 
