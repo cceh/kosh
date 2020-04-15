@@ -1,7 +1,7 @@
 version: '2.3'
 services:
   elastic:
-    image: elasticsearch:7.0.0
+    image: elasticsearch:7.6.2
     network_mode: host
     environment: ['discovery.type=single-node', 'logger.level=error']
     healthcheck:
