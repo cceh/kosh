@@ -4,7 +4,7 @@ services:
 
     ## volumes: ['PATH_TO_XML_LEXICAL_DATA_WITH_KOSH_FILES:/var/lib/kosh:ro']
     volumes: ['../kosh_data/hiztegibatua:/var/lib/kosh:ro']
-    ## you can create a config file, where you can override kosh's default settings
+    ## you can create a config file 'not in this folder', where you can override kosh's default settings
     #volumes: ['../kosh_data:/var/lib/kosh:ro', '../kosh.ini:/etc/kosh.ini:ro']
     #command: ['--config_file', '/etc/kosh.ini']
 
