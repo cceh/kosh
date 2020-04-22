@@ -16,7 +16,7 @@ Deployment: <https://github.com/vocabulista/csl-kosh>
 
 
 |  DICT_ID | Title | Year | REST | GraphQL | Entries |
-|-------------- | -------------- | -------------- | -------------- | -------------- | -------------- | 
+|:--------: | :--------: | :--------:| :--------:| :--------: | :--------: | 
 | acc | Aufrecht's Catalogus Catalogorum | 1962 | <a href="https://kosh.uni-koeln.de/cdsd/acc/restful"> <img src="../../assets/images/swagger_logo.png" style="max-height: 20px; max-width: 20px;"/> | <a href="https://kosh.uni-koeln.de/cdsd/acc/graphql"> <img src="../../assets/images/graphql_logo.svg" style="max-height: 20px; max-width: 20px;"/> | 49822 | 
 | ae | Apte Student's English-Sanskrit Dictionary | 1884 | <a href="https://kosh.uni-koeln.de/cdsd/ae/restful"> <img src="../../assets/images/swagger_logo.png" style="max-height: 20px; max-width: 20px;"/> | <a href="https://kosh.uni-koeln.de/cdsd/ae/graphql"> <img src="../../assets/images/graphql_logo.svg" style="max-height: 20px; max-width: 20px;"/> | 11360 | 
 | ap90 | Apte Practical Sanskrit-English Dictionary | 1890 | <a href="https://kosh.uni-koeln.de/cdsd/ap90/restful"> <img src="../../assets/images/swagger_logo.png" style="max-height: 20px; max-width: 20px;"/> | <a href="https://kosh.uni-koeln.de/cdsd/ap90/graphql"> <img src="../../assets/images/graphql_logo.svg" style="max-height: 20px; max-width: 20px;"/> | 32188 | 
