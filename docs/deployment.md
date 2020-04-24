@@ -18,8 +18,8 @@ A Kosh data module consists of:
 3. ['.kosh' file](#kosh_file)
 
 ### <a name="data_xml"></a>Lexical data in XML 
-You can index **any valid XML** files. The following entry belongs to the the Basque dictionary [Hiztegi Batua](https://github.com/cceh/kosh_data/blob/master/hiztegibatua/hiztegibatua.xml).
-This dictionary has been compiled by the Royal Academie of the Basque Language, Euzkaltzaindia. It is available in 
+You can add to Kosh **any valid XML** file. The following entry belongs to the the Basque dictionary [Hiztegi Batua](https://github.com/cceh/kosh_data/blob/master/hiztegibatua/hiztegibatua.xml).
+This dictionary has been compiled by the Academy of the Basque Language, Euzkaltzaindia. It is available in 
 [PDF](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.pdf) and in [XML](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) format. 
 A copy of the XML version and Kosh-backed APIs for it are available at [Kosh Data](implementations/kosh_data.md)
 
