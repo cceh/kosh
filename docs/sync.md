@@ -7,13 +7,13 @@ nav_order: 3
 {: .no_toc}
 
 If you modify any file part of a Kosh data module (.kosh file, XML files or JSON config file), Kosh automatically updates the respective index.
-Therefore if you wish to synchronize your local Kosh instance with data from a GIT repository, you have two alternatives:
+Therefore if you wish to synchronize your local Kosh instance with data from a GIT repository, we present you two alternatives:
 
 
 1. TOC
 {:toc}
 
-## With Kosh Sync
+##  Kosh Sync
 
 You can use <a href="https://www.github.com/cceh/kosh_sync">Kosh Sync</a>, a Docker container, to synchronize local datasets with their 
 respective cloud repository.
@@ -53,7 +53,7 @@ $ docker-compose -f docker-compose.yml -f docker-compose.local.yml -f [PATH_TO_K
  ```
 
 
-##  As a cron job
+##  Cron job
 
 In order to automatically check for updates, in Unix-like systems you can create a cron job:
 
