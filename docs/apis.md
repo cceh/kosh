@@ -37,4 +37,29 @@ GraphiQL: `http://localhost:5000/[your_index_name_here]/api/graphql`
 
 ## Search
 
-Kosh is a flexible 
+The most important functionality of a digital dictionary is to provide an efficient search system.
+Therefore at the core of the Kosh system is elasticsearch, an open-source search engine that is fast and design to scale with little effort.
+
+### Overview
+
+- In both APIs of each dataset, you can do the same type of queries.
+- Besides the fields that you have configured to be indexed, Kosh indexes per default the whole XML entry. The XML tags and attributes are not indexed. 
+This means that you can search in the whole text of the entry. This comes handy when the datset has not been properly structured and you need to search on it while working on its improvement.
+
+
+### Query types:
+
+Kosh offers the following query types:
+```
+term 
+fuzzy 
+terms
+match 
+match_phrase 
+wildcard 
+regexp 
+prefix 
+```
+
+### Query examples
+
