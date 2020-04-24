@@ -9,7 +9,7 @@ nav_order: 4
 # Kosh Data
 
 Kosh Data contains different datasets that can be downloaded from <a href="https://github.com/cceh/kosh_data">this repository</a>.
-If you clone Kosh Data to your computer, you can deploy them locally with Kosh.
+If you clone Kosh Data to your computer, you can deploy them locally with <a href="https://github.com/cceh/kosh">Kosh</a>.
 
 These are the datasets that you can access:
 
@@ -63,7 +63,6 @@ Entries Index:
     foreignGrc
   }
 }
-
 ```
 
 
