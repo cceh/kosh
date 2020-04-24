@@ -18,10 +18,10 @@ A Kosh data module consists of:
 3. ['.kosh' file](#kosh_file)
 
 ### <a name="data_xml"></a>Lexical data in XML 
-You can index any kind of **valid** XML files. The following entry belongs to the the Basque dictionary [Hiztegi Batua](https://github.com/cceh/kosh_data/blob/master/hiztegibatua/hiztegibatua.xml).
+You can index **any valid XML** files. The following entry belongs to the the Basque dictionary [Hiztegi Batua](https://github.com/cceh/kosh_data/blob/master/hiztegibatua/hiztegibatua.xml).
 This dictionary has been compiled by the Royal Academie of the Basque Language, Euzkaltzaindia. It is available in 
 [PDF](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.pdf) and in [XML](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml) format. 
-A copy of the XML version and Kosh-backed APIs for it are available at [Kosh Data](https://cceh.github.io/kosh_data/)
+A copy of the XML version and Kosh-backed APIs for it are available at [Kosh Data](implementations/kosh_data.md)
 
 ```xml
  <entry id="13">
@@ -129,7 +129,7 @@ schema: de_alcedo_mapping.json
 
 ## Running Kosh
 
-Kosh can be deployed natively on Unix-like 2systems or via Docker. 
+Kosh can be deployed natively on Unix-like systems or with Docker. 
 
 If you deploy it natively on Linux systems, data synchronization is guaranteed, i.e. if you modify any file of a data module, Kosh will update the index. 
 This feature is not available for macOS.
@@ -140,7 +140,7 @@ Requirements:
 
 python 3+
 
-[elasticsearch 7.0](https://www.elastic.co/downloads/past-releases/elasticsearch-7-0-0)
+[elasticsearch 7+]
 
 Procedure:
 
@@ -163,8 +163,9 @@ make
     ```bash
     $ kosh --log_level DEBUG --data_root [path_to_your_data_dir] --data_host localhost
     ```
-    ```bash
-    on OSX: `kosh --log_level DEBUG --data_root [path_to_your_data_dir] --data_host localhost --data_sync off`
+   on OSX:  
+   ```bash
+    $ kosh --log_level DEBUG --data_root [path_to_your_data_dir] --data_host localhost --data_sync off
     ```
 
 ### With Docker
@@ -178,28 +179,28 @@ Procedure:
 
 3.  In `docker-compose.local.yml`, you need to specify the path to your data modules, i.e. replace`../kosh_data`:    
    
-    ``` 
+    ``` dockerfile
     version: '2.3'
         services:
         kosh:
         volumes: ['../kosh_data:/var/lib/kosh:ro']
     ```
 
-4. `sudo docker build -t cceh/kosh .`
-5. `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml up -d`
+
+4. `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml up -d`
 
 
 To check the logs:
 
 `sudo docker-compose logs`
 
-To stop and later rebuild:
+To stop and redeploy:
 
 `sudo docker-compose down`
 
-## Sample datasets: [Kosh Data](https://cceh.github.io/kosh_data/)
+## Sample datasets: [Kosh Data](/implementations/kosh_data.md)
 
-In [Kosh Data](https://cceh.github.io/kosh_data/) you can find different datasets available to be deployed with Kosh. 
+In [Kosh Data](/implementations/kosh_data.md) you can find datasets to be deployed with Kosh. 
 For each of them you will find the required files by Kosh: lexical data encoded in XML, a JSON config file and a '.kosh' file.
 You can have a look at them to configure your own Kosh data modules. 
   
