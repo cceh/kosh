@@ -13,7 +13,7 @@ Kosh is an open-source framework developed for creating and maintaining APIs for
 
 [View it on GitHub](https://github.com/cceh/kosh){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 
-<img src="/assets/images/kosh_overview.png"/>
+<img src="assets/images/kosh_overview.png"/>
 
 Kosh has been conceived to provide API access to **any XML-encoded** lexical dataset, independently of the data model employed.
 
