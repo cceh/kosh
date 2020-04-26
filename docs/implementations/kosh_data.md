@@ -7,11 +7,14 @@ nav_order: 4
 
 
 # Kosh Data
+{: .no_toc }
 
 Kosh Data contains different datasets that can be downloaded from <a href="https://github.com/cceh/kosh_data">this repository</a>.
 If you clone Kosh Data to your computer, you can deploy them locally with <a href="https://github.com/cceh/kosh">Kosh</a>.
 
-These are the datasets that you can access:
+Kosh Data contains the following datasets :
+1. TOC
+{:toc}
 
 ### Diccionario Geográfico-Histórico de las Indias Occidentales ó América (1786-1789) de Antonio de Alcedo
 
@@ -29,7 +32,8 @@ These are the datasets that you can access:
 }
 ```
 
-### [English Wordnet](https://en-word.net/)
+### English Wordnet
+Source: <https://en-word.net/>
 
 Synsets Index:
 
@@ -48,7 +52,8 @@ Entries Index:
 
 
 
-### [Glossarium mediæ et infimæ latinitatis](https://sourceforge.net/p/ducange/code/HEAD/tree/xml/) - Charles du Fresne, sieur du Cange
+### Glossarium mediæ et infimæ latinitatis - Charles du Fresne, sieur du Cange
+Source: <https://sourceforge.net/p/ducange/code/HEAD/tree/xml> 
 
 **89.975 Entries**
 
@@ -67,7 +72,8 @@ Entries Index:
 
 
 
-### Hiztegi Batua (Basque) [XML](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml), [PDF](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.pdf): 
+### Hiztegi Batua (Basque) 
+Source: [XML](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.xml), [PDF](http://www.euskaltzaindia.eus/dok/eaeb/hiztegibatua/hiztegibatua.pdf): 
 
 **37.973 Entries**
 
@@ -86,7 +92,9 @@ Entries Index:
 ```
 
 
-### TuniCo - [A Dictionary of Tunis Arabic](https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37)
+### TuniCo - A Dictionary of Tunis Arabic
+Source: <https://arche.acdh.oeaw.ac.at/browser/oeaw_detail/id.acdh.oeaw.ac.at/uuid/175b8cdf-5d04-f4d3-a778-67910aa8fd37>
+
 **7.543 Entries**
 
 * Swagger UI: <http://kosh.uni-koeln.de/api/tunico/restful>
@@ -105,6 +113,7 @@ Entries Index:
 ```
 
 ### Wörterbuch der Kölner Mundart - Fritz Hönig (Kölsch-Deutsch)
+
 **10.780 Entries**
 * Swagger UI: <http://kosh.uni-koeln.de/api/hoenig/restful>
 
