@@ -1,7 +1,7 @@
 ---
 layout: default
 title: C-SALT APIs for Sanskrit Dictionaries
-parent: Implementations
+parent: Reference Implementations
 nav_order: 3
 ---
 

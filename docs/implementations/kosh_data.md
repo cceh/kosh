@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Kosh Data
-parent: Implementations
+parent: Reference Implementations
 nav_order: 4
 ---
 

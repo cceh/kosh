@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Cologne Digital Sanskrit Dictionaries
-parent: Implementations
+parent: Reference Implementations
 nav_order: 2
 ---
 ## [Cologne Digital Sanskrit Dictionaries](https://www.sanskrit-lexicon.uni-koeln.de)

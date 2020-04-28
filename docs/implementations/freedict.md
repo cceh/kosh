@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Freedict.org
-parent: Implementations
+parent: Reference Implementations
 nav_order: 1
 ---
 ## [freedict.org](https://freedict.org)

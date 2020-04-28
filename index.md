@@ -7,7 +7,7 @@ permalink: /
 # Kosh - APIs for Dictionaries
 {: .fs-9 }
 
-Kosh is an open-source framework developed for creating and maintaining APIs for dictionaries
+Kosh is an open-source framework for creating and maintaining APIs for dictionaries
 {: .fs-6 .fw-350}
 
 
