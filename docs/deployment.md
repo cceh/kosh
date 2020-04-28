@@ -59,7 +59,7 @@ in the property "fields", you must add square braquets to the respective value, 
  
 If you want to save the strings 'as they are', i.e. without preprocessing, use `"type":"keyword"`.
 
-If you want to avoid saving strings with punctuation, i.e. let them be analyze by elasticsearch, use `"type":"text"`.
+If you want to preprocess strings (analyze them before indexing), i.e. let them be analyze by elasticsearch, use `"type":"text"`.
 
 If your dictionary does not have IDs for the entries, Kosh creates them automatically.
 

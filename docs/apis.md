@@ -1,7 +1,7 @@
 ---
 layout: default
-title: APIs Access and Search
-nav_order: 4
+title: API Access and Search
+nav_order: 3
 ---
 
 # API Access and Search
@@ -15,8 +15,8 @@ nav_order: 4
 
 ## API Access
 
-Both APIs, REST and GraphQL, provide access to the same data that is contained in an elasticsearch instance.
-Each API provides a dedicated GUI for testing purposes. You can access each REST API via Swagger and each GraphQL API via GraphiQL.
+Both APIs, REST and GraphQL, provide access to the same data that is contained in an elasticsearch index.
+You can access each REST API via Swagger and each GraphQL API via GraphiQL.
 
 ### REST
 
@@ -42,24 +42,26 @@ Therefore at the core of the Kosh system is elasticsearch, an open-source search
 
 ### Overview
 
-- In both APIs of each dataset, you can do the same type of queries.
+- In both APIs of each dataset, you can do the same type of queries. The difference between both APIs is that in GraphQL you have to specify which fields should be returned.
 - Besides the fields that you have configured to be indexed, Kosh indexes per default the whole XML entry. The XML tags and attributes are not indexed. 
 This means that you can search in the whole text of the entry. This comes handy when the datset has not been properly structured and you need to search on it while working on its improvement.
 
 
-### Query types:
+### Query types
 
-Kosh offers the following query types:
+Kosh offers the following elastic subset query types:
 ```
 term 
+match
 fuzzy 
-terms
-match 
-match_phrase 
 wildcard 
 regexp 
 prefix 
+terms 
+match_phrase 
 ```
 
-### Query examples
+### Query example
+
+
 
