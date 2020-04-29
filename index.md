@@ -4,7 +4,7 @@ title: Overview
 nav_order: 1
 permalink: /
 ---
-# Kosh - APIs for Dictionaries
+# Kosh - APIs for Lexical Data
 {: .fs-9 }
 
 Kosh is an open-source framework for creating and maintaining APIs for lexical data
