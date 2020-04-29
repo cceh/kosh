@@ -6,7 +6,7 @@ nav_order: 5
 # Syncing Kosh with GIT remote repositories
 {: .no_toc}
 
-If you modify any file part of a Kosh data module (.kosh file, XML files or JSON config file), Kosh automatically updates the respective index.
+If you modify any file part of a Kosh data module (.kosh file, XML files or JSON config file), Kosh per default automatically updates the respective index.
 Therefore if you wish to synchronize your local Kosh instance with data from a GIT repository, we present you two alternatives:
 
 
