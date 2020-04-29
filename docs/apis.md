@@ -63,11 +63,12 @@ match_phrase
 
 ### Query example
 
-#### REST API
-
 In the Basque dictionary '[Hiztegi Batua](/implementations/kosh_data.md#hiztegi-batua-basque)' get those the entries with headwords ending with 'eko':
 
-A REST version of this query would look like this:
+
+#### REST API
+
+A REST version of the previous query would look like this:
 
 <https://kosh.uni-koeln.de/api/hiztegibatua/restful/entries?field=lemma&query=*eko&query_type=wildcard>
 
