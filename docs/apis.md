@@ -90,4 +90,4 @@ Let's only ask for those lemmas ending with 'eko':
 
 ```
 
-Copy + paste the snippet and execute it here: <https://kosh.uni-koeln.de/api/hiztegibatua/graphql>
+Copy + paste the query snippet and execute it here: <https://kosh.uni-koeln.de/api/hiztegibatua/graphql>
