@@ -69,9 +69,9 @@ def defaultconfig() -> Dict[str, Dict[str, str]]:
       'sync': True
     },
     'info': {
-      'desc': '%(name)s - APIs for Dictionaries',
+      'desc': '%(name)s - APIs for Lexical Data',
       'link': 'https://kosh.uni-koeln.de',
-      'mail': 'info@cceh.uni-koeln.de',
+      'mail': 'info-kosh@uni-koeln.de',
       'repo': 'https://github.com/cceh/kosh'
     },
     'logs': {
