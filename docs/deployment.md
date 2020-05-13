@@ -177,17 +177,39 @@ Procedure:
 
 2.  `cd kosh`
 
-3.  In `docker-compose.local.yml`, you need to specify the path to your data modules, i.e. replace`../kosh_data`:    
+3.  In `docker-compose.override.yml`, you need to specify the path to your data modules, i.e. replace`../kosh_data/hoenig`:    
    
-    ``` dockerfile
-    version: '2.3'
-        services:
-        kosh:
-        volumes: ['../kosh_data:/var/lib/kosh:ro']
-    ```
+``` dockerfile
+    
+version: '2.3'
+
+services:
+  elastic:
+    ## Uncomment the next line when the host network should be used.
+    # network_mode: host
+
+    ## Uncomment the next line when deploying in production.
+    # restart: always
+
+  kosh:
+    ## Uncomment the next line when the host network should be used.
+    # network_mode: host
+
+    ## uncomment the next line when deploying in production
+    # restart: always
+
+    ## volumes:
+    ##   - PATH_TO_KOSH_INI_FILE:/etc/kosh.ini:ro
+    ##   - PATH_TO_XML_LEXICAL_DATA_WITH_KOSH_FILES:/var/lib/kosh:ro
+    volumes:
+      - ./kosh.ini:/etc/kosh.ini:ro
+      - ../kosh_data/hoenig:/var/lib/kosh:ro
+
+    command: ['--config_file', '/etc/kosh.ini']
+```
 
 
-4. `sudo docker-compose -f docker-compose.yml -f docker-compose.local.yml up -d`
+4. `sudo docker-compose up -d`
 
 
 To check the logs:
