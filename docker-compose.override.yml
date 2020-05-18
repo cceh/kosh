@@ -5,14 +5,15 @@ services:
     ## Uncomment the next line when the host network should be used.
     # network_mode: host
 
-    ## Uncomment the next line when deploying in production.
+    ## Comment 'restart: "no"' and uncomment 'restart: always' when deploying in production.
+    restart: "no"
     # restart: always
 
   kosh:
     ## Uncomment the next line when the host network should be used.
     # network_mode: host
 
-    ## uncomment the next line when deploying in production
+    ## Uncomment the next line when deploying in production
     # restart: always
 
     ## volumes:
