@@ -5,15 +5,16 @@ services:
     ## Uncomment the next line when the host network should be used.
     # network_mode: host
 
-    ## Comment 'restart: "no"' and uncomment 'restart: always' when deploying in production.
-    restart: "no"
+    ## Uncomment the next line when deploying in production.
     # restart: always
 
   kosh:
+    command: [--config_file, /etc/kosh.ini]
+
     ## Uncomment the next line when the host network should be used.
     # network_mode: host
 
-    ## Uncomment the next line when deploying in production
+    ## Uncomment the next line when deploying in production.
     # restart: always
 
     ## volumes:
@@ -21,6 +22,4 @@ services:
     ##   - PATH_TO_XML_LEXICAL_DATA_WITH_KOSH_FILES:/var/lib/kosh:ro
     volumes:
       - ./kosh.ini:/etc/kosh.ini:ro
-      - ../kosh_data/hoenig:/var/lib/kosh:ro
-
-    command: ['--config_file', '/etc/kosh.ini']
+      - ../kosh_data:/var/lib/kosh:ro
