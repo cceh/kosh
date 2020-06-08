@@ -56,8 +56,14 @@ class entry():
     '''
     elem = etree.tostring(root, encoding = 'unicode')
     xmap = self.elex.schema.mappings._meta._xpaths
-    euid = next(iter(root.xpath(xmap.id, namespaces = ns())), None) \
-      or sha1(elem.encode('utf-8')).hexdigest()
+
+    for euid in root.xpath(xmap.id, namespaces = ns()):
+      if isinstance(euid, etree._Element) and euid.text is not None:
+        euid = normalize('NFC', euid.text)
+      elif isinstance(euid, etree._ElementUnicodeResult):
+        euid = normalize('NFC', euid)
+      else:
+        euid = sha1(elem.encode('utf-8')).hexdigest()
 
     item = self.schema(
       meta = { 'id': euid },
