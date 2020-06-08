@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from gc import collect
 from glob import glob
 from itertools import groupby
 from json import load, loads
@@ -32,6 +33,7 @@ class index():
       helpers.bulk(connections.get_connection(), bulk)
       size += len(bulk)
 
+    collect()
     logger().info('Found %i entries for dictionary %s', size, elex.uid)
 
   @classmethod

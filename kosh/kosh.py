@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from distutils.util import strtobool
+from gc import collect
 from importlib import import_module as mod
 from logging import basicConfig, getLogger
 from multiprocessing import Process
@@ -90,6 +91,7 @@ class kosh():
     try:
       instance.server.terminate()
       instance.server.join()
+      collect()
     except: pass
 
     instance.server = process(daemon = True, name = 'server')
