@@ -1,9 +1,9 @@
-elasticsearch>=7.0.0
-elasticsearch-dsl>=7.0.0
-flask>=1.0.0
+elasticsearch>=7.7.0
+elasticsearch-dsl>=7.2.0
+flask>=1.1.0
 flask-graphql>=2.0.0
-flask-swagger-ui>=3.20.0
+flask-swagger-ui>=3.25.0
 graphene>=2.1.0
 inotify>=0.2.0
-lxml>=4.2.0
-setuptools>=41.0.0
+lxml>=4.5.0
+setuptools>=47.1.0
