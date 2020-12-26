@@ -1,4 +1,4 @@
-remote_theme: pmarsceill/just-the-docs
+remote_theme: pmarsceill/just-the-docs@v0.2.8
 logo: "/assets/images/kosh.png"
 # Aux links for the upper right navigation
 aux_links:
