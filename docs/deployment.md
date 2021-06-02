@@ -161,11 +161,11 @@ make
 
     on Linux: 
     ```bash
-    $ kosh --log_level DEBUG --data_root [path_to_your_data_dir] --data_host localhost
+    $ kosh --log_level DEBUG --data_root path_to_your_data_dir --data_host localhost
     ```
    on OSX:  
    ```bash
-    $ kosh --log_level DEBUG --data_root [path_to_your_data_dir] --data_host localhost --data_sync off
+    $ kosh --log_level DEBUG --data_root path_to_your_data_dir --data_host localhost --data_sync off
     ```
 
 ### With Docker
