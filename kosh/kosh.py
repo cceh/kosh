@@ -78,6 +78,8 @@ class kosh():
     '''
     conf = dotdict(instance.config['api'])
     wapp = Flask(conf.name)
+    from flask_cors import CORS
+    CORS(wapp)
     wapp.config['PROPAGATE_EXCEPTIONS'] = True
 
     for elex in instance.elexes.values():
