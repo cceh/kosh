@@ -14,6 +14,7 @@ from time import sleep
 
 from elasticsearch_dsl import connections
 from flask import Flask
+from flask_cors import CORS
 
 from kosh.elastic.index import index
 from kosh.utils import defaultconfig, dotdict, instance, logger
@@ -78,7 +79,6 @@ class kosh():
     '''
     conf = dotdict(instance.config['api'])
     wapp = Flask(conf.name)
-    from flask_cors import CORS
     CORS(wapp)
     wapp.config['PROPAGATE_EXCEPTIONS'] = True
 
