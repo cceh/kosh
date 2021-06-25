@@ -1,6 +1,6 @@
 # Kosh - APIs for Lexical Data
 
-More Information: <a href="https://kosh.uni-koeln.de">https://kosh.uni-koeln.de</a>
+For Deployment and Reference Imlementations, please visit <a href="https://kosh.uni-koeln.de">https://kosh.uni-koeln.de</a>
 
 ## Citing Kosh
 To cite this repository:
