@@ -1,5 +1,5 @@
 # cceh/kosh
-FROM alpine:latest
+FROM alpine:3.12
 ADD . /tmp/kosh
 RUN \
 #
