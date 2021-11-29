@@ -22,12 +22,17 @@ class restful(_api):
     todo: docs
     '''
     path = lambda p: '{}/{}'.format(self.path, p)
+
     logger().debug('Deploying RESTful endpoint %s', self.path)
 
+    wapp.add_url_rule(path('dict'),path('dict'),self.dict_view)
+    wapp.add_url_rule(path('_count'),path('_count'),self._count)
     wapp.add_url_rule(path('entries'), path('entries'), self.entries)
     wapp.add_url_rule(path('ids'), path('ids'), self.ids)
     wapp.add_url_rule(path('spec'), path('spec'), self.spec)
 
+    
+    # register spec() as swagger blueprint  
     wapp.register_blueprint(get_swaggerui_blueprint(
       self.path,
       path('spec'),
@@ -66,6 +71,33 @@ class restful(_api):
       self.elex, field, query, query_type,
       int(size) if size else 10
     ))
+
+  def dict_data(self)-> Dict:
+    root_path = '/'.join(self.path.split('/')[:-1])
+    
+    data = {'DICT_ID':self.elex.uid,
+      'Source Language':'',
+      'Target Language':'',
+      'REST':root_path+'/restful/',
+      'GraphQL':root_path+'/graphql/',
+      'entries':search.dict_count(self.elex)}
+
+    return data
+
+  def dict_view(self)-> Response:
+    '''
+    todo: docs
+    '''
+    return self.__data(self.dict_data())
+
+  
+
+  def _count(self) -> Response:
+    '''
+    todo: docs
+    '''
+    return self.__data(search.dict_count(self.elex))
+
 
   def spec(self) -> Response:
     '''
@@ -168,13 +200,13 @@ class restful(_api):
 
   def __fail(self, body: str, code: int = 400) -> Response:
     '''
-    todo: docs
+    combines the body string and an error code (default 400) into a ``__json`` function call. 
     '''
     return self.__json({ 'error': body }, code)
 
   def __json(self, body: Any, code: int = 200) -> Response:
     '''
-    todo: docs
+    returns a json formated string as a flask ``response``
     '''
     return Response(
       dumps(body, default = self.__time, ensure_ascii = False),

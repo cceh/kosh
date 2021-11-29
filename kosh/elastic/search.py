@@ -14,6 +14,11 @@ class search():
   '''
 
   @classmethod
+  def dict_count(cls,elex: Dict[str, Any]) -> int:
+    find = Search(index = elex.uid).count()
+    return find
+
+  @classmethod
   def ids(cls,
     elex: Dict[str, Any],
     ids: List[str]
