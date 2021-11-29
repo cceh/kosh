@@ -19,6 +19,7 @@ from flask_cors import CORS
 from kosh.elastic.index import index
 from kosh.utils import defaultconfig, dotdict, instance, logger
 
+import os 
 
 def main() -> None: kosh().main()
 if __name__ == '__main__': main()
@@ -82,8 +83,14 @@ class kosh():
     CORS(wapp)
     wapp.config['PROPAGATE_EXCEPTIONS'] = True
 
+    from kosh.info.info import info_restful
+    info_api = info_restful([])
     for elex in instance.elexes.values():
-      for echo in instance.echoes: echo(elex).deploy(wapp)
+      for echo in instance.echoes:
+        echo(elex).deploy(wapp)
+        if "dict_data" in dir(echo): info_api.append_dict(echo(elex).dict_data())
+    info_api.deploy(wapp)
+        
 
     class process(Process):
       def run(self) -> None:
