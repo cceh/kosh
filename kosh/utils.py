@@ -127,7 +127,7 @@ def namespaces() -> Dict[str, str]:
 
 class instance():
   '''
-  ``instance`` class, containing a dotdict sigleton. This singleton data
+  ``instance`` class, containing a dotdict singleton. This singleton data
   storage, shared throughout kosh, is the runtime-storage for all components.
   '''
   __data = dotdict()
