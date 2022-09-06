@@ -7,4 +7,3 @@ graphene>=2.1.0
 inotify>=0.2.0
 lxml>=4.5.0
 setuptools>=47.1.0
-flask-cors>=3.0.10

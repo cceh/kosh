@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../kosh_client"
+		},
+		{
+			"path": "../../../c-salt_mpcd/dicts"
+		},
+		{
+			"path": "../../../kosh_parsers"
+		}
+	],
+	"settings": {}
+}
