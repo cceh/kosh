@@ -75,7 +75,8 @@ def defaultconfig() -> Dict[str, Dict[str, str]]:
       'repo': 'https://github.com/cceh/kosh'
     },
     'logs': {
-      'elvl': 'INFO'
+      'elvl': 'INFO',
+      'file': ''
     }
   })
 
