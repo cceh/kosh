@@ -43,7 +43,7 @@ class entry():
     todo: docs
     '''
     class entry(Document):
-      class Index: name = self.elex.uid
+      class Index: name = self.elex.pool
 
     emap = self.elex.schema.mappings.properties
     for i in emap: entry._doc_type.mapping.field(i, emap[i].type)

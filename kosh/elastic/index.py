@@ -11,7 +11,7 @@ from elasticsearch import helpers
 from elasticsearch_dsl import connections
 
 from kosh.elastic.entry import entry
-from kosh.utils import dotdict, logger
+from kosh.utils import dotdict, instance, logger
 
 
 class index():
@@ -34,7 +34,7 @@ class index():
       size += len(bulk)
 
     collect()
-    logger().info('Found %i entries for dictionary %s', size, elex.uid)
+    logger().info('Found %i entries for index %s', size, elex.uid)
 
   @classmethod
   def create(cls, elex: Dict[str, Any]) -> None:
@@ -43,7 +43,7 @@ class index():
     '''
     idxs = connections.get_connection().indices
     logger().debug('Creating index %s', elex.uid)
-    idxs.create(index = elex.uid, body = cls.__schema(elex))
+    idxs.create(index = elex.pool, body = cls.__schema(elex))
 
   @classmethod
   def delete(cls, elex: Dict[str, Any]) -> None:
@@ -52,7 +52,7 @@ class index():
     '''
     idxs = connections.get_connection().indices
     logger().debug('Dropping index %s', elex.uid)
-    idxs.delete(ignore = 404, index = elex.uid)
+    idxs.delete(ignore = 404, index = elex.pool)
 
   @classmethod
   def lookup(cls, root: str, spec: str) -> List[Dict[str, Any]]:
@@ -101,15 +101,17 @@ class index():
     '''
     todo: docs
     '''
-    conf = ConfigParser()
+    conf = dotdict(instance.config['data'])
     root = path.dirname(file)
-    conf.read_file(open(file))
+    spec = ConfigParser()
+    spec.read_file(open(file))
 
     return [dotdict(elex) for elex in [[
       ('uid', uid),
-      ('files', ['{}/{}'.format(root, i) for i in loads(conf[uid]['files'])]),
-      ('schema', load(open('{}/{}'.format(root, conf[uid]['schema']))))
-    ] for uid in conf.sections()]]
+      ('pool', '{}[{}]'.format(spec[uid].get('pool', conf.pool), uid)),
+      ('files', ['{}/{}'.format(root, i) for i in loads(spec[uid]['files'])]),
+      ('schema', load(open('{}/{}'.format(root, spec[uid]['schema']))))
+    ] for uid in spec.sections()]]
 
   @classmethod
   def __schema(cls, elex: Dict[str, Any]) -> Dict[str, Any]:

@@ -64,6 +64,7 @@ def defaultconfig() -> Dict[str, Dict[str, str]]:
     },
     'data': {
       'host': '127.0.0.1',
+      'pool': '%(name)s',
       'root': '/var/lib/%(name)s',
       'spec': '.%(name)s',
       'sync': True

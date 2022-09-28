@@ -40,7 +40,7 @@ class search():
     '''
     todo: docs
     '''
-    find = Search(index = elex.uid).query(query_type, **{
+    find = Search(index = elex.pool).query(query_type, **{
       field if field != 'id' else '_id': query
     })
 
