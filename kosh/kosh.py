@@ -13,7 +13,7 @@ from threading import Thread
 from time import sleep
 
 from elasticsearch_dsl import connections
-from flask import Flask
+from flask import cli, Flask
 
 from kosh.elastic.index import index
 from kosh.utils import defaultconfig, dotdict, instance, logger
@@ -36,7 +36,7 @@ class kosh():
       datefmt = '%Y-%m-%d %H:%M:%S',
       format = '%(asctime)s [%(levelname)s] <%(name)s> %(message)s'
     )
-    environ['WERKZEUG_RUN_MAIN'] = 'true'
+    cli.show_server_banner = lambda *_: None
     getLogger('elasticsearch').disabled = True
     getLogger('werkzeug').disabled = True
 
