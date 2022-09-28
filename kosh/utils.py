@@ -63,7 +63,7 @@ def defaultconfig() -> Dict[str, Dict[str, str]]:
       'root': '/api'
     },
     'data': {
-      'host': 'localhost',
+      'host': '127.0.0.1',
       'root': '/var/lib/%(name)s',
       'spec': '.%(name)s',
       'sync': True
