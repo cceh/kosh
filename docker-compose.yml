@@ -18,6 +18,7 @@ services:
       test: curl -s 127.0.0.1:9200 &>/dev/null
 
   kosh:
+    build: https://github.com/cceh/kosh.git#master
     image: cceh/kosh:latest
     ports:
       - 5000:5000
