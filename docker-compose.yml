@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   elastic:
-    image: elasticsearch:7.7.0
+    image: elasticsearch:7.17.6
     environment:
       - bootstrap.memory_lock=true
       - discovery.type=single-node
