@@ -25,16 +25,16 @@ class index():
     todo: docs
     '''
     edef = entry(elex)
-    size = 0
+    elex.size = 0
 
     for file in elex.files:
-      bulk = [i.to_dict(include_meta = True) for i in edef.parse(file)]
-      logger().debug('Adding %i entries to index %s', len(bulk), elex.uid)
-      helpers.bulk(connections.get_connection(), bulk)
-      size += len(bulk)
+      bulk = (i.to_dict(include_meta = True) for i in edef.parse(file))
+      size, _ = helpers.bulk(connections.get_connection(), bulk)
+      logger().debug('Filed %i entries to index %s', size, elex.uid)
+      elex.size += size
 
     collect()
-    logger().info('Found %i entries for index %s', size, elex.uid)
+    logger().info('Added %i entries to index %s', elex.size, elex.uid)
 
   @classmethod
   def create(cls, elex: Dict[str, Any]) -> None:

@@ -27,16 +27,13 @@ class entry():
     '''
     todo: docs
     '''
-    docs = []
     name = path.basename(file)
     xmap = self.elex.schema.mappings._meta._xpaths
 
     logger().debug('Parsing file %s/%s', self.elex.uid, name)
     tree = etree.parse(file, etree.XMLParser(remove_blank_text = True))
     for elem in tree.xpath(xmap.root, namespaces = ns()):
-      docs += [self.__record(elem)]
-
-    return docs
+      yield self.__record(elem)
 
   def schema(self, *args, **kwargs) -> Document:
     '''
