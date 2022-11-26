@@ -19,7 +19,7 @@ You can access each dictionary via a REST and a GraphQL API.
 * GraphQL: [https://api.c-salt.uni-koeln.de/dicts/mw/graphql](https://api.c-salt.uni-koeln.de/dicts/mw/graphql)
 
 **AP90** - The Practical Sanskrit-English Dictionary by V.S. Apte (1890) 
-* REST Swagger UI: <a href="https://api.c-salt.uni-koeln.de/dicts/qp90/restful">https://api.c-salt.uni-koeln.de/dicts/ap90/restful</a>
+* REST Swagger UI: <a href="https://api.c-salt.uni-koeln.de/dicts/ap90/restful">https://api.c-salt.uni-koeln.de/dicts/ap90/restful</a>
 * GraphQL: [https://api.c-salt.uni-koeln.de/dicts/ap90/graphql](https://api.c-salt.uni-koeln.de/dicts/ap90/graphql)
 
 **BHS** - Buddhist Hybrid Sanskrit Grammar and Dictionary by Edgerton (1953) 
