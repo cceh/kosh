@@ -7,6 +7,7 @@ RUN \
 apk --no-cache add \
   py3-lxml \
   py3-setuptools \
+  py3-six \
   py3-urllib3 \
   python3 && \
 apk --no-cache --virtual build add \
