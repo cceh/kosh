@@ -1,25 +1,5 @@
-# cceh/kosh
-FROM alpine:latest
+FROM python:3.11-alpine3.17
 ADD . /tmp/kosh
-RUN \
-#
-# packages
-apk --no-cache add \
-  py3-lxml \
-  py3-setuptools \
-  py3-six \
-  py3-urllib3 \
-  python3 && \
-apk --no-cache --virtual build add \
-  make \
-  py3-pip && \
-#
-# kosh
-make -C /tmp/kosh && \
-#
-# cleanup
-apk del --purge build && \
-find /root /tmp -mindepth 1 -delete
-#
-# runtime
-ENTRYPOINT ["/usr/bin/kosh"]
+RUN pip install /tmp/kosh && find /root /tmp -mindepth 1 -delete
+USER nobody
+ENTRYPOINT ["kosh"]

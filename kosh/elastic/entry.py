@@ -8,78 +8,86 @@ from unicodedata import normalize
 from elasticsearch_dsl import Document
 from lxml import etree
 
-from kosh.utils import logger
-from kosh.utils import namespaces as ns
+from ..utility.instance import instance
+from ..utility.logger import logger
 
 
-class entry():
-  '''
-  todo: docs
-  '''
-
-  def __init__(self, elex: Dict[str, Any]) -> None:
-    '''
+class entry:
+    """
     todo: docs
-    '''
-    self.elex = elex
+    """
 
-  def parse(self, file: str) -> List[Document]:
-    '''
-    todo: docs
-    '''
-    name = path.basename(file)
-    xmap = self.elex.schema.mappings._meta._xpaths
+    def __init__(self, lexicon: Dict[str, Any]) -> None:
+        """
+        todo: docs
+        """
+        self.lexicon = lexicon
 
-    logger().debug('Parsing file %s/%s', self.elex.uid, name)
-    tree = etree.parse(file, etree.XMLParser(remove_blank_text = True))
-    for elem in tree.xpath(xmap.root, namespaces = ns()):
-      yield self.__record(elem)
+    def parse(self, file: str) -> List[Document]:
+        """
+        todo: docs
+        """
+        filename = path.basename(file)
+        namespaces = {**instance.config["namespaces"]}
+        xpaths = self.lexicon.schema.mappings._meta._xpaths
 
-  def schema(self, *args, **kwargs) -> Document:
-    '''
-    todo: docs
-    '''
-    class entry(Document):
-      class Index: name = self.elex.pool
+        logger().debug("Parsing file %s/%s", self.lexicon.uid, filename)
+        tree = etree.parse(file, etree.XMLParser(remove_blank_text=True))
 
-    emap = self.elex.schema.mappings.properties
-    for i in emap: entry._doc_type.mapping.field(i, emap[i].type)
+        for element in tree.xpath(xpaths.root, namespaces=namespaces):
+            yield self.__record(element)
 
-    return entry(*args, **kwargs)
+    def schema(self, *args, **kwargs) -> Document:
+        """
+        todo: docs
+        """
 
-  def __record(self, root: etree.Element) -> Document:
-    '''
-    todo: docs
-    '''
-    elem = etree.tostring(root, encoding = 'unicode')
-    xmap = self.elex.schema.mappings._meta._xpaths
+        class entry(Document):
+            class Index:
+                name = self.lexicon.pool
 
-    for euid in root.xpath(xmap.id, namespaces = ns()) or [None]:
-      if isinstance(euid, etree._Element) and euid.text is not None:
-        euid = normalize('NFC', euid.text)
-      elif isinstance(euid, etree._ElementUnicodeResult):
-        euid = normalize('NFC', euid)
-      else:
-        euid = sha1(elem.encode('utf-8')).hexdigest()
+        mapping = self.lexicon.schema.mappings.properties
+        [entry._doc_type.mapping.field(i, mapping[i].type) for i in mapping]
+        return entry(*args, **kwargs)
 
-    item = self.schema(
-      meta = { 'id': euid },
-      created = datetime.now(),
-      xml = elem
-    )
+    def __record(self, root: etree.Element) -> Document:
+        """
+        todo: docs
+        """
+        element = etree.tostring(root, encoding="unicode")
+        namespaces = {**instance.config["namespaces"]}
+        xpaths = self.lexicon.schema.mappings._meta._xpaths
 
-    for prop in xmap.fields:
-      for data in root.xpath(xmap.fields[prop], namespaces = ns()):
-        if isinstance(data, etree._Element) and data.text is not None:
-          data = normalize('NFC', data.text)
-        elif isinstance(data, etree._ElementUnicodeResult):
-          data = normalize('NFC', data)
-        else: data = None
+        for name in root.xpath(xpaths.id, namespaces=namespaces) or [None]:
+            if isinstance(name, etree._Element) and name.text is not None:
+                name = normalize("NFC", name.text)
+            elif isinstance(name, etree._ElementUnicodeResult):
+                name = normalize("NFC", name)
+            else:
+                name = sha1(element.encode("utf-8")).hexdigest()
 
-        if data is not None:
-          if not search(r'^\[.*\]$', prop): item[prop] = data
-          elif prop[1:-1] in item: item[prop[1:-1]] = [*item[prop[1:-1]], data]
-          else: item[prop[1:-1]] = [data]
+        item = self.schema(
+            meta={"id": name},
+            created=datetime.now(),
+            xml=element,
+        )
 
-    root.clear()
-    return item
+        for prop in xpaths.fields:
+            for node in root.xpath(xpaths.fields[prop], namespaces=namespaces):
+                if isinstance(node, etree._Element) and node.text is not None:
+                    node = normalize("NFC", node.text)
+                elif isinstance(node, etree._ElementUnicodeResult):
+                    node = normalize("NFC", node)
+                else:
+                    node = None
+
+                if node is not None:
+                    if not search(r"^\[.*\]$", prop):
+                        item[prop] = node
+                    elif prop[1:-1] in item:
+                        item[prop[1:-1]] = [*item[prop[1:-1]], node]
+                    else:
+                        item[prop[1:-1]] = [node]
+
+        root.clear()
+        return item

@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  kosh:
+    ## Uncomment the next line to configure kosh through a configuration file.
+    # command: --config_file /etc/kosh.ini
+
+    ## Uncomment the next line when the host network should be used.
+    # network_mode: host
+
+    ## Uncomment the next line when deploying in production.
+    # restart: always
+
+    ## If the default port is changed, the healthcheck has to be adjusted.
+    # healthcheck:
+    #   test: wget --spider 127.0.0.1:<internal:port> &>/dev/null
+
+    ## If the default port is changed, the port mapping has to be adjusted.
+    # ports:
+    #   - <external:port>:<internal:port>
+
+    ## Adjust the next section according to the local deployment paths.
+    # volumes:
+    #   - <path/to/kosh.ini>:/etc/kosh.ini:ro
+    #   - <path/to/kosh/data>:/var/lib/kosh:ro

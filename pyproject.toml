@@ -1,0 +1,45 @@
+[project]
+name = "kosh"
+description = "kosh - APIs for Lexical Data"
+
+version = "0.0.2"
+requires-python = ">= 3.11"
+
+readme = "README.md"
+license = { file = "LICENSE" }
+
+authors = [
+  {name = "Philip Schildkamp", email = "philip.schildkamp@uni-koeln.de"},
+  {name = "Francisco Mondaca", email = "f.mondaca@uni-koeln.de"},
+  {name = "Felix Rau", email = "f.rau@uni-koeln.de"},
+]
+
+maintainers = [
+  {name = "Philip Schildkamp", email = "philip.schildkamp@uni-koeln.de"},
+]
+
+dependencies = [
+  "elasticsearch",
+  "elasticsearch-dsl",
+  "flask",
+  "flask-graphql",
+  "flask-swagger-ui",
+  "graphene",
+  "inotify",
+  "lxml",
+]
+
+[project.optional-dependencies]
+development = [
+  "black",
+]
+
+[project.scripts]
+kosh = "kosh.kosh:main"
+
+[project.urls]
+homepage = "https://kosh.uni-koeln.de"
+repository = "https://github.com/cceh/kosh"
+
+[tool.black]
+line-length = 80

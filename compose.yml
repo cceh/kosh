@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.6
+    environment:
+      - ES_SETTING_DISCOVERY_TYPE=single-node
+      - ES_SETTING_LOGGER_DEPRECATION_LEVEL=off
+      - ES_SETTING_LOGGER_LEVEL=warn
+      - ES_SETTING_XPACK_SECURITY_ENABLED=false
+    healthcheck:
+      test: curl 127.0.0.1:9200 &>/dev/null
+
+  kosh:
+    build: https://github.com/cceh/kosh.git
+    command: --data_host elasticsearch
+    image: cceh/kosh:latest
+    ports: [5000:5000]
+    volumes: [../kosh_data:/var/lib/kosh:ro]
+    depends_on:
+      elasticsearch: {condition: service_healthy}
+    healthcheck:
+      test: wget --spider 127.0.0.1:5000 &>/dev/null

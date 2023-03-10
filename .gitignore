@@ -1,6 +1,5 @@
 **/__pycache__
-build
-dist
-kosh.egg-info
-kosh/docs/*.html
-.idea
+
+/.idea
+/build
+/kosh.egg-info
