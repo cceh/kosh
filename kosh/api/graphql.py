@@ -86,9 +86,9 @@ class graphql(_api):
         fields = self.lexicon.schema.mappings._meta._xpaths.fields
         typing = {}
 
-        for prop in self.mapping:
-            array_like = "[{}]".format(prop) in fields
-            graphene = self.graphenemap[self.mapping[prop].type]
-            typing[prop] = List(graphene) if array_like else graphene()
+        for property in self.mapping:
+            array_like = "[{}]".format(property) in fields
+            graphene = self.graphenemap[self.mapping[property].type]
+            typing[property] = List(graphene) if array_like else graphene()
 
         return typing

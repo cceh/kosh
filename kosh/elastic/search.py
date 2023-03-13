@@ -24,11 +24,7 @@ class search:
         find = entry(lexicon).schema()
 
         try:
-            return [
-                {**item.to_dict(), "id": item.meta.id}
-                for item in find.mget(ids)
-            ]
-
+            return [{**i.to_dict(), "id": i.meta.id} for i in find.mget(ids)]
         except Exception:
             return []
 

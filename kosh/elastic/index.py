@@ -126,8 +126,8 @@ class index:
                     (
                         "files",
                         [
-                            "{}/{}".format(root, i)
-                            for i in loads(spec[uid]["files"])
+                            "{}/{}".format(root, file)
+                            for file in loads(spec[uid]["files"])
                         ],
                     ),
                     (

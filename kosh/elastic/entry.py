@@ -46,8 +46,12 @@ class entry:
             class Index:
                 name = self.lexicon.pool
 
-        mapping = self.lexicon.schema.mappings.properties
-        [entry._doc_type.mapping.field(i, mapping[i].type) for i in mapping]
+        for property in self.lexicon.schema.mappings.properties:
+            entry._doc_type.mapping.field(
+                property,
+                self.lexicon.schema.mappings.properties[property].type,
+            )
+
         return entry(*args, **kwargs)
 
     def __record(self, root: etree.Element) -> Document:
@@ -72,8 +76,8 @@ class entry:
             xml=element,
         )
 
-        for prop in xpaths.fields:
-            for node in root.xpath(xpaths.fields[prop], namespaces=namespaces):
+        for field in xpaths.fields:
+            for node in root.xpath(xpaths.fields[field], namespaces=namespaces):
                 if isinstance(node, etree._Element) and node.text is not None:
                     node = normalize("NFC", node.text)
                 elif isinstance(node, etree._ElementUnicodeResult):
@@ -82,12 +86,12 @@ class entry:
                     node = None
 
                 if node is not None:
-                    if not search(r"^\[.*\]$", prop):
-                        item[prop] = node
-                    elif prop[1:-1] in item:
-                        item[prop[1:-1]] = [*item[prop[1:-1]], node]
+                    if not search(r"^\[.*\]$", field):
+                        item[field] = node
+                    elif field[1:-1] in item:
+                        item[field[1:-1]] = [*item[field[1:-1]], node]
                     else:
-                        item[prop[1:-1]] = [node]
+                        item[field[1:-1]] = [node]
 
         root.clear()
         return item

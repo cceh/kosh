@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from importlib import import_module as mod
+from importlib import import_module
 from logging import basicConfig, getLogger
 from multiprocessing import Process
 from os import getpid, path
@@ -62,22 +62,25 @@ class kosh:
             modules = [i for _, i, _ in iter_modules([root]) if i[0] != ("_")]
             logger().info("Loaded API endpoint modules %s", modules)
 
-            instance.echoes = [
-                mod("kosh.api.{}".format(i)).__dict__[i] for i in modules
+            instance.modules = [
+                import_module("kosh.api.{}".format(module)).__dict__[module]
+                for module in modules
             ]
 
-            for i in [i for i in argv if i.startswith("--")]:
+            for arg in [i for i in argv if i.startswith("--")]:
                 try:
-                    mod("kosh.param.{}".format(i[2:])).__dict__[i[2:]](argv)
+                    module = "kosh.param.{}".format(arg[2:])
+                    import_module(module).__dict__[arg[2:]](argv)
                 except Exception:
-                    exit("Invalid parameter or argument to {}".format(i[2:]))
+                    exit("Invalid parameter or argument to {}".format(arg[2:]))
 
             config = dotdictionary(instance.config["data"])
             connections.create_connection(hosts=[config.host])
             logger().info("Connecting to Elasticsearch host %s", config.host)
 
             instance.lexicons = {
-                i.uid: i for i in index.lookup(config.root, config.spec)
+                lexicon.uid: lexicon
+                for lexicon in index.lookup(config.root, config.spec)
             }
 
             instance.query_types = [
@@ -119,12 +122,12 @@ class kosh:
                 ],
                 "query_types": instance.query_types,
                 "endpoints": {
-                    i.__module__.split(".")[-1]: "{}/{}/{}".format(
+                    module.__module__.split(".")[-1]: "{}/{}/{}".format(
                         instance.config["api"]["root"],
                         lexicon.uid,
-                        i.__module__.split(".")[-1],
+                        module.__module__.split(".")[-1],
                     )
-                    for i in instance.echoes
+                    for module in instance.modules
                 },
             }
 
@@ -144,8 +147,8 @@ class kosh:
         )
 
         for lexicon in instance.lexicons.values():
-            for echo in instance.echoes:
-                echo(lexicon).deploy(flask)
+            for module in instance.modules:
+                module(lexicon).deploy(flask)
 
         class process(Process):
             def run(self) -> None:
@@ -176,13 +179,14 @@ class kosh:
         class thread(Thread):
             def run(self) -> None:
                 logger().info("Starting data sync in %s", config.root)
-                for call in index.notify(config.root, config.spec):
-                    queue.put(call)
+                for lexicon in index.notify(config.root, config.spec):
+                    queue.put(lexicon)
 
         thread(daemon=True, name="update").start()
 
         while True:
             try:
-                [watcher(i) for i in queue.get(False)()]
+                for lexicon in queue.get(False)():
+                    watcher(lexicon)
             except Empty:
                 sleep(int(config.sync))
