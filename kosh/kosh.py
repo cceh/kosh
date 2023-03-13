@@ -84,9 +84,10 @@ class kosh:
             }
 
             instance.query_types = [
-                queue_type
-                for queue_type in instance.config["query_types"]
-                if queue_type not in instance.config.defaults()
+                query_type
+                for query_type in instance.config["query_types"]
+                if query_type not in instance.config.defaults()
+                and instance.config.getboolean("query_types", query_type)
             ]
 
             for lexicon in instance.lexicons.values():

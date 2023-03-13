@@ -33,10 +33,13 @@ defaultconfig = {
         "tei": "http://www.tei-c.org/ns/1.0",
     },
     "query_types": {
-        "term": 1,
-        "terms": 2,
-        "fuzzy": 3,
-        "match": 4,
-        "match_phrase": 5,
+        "term": True,
+        "terms": True,
+        "fuzzy": True,
+        "match": True,
+        "match_phrase": True,
+        "prefix": False,
+        "wildcard": False,
+        "regexp": False,
     },
 }
