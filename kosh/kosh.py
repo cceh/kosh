@@ -56,7 +56,6 @@ class kosh:
         try:
             instance.config = ConfigParser()
             instance.config.read_dict(defaultconfig)
-            instance.query_types = [*instance.config["query_types"]][:-1]
             logger().info("Started kosh with pid %s", getpid())
 
             root = "{}/{}".format(path.dirname(__file__), "api")
@@ -80,6 +79,12 @@ class kosh:
             instance.lexicons = {
                 i.uid: i for i in index.lookup(config.root, config.spec)
             }
+
+            instance.query_types = [
+                queue_type
+                for queue_type in instance.config["query_types"]
+                if queue_type not in instance.config.defaults()
+            ]
 
             for lexicon in instance.lexicons.values():
                 index.update(lexicon)
