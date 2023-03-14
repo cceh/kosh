@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  kosh:
+  kosh: {
     ## Uncomment the next line to configure kosh through a configuration file.
     # command: --config_file /etc/kosh.ini
 
@@ -23,3 +23,4 @@ services:
     # volumes:
     #   - <path/to/kosh.ini>:/etc/kosh.ini:ro
     #   - <path/to/kosh/data>:/var/lib/kosh:ro
+  }
