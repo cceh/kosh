@@ -24,7 +24,11 @@ class search:
         find = entry(lexicon).schema()
 
         try:
-            return [{**i.to_dict(), "id": i.meta.id} for i in find.mget(ids)]
+            return [
+                {**item.to_dict(), "id": item.meta.id}
+                for item in find.mget(ids)
+                if item
+            ]
         except Exception:
             return []
 
@@ -53,6 +57,5 @@ class search:
                 }
                 for item in find[:size].execute()
             ]
-
         except Exception:
             return []
