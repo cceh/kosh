@@ -26,14 +26,17 @@ class index:
         """
         todo: docs
         """
-        edef = entry(lexicon)
+        input = entry(lexicon)
         lexicon.size = 0
 
         for file in lexicon.files:
-            bulk = (i.to_dict(include_meta=True) for i in edef.parse(file))
-            size, _ = helpers.bulk(connections.get_connection(), bulk)
-            logger().debug("Filed %i entries to index %s", size, lexicon.uid)
-            lexicon.size += size
+            try:
+                bulk = (i.to_dict(include_meta=True) for i in input.parse(file))
+                size, _ = helpers.bulk(connections.get_connection(), bulk)
+                logger().debug("Read %i entries to index %s", size, lexicon.uid)
+                lexicon.size += size
+            except Exception:
+                logger().warn("Skipping corrupt dict XML at %s", file)
 
         collect()
         logger().info("Added %i entries to index %s", lexicon.size, lexicon.uid)
@@ -43,34 +46,34 @@ class index:
         """
         todo: docs
         """
-        idxs = connections.get_connection().indices
+        indices = connections.get_connection().indices
         logger().debug("Creating index %s", lexicon.uid)
-        idxs.create(index=lexicon.pool, body=cls.__schema(lexicon))
+        indices.create(index=lexicon.pool, body=cls.__schema(lexicon))
 
     @classmethod
     def delete(cls, lexicon: Dict[str, Any]) -> None:
         """
         todo: docs
         """
-        idxs = connections.get_connection().indices
+        indices = connections.get_connection().indices
         logger().debug("Dropping index %s", lexicon.uid)
-        idxs.delete(ignore=404, index=lexicon.pool)
+        indices.delete(ignore=404, index=lexicon.pool)
 
     @classmethod
     def lookup(cls, root: str, spec: str) -> List[Dict[str, Any]]:
         """
         todo: docs
         """
-        idxs = []
+        indices = []
         logger().debug("Looking for dict definitions in %s", root)
 
         for file in glob("{}/**/{}".format(root, spec), recursive=True):
             try:
-                idxs += cls.__parser(file)
+                indices += cls.__parser(file)
             except Exception:
-                logger().warn("Corrupt dict definition in %s", file)
+                logger().warn("Skipping corrupt dict definition in %s", file)
 
-        return idxs
+        return indices
 
     @classmethod
     def notify(cls, root: str, spec: str) -> Callable:
