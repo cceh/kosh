@@ -137,6 +137,22 @@ class index:
                         "schema",
                         load(open("{}/{}".format(root, spec[uid]["schema"]))),
                     ),
+                    (
+                        "authors",
+                        loads(spec[uid]["authors"])
+                    ),
+                    (
+                        "title",
+                        loads(spec[uid]["title"])
+                    ),
+                    (
+                        "source_languages",
+                        loads(spec[uid]["source_languages"])
+                    ),
+                    (
+                        "target_languages",
+                        loads(spec[uid]["target_languages"])
+                    ),
                 ]
                 for uid in spec.sections()
             ]

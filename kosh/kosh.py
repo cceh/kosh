@@ -117,6 +117,10 @@ class kosh:
         def specs(lexicon):
             return {
                 "size": lexicon.size,
+                "title": lexicon.title,
+                "authors": lexicon.authors,
+                "source_languages": lexicon.source_languages,
+                "target_languages": lexicon.target_languages,
                 "properties": [
                     "id",
                     *[i for i in lexicon.schema.mappings.properties],
