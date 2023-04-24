@@ -143,12 +143,14 @@ class kosh:
                 "about": {**instance.config["info"]},
                 "dicts": {i.uid: specs(i) for i in instance.lexicons.values()},
             },
+            strict_slashes=False,
         )
 
         flask.add_url_rule(
             "{}/<uid>".format(config.root),
             "{}/<uid>".format(config.root),
             lambda uid: specs(instance.lexicons[uid]),
+            strict_slashes=False,
         )
 
         for lexicon in instance.lexicons.values():

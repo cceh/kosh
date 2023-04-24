@@ -40,9 +40,15 @@ class restful(_api):
         path = lambda endpoint: "{}/{}".format(self.path, endpoint)
         logger().debug("Deploying RESTful endpoint %s", self.path)
 
-        flask.add_url_rule(path("entries"), path("entries"), self.entries)
-        flask.add_url_rule(path("ids"), path("ids"), self.ids)
-        flask.add_url_rule(path("spec"), path("spec"), self.spec)
+        flask.add_url_rule(
+            path("entries"), path("entries"), self.entries, strict_slashes=False
+        )
+        flask.add_url_rule(
+            path("ids"), path("ids"), self.ids, strict_slashes=False
+        )
+        flask.add_url_rule(
+            path("spec"), path("spec"), self.spec, strict_slashes=False
+        )
 
         flask.register_blueprint(
             get_swaggerui_blueprint(
