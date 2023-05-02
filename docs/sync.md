@@ -4,28 +4,29 @@ title: Synchronization
 nav_order: 5
 ---
 # Syncing Kosh with GIT remote repositories
+
 {: .no_toc}
 
 If you modify any file part of a Kosh data module (.kosh file, XML files or JSON config file), Kosh per default automatically updates the respective index.
 Therefore if you wish to synchronize your local Kosh instance with data from a GIT repository, we present you two alternatives:
 
-
 1. TOC
 {:toc}
 
-##  Kosh Sync
+## Kosh Sync
 
-You can use <a href="https://www.github.com/cceh/kosh_sync">Kosh Sync</a>, a Docker container, to synchronize local datasets with their 
+You can use <a href="https://www.github.com/cceh/kosh_sync">Kosh Sync</a>, a Docker container, to synchronize local datasets with their
 respective cloud repository.
 
-Setup: 
+Setup:
 
-1. Clone kosh_sync: 
+1. Clone kosh_sync:
+
 ```bash
 $ git clone https://github.com/cceh/kosh_sync
-``` 
-2. Modify `docker-compose.sync.yml` to your requirements: 
+```
 
+2. Modify `docker-compose.sync.yml` to your requirements:
 
 ```dockerfile
 version: '2.3'
@@ -43,8 +44,8 @@ services:
       KOSH_SYNC_REPOSE: 1h
       
  ```
- 
-` KOSH_SYNC_REPOSE`, the time-interval used to call the external GIT repo, is set here to one hour (1h). You can employ the following values: (s)econds, (m)inutes, (h)ours, or (d)ays.
+
+`KOSH_SYNC_REPOSE`, the time-interval used to call the external GIT repo, is set here to one hour (1h). You can employ the following values: (s)econds, (m)inutes, (h)ours, or (d)ays.
 
 Deploy Kosh Sync together with Kosh:
 
@@ -52,8 +53,7 @@ Deploy Kosh Sync together with Kosh:
 $ docker-compose -f docker-compose.yml -f docker-compose.local.yml -f [PATH_TO_KOSH_SYNC]/docker-compose.sync.yml up -d
  ```
 
-
-##  Cron job
+## Cron job
 
 In order to automatically check for updates, in Unix-like systems you can create a cron job:
 
@@ -62,6 +62,7 @@ $ crontab -e
  ```
 
 For checking for updates daily at 23:00
+
 ```
 # For more information see the manual pages of crontab(5) and cron(8)
 #

@@ -5,13 +5,11 @@ nav_order: 3
 ---
 
 # API Access and Search
+
 {: .no_toc}
 
 1. TOC
 {:toc}
-
-
-
 
 ## API Access
 
@@ -28,7 +26,6 @@ After deploying, you can search on each data module at the following address:
 
 REST (Swagger UI): `http://localhost:5000/[your_index_name_here]/api/restful`
 
-
 ### GraphQL
 
 Graphql offers only one endpoint but two query types: `entries` and `ids`.
@@ -43,13 +40,13 @@ Therefore at the core of the Kosh system is elasticsearch, an open-source search
 ### Overview
 
 - In both APIs of each dataset, you can do the same type of queries. The difference between both APIs is that in GraphQL you have to specify which fields should be returned.
-- Besides the fields that you have configured to be indexed, Kosh indexes per default the whole XML entry. The XML tags and attributes are not indexed. 
+- Besides the fields that you have configured to be indexed, Kosh indexes per default the whole XML entry. The XML tags and attributes are not indexed.
 This means that you can search in the whole text of the entry. This comes handy when the datset has not been properly structured and you need to search on it while working on its improvement.
-
 
 ### Query types
 
 Kosh offers the following elastic subset query types:
+
 ```
 term 
 match
@@ -65,7 +62,6 @@ match_phrase
 
 In the Basque dictionary '[Hiztegi Batua](/implementations/kosh_data.md#hiztegi-batua-basque)' get those the entries with headwords ending with 'eko':
 
-
 #### REST API
 
 A REST version of the previous query would look like this:
@@ -75,7 +71,6 @@ A REST version of the previous query would look like this:
 Elasticsearch returns per default a maximum of 20 results per query. You can increase this value with the `size` parameter:
 
 <https://kosh.uni-koeln.de/api/hiztegibatua/restful/entries?field=lemma&query=*eko&query_type=wildcard&size=50>
-
 
 #### GraphQL API
 
