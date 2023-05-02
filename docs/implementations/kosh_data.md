@@ -6,7 +6,6 @@ nav_order: 4
 ---
 
 # Kosh Data
-
 {: .no_toc }
 
 Kosh Data contains different datasets that can be downloaded from <a href="https://github.com/cceh/kosh_data">this repository</a>.

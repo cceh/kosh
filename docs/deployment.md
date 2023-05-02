@@ -6,10 +6,10 @@ nav_order: 2
 
 # Deploying Kosh
 
-{: .no_toc}
+{: .no_toc }
 
 1. TOC
-{:toc}
+{: toc }
 
 ## Input: Data module
 

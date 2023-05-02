@@ -6,11 +6,10 @@ permalink: /
 ---
 
 # Kosh - APIs for Lexical Data
-
 {: .fs-9 }
 
-Kosh is an open-source framework for creating and maintaining APIs for lexical data.
-{: .fs-6 .fw-350}
+Kosh is an open-source framework for creating and maintaining APIs for lexical data. 
+{: .fs-6 .fw-350 }
 
 [View it on GitHub](https://github.com/cceh/kosh){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 

@@ -5,12 +5,8 @@ parent: Reference Implementations
 nav_order: 2
 ---
 
-## [Cologne Digital Sanskrit Dictionaries](https://www.sanskrit-lexicon.uni-koeln.de)
-
+# [Cologne Digital Sanskrit Dictionaries](https://www.sanskrit-lexicon.uni-koeln.de)
 {: .no_toc }
-
-1. TOC
-{:toc}
 
 Source: <https://github.com/sanskrit-lexicon/csl-orig/tree/master/v02>
 

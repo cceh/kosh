@@ -5,14 +5,17 @@ parent: Reference Implementations
 nav_order: 3
 ---
 
-## C-SALT APIs for Sanskrit Dictionaries
+# C-SALT APIs for Sanskrit Dictionaries
+{: .no_toc }
 
-The C-SALT APIs for Sanskrit Dictionaries provide access to the most important Sanskrit dictionaries
-hosted by the University of Cologne. The dictionaries have been encoded in TEI-P5 and you can download them from <a href="https://github.com/cceh/c-salt_sanskrit_data">this repository</a>. The APIs have been created and are maintained with <a href="https://kosh.uni-koeln.de">Kosh</a>.
+The C-SALT APIs for Sanskrit Dictionaries provide access to the most important Sanskrit dictionaries hosted by the University of Cologne. The dictionaries have been encoded in TEI-P5 and you can download them from <a href="https://github.com/cceh/c-salt_sanskrit_data">this repository</a>. The APIs have been created and are maintained with <a href="https://kosh.uni-koeln.de">Kosh</a>.
 
 You can access each dictionary via a REST and a GraphQL API.
 
-### **Sanskrit-English**
+1. TOC
+{: toc }
+
+## Sanskrit-English
 
 **MW** -  A Sanskrit-English Dictionary: Etymologically and Philologically Arranged with Special Reference to Cognate Indo-European languages by Monier Williams (1899)
 
@@ -34,7 +37,7 @@ You can access each dictionary via a REST and a GraphQL API.
 * REST Swagger UI: <a href="https://api.c-salt.uni-koeln.de/dicts/vei/restful">https://api.c-salt.uni-koeln.de/dicts/vei/restful</a>
 * GraphQL:  <a href="https://api.c-salt.uni-koeln.de/dicts/vei/graphql">https://api.c-salt.uni-koeln.de/dicts/vei/graphql</a>
 
-### **Sanskrit-German**
+## Sanskrit-German
 
 **PWG** - Sanskrit Wörterbuch, herausgegeben von der kaiserlichen Akademie der Wissenschaften, bearbeitet von Otto Böhtlingk und Rudolph Roth (1855)
 
@@ -46,7 +49,7 @@ You can access each dictionary via a REST and a GraphQL API.
 * REST Swagger UI: <a href="https://api.c-salt.uni-koeln.de/dicts/gra/restful">https://api.c-salt.uni-koeln.de/dicts/gra/restful</a>
 * GraphQL:  <a href="https://api.c-salt.uni-koeln.de/dicts/gra/graphql">https://api.c-salt.uni-koeln.de/dicts/gra/graphql</a>
 
-### **English-Sanskrit**
+## English-Sanskrit
 
 **AE** - The Student’s English-Sanskrit Dictionary by V.S. Apte (1884)
 

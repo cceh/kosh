@@ -5,12 +5,8 @@ parent: Reference Implementations
 nav_order: 1
 ---
 
-## [freedict.org](https://freedict.org)
-
+# [freedict.org](https://freedict.org)
 {: .no_toc }
-
-1. TOC
-{:toc}
 
 Source: <https://freedict.org/freedict-database.json>
 
