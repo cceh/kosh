@@ -3,6 +3,7 @@ layout: default
 title: Synchronization
 nav_order: 5
 ---
+
 # Syncing Kosh with GIT remote repositories
 
 {: .no_toc}

@@ -5,7 +5,6 @@ parent: Reference Implementations
 nav_order: 4
 ---
 
-
 # Kosh Data
 
 {: .no_toc }
