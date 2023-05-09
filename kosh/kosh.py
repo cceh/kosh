@@ -117,11 +117,6 @@ class kosh:
 
         def specs(lexicon):
             return {
-                "size": lexicon.size,
-                "title": lexicon.title,
-                "authors": lexicon.authors,
-                "source_languages": lexicon.source_languages,
-                "target_languages": lexicon.target_languages,
                 "properties": [
                     "id",
                     *[i for i in lexicon.schema.mappings.properties],
@@ -134,6 +129,11 @@ class kosh:
                         module.__module__.split(".")[-1],
                     )
                     for module in instance.modules
+                },
+                **{
+                    key: value
+                    for key, value in lexicon.items()
+                    if key not in ["files", "pool", "schema", "uid"]
                 },
             }
 

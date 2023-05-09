@@ -111,7 +111,7 @@ class index:
         """
         pool = instance.config["data"]["pool"]
         root = path.dirname(file)
-        spec = ConfigParser()
+        spec = ConfigParser(converters={"value": cls.__value})
         spec.read_file(open(file))
 
         return [
@@ -124,35 +124,30 @@ class index:
                     ),
                     (
                         "pool",
-                        "{}[{}]".format(spec[uid].get("pool", pool), uid),
+                        "{}[{}]".format(spec[uid].getvalue("pool", pool), uid),
                     ),
                     (
                         "files",
                         [
                             "{}/{}".format(root, file)
-                            for file in loads(spec[uid]["files"])
+                            for file in spec[uid].getvalue("files")
                         ],
                     ),
                     (
                         "schema",
-                        load(open("{}/{}".format(root, spec[uid]["schema"]))),
+                        load(
+                            open(
+                                "{}/{}".format(
+                                    root, spec[uid].getvalue("schema")
+                                )
+                            )
+                        ),
                     ),
-                    (
-                        "authors",
-                        loads(spec[uid]["authors"])
-                    ),
-                    (
-                        "title",
-                        loads(spec[uid]["title"])
-                    ),
-                    (
-                        "source_languages",
-                        loads(spec[uid]["source_languages"])
-                    ),
-                    (
-                        "target_languages",
-                        loads(spec[uid]["target_languages"])
-                    ),
+                    *[
+                        (key, spec[uid].getvalue(key))
+                        for key in spec.options(uid)
+                        if key not in ["files", "pool", "schema"]
+                    ],
                 ]
                 for uid in spec.sections()
             ]
@@ -182,3 +177,13 @@ class index:
         }
 
         return lexicon.schema
+
+    @classmethod
+    def __value(cls, value: str) -> Any:
+        """
+        todo: docs
+        """
+        try:
+            return loads(value)
+        except Exception:
+            return value
