@@ -113,6 +113,7 @@ class kosh:
         config = dotdictionary(instance.config["api"])
         flask = Flask(config.name, root_path=Path(__file__).parent)
         flask.config["PROPAGATE_EXCEPTIONS"] = True
+        flask.url_map.strict_slashes = False
 
         def specs(lexicon):
             return {
@@ -143,14 +144,12 @@ class kosh:
                 "about": {**instance.config["info"]},
                 "dicts": {i.uid: specs(i) for i in instance.lexicons.values()},
             },
-            strict_slashes=False,
         )
 
         flask.add_url_rule(
             "{}/<uid>".format(config.root),
             "{}/<uid>".format(config.root),
             lambda uid: specs(instance.lexicons[uid]),
-            strict_slashes=False,
         )
 
         for lexicon in instance.lexicons.values():

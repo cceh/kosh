@@ -47,7 +47,7 @@ class graphql(_api):
         """
         view = ql.as_view(self.path, schema=self.__schema(), graphiql=True)
         logger().debug("Deploying GraphQL endpoint %s", self.path)
-        flask.add_url_rule(self.path, self.path, view, strict_slashes=False)
+        flask.add_url_rule(self.path, self.path, view)
 
     def __schema(self) -> Schema:
         """
