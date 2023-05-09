@@ -9,12 +9,14 @@ readme = "README.md"
 license = { file = "LICENSE" }
 
 authors = [
+  {name = "Luke Günther", email = "luke.guenther@uni-koeln.de"},
   {name = "Philip Schildkamp", email = "philip.schildkamp@uni-koeln.de"},
   {name = "Francisco Mondaca", email = "f.mondaca@uni-koeln.de"},
   {name = "Felix Rau", email = "f.rau@uni-koeln.de"},
 ]
 
 maintainers = [
+  {name = "Luke Günther", email = "luke.guenther@uni-koeln.de"},
   {name = "Philip Schildkamp", email = "philip.schildkamp@uni-koeln.de"},
 ]
 
