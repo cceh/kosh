@@ -26,9 +26,9 @@ For each data module, Kosh creates two endpoints: `entries` and `ids`.
 
 `ids` returns the items matching the requested IDs.
 
-After deploying Kosh locally, you can access each data module's contents at:
+After deploying Kosh locally, you can access each data module's contents at the following address, swapping `[your_index_name_here]` for the real index name of that module:
 
-`http://localhost:5000/[your_index_name_here]/api/restful`
+`http://localhost:5000/api/[your_index_name_here]/restful`
 
 That link will also lead you to the Swagger UI where you can experiment with queries and check which parameters are required. Data is served as JSON.
 
@@ -40,7 +40,7 @@ As described above, they provide you with the means to either search items based
 
 After deploying Kosh locally, you can access each data module through GraphQL by using the following endpoint:
 
-`http://localhost:5000/[your_index_name_here]/api/graphql`
+`http://localhost:5000/api/[your_index_name_here]/graphql`
 
 There, you can also use the GraphiQL "playground" to experiment with queries, with the added benefit of error highlighting and auto-completion.
 
