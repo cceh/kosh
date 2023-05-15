@@ -5,7 +5,6 @@ nav_order: 5
 ---
 
 # Syncing Kosh with GIT remote repositories
-
 {: .no_toc }
 
 If you modify any file part of a Kosh data module (.kosh file, XML files or JSON config file), Kosh per default automatically updates the respective index.
@@ -16,7 +15,7 @@ Therefore if you wish to synchronize your local Kosh instance with data from a G
 
 ## Kosh Sync
 
-You can use <a href="https://www.github.com/cceh/kosh_sync">Kosh Sync</a>, a Docker container, to synchronize local datasets with their
+You can use [Kosh Sync](https://www.github.com/cceh/kosh_sync), a Docker container, to synchronize local datasets with their
 respective cloud repository.
 
 Setup:
