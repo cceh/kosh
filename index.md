@@ -5,29 +5,29 @@ nav_order: 1
 permalink: /
 ---
 
-# Kosh - APIs for Lexical Data
+# Kosh Suite - API Framework for Lexical Data
 {: .fs-9 }
 
-Kosh is an open-source framework for creating and maintaining APIs for lexical data. 
+The Kosh Suite is an API-centric, open-source framework designed to efficiently manage and access lexical data.
 {: .fs-6 .fw-350 }
 
 [View it on GitHub](https://github.com/cceh/kosh){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 
 <img src="assets/images/kosh_overview.png"/>
 
-Kosh has been conceived to provide API access to **any XML-encoded** lexical dataset, independently of the data model employed.
+The Kosh Suite is a comprehensive framework for working with lexical data. Its backend `kosh` has been conceived to provide API access to **any XML-encoded** lexical dataset, independently of the data model employed.
 
-Its name Kosh derives from the Hindi word for dictionary or lexicon, कोश _koś_ or _kosh_, which in turn derives from Sanskrit कोश _kośa_ with the same meaning.
+The name _Kosh_ derives from the Hindi word for dictionary or lexicon, कोश _koś_ or _kosh_, which in turn derives from Sanskrit कोश _kośa_ with the same meaning.
 
 ## Features
 
 * Kosh processes lexical data in XML format.
-* Two APIs, GraphQL and REST, access the data stored in elasticsearch.
-* Kosh can be deployed either via Docker or natively on Unix-like systems.
+* Two APIs, based on GraphQL and REST, provide access to an Elasticsearch backend.
+* All components of the Kosh Suite can be deployed via Docker. Kosh also runs natively on Unix-like systems.
 
-## How to run Kosh
+## Setup
 
-You can configurate Kosh to create APIs for any XML-encoded lexical resource. Learn how to do it for your own resources in [deployment](/docs/deployment.md)
+You can configure Kosh to create APIs for any XML-encoded lexical resource. Learn how to do it for your own data in [the deployment section](/docs/deployment.md).
 
 ## References
 
