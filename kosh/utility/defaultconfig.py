@@ -34,7 +34,6 @@ defaultconfig = {
     },
     "query_types": {
         "term": True,
-        "terms": True,
         "fuzzy": True,
         "match": True,
         "match_phrase": True,
