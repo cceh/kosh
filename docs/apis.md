@@ -80,7 +80,6 @@ Kosh offers the following subset of Elasticsearch query types:
 | `wildcard` | Returns documents that contain terms matching a wildcard pattern. |
 | `regexp` | Returns documents that contain terms matching a regular expression. |
 | `prefix` | Returns documents that contain a specific prefix in a provided field. |
-| `terms` | Returns documents that contain one or more exact terms in a provided field. |
 | `match_phrase` | Returns documents that contain an exact phrase. |
 
 From the Elasticsearch Documentation:
