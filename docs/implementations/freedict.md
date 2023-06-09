@@ -4,15 +4,13 @@ title: Freedict.org
 parent: Reference Implementations
 nav_order: 1
 ---
-## [freedict.org](https://freedict.org)
+
+# [freedict.org](https://freedict.org)
 {: .no_toc }
 
-1. TOC
-{:toc}
+Source: <https://freedict.org/freedict-database.json>
 
-Source: <https://freedict.org/freedict-database.json> 
-
-How to deploy: <https://github.com/freedict/fd-kosh> 
+How to deploy: <https://github.com/freedict/fd-kosh>
 
 |DICT_ID|Source Language|Target Language|REST|GraphQL|Entries|
 |:---:|:---:|:---:|:---:|:---:|:---:|
