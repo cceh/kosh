@@ -1,6 +1,6 @@
 from logging import FileHandler, getLogger
 from sys import exit
-from typing import List
+from typing import Any, List
 
 from ..utility.concretemethod import concretemethod
 from ..utility.instance import instance
@@ -10,7 +10,7 @@ from ._param import _param
 
 class log_file(_param):
     """
-    todo: docs
+    Specifies the the file kosh will log to
     """
 
     @concretemethod
@@ -30,3 +30,10 @@ class log_file(_param):
 
         instance.config.set("logger", "file", params[0])
         logger().info("Set log file to %s", params[0])
+
+    @concretemethod
+    def _value(self) -> Any:
+        """
+        todo: docs
+        """
+        return instance.config.get("logger", "file")

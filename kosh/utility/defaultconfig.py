@@ -4,6 +4,7 @@ passed to ``ConfigParser.read_dict`` to define sane default values.
 """
 defaultconfig = {
     "DEFAULT": {
+        "conf": "",
         "name": "kosh",
     },
     "api": {

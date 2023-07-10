@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 
 from ..utility.concretemethod import concretemethod
 from ..utility.instance import instance
@@ -8,7 +8,7 @@ from ._param import _param
 
 class data_root(_param):
     """
-    todo: docs
+    The path to XML lexical data with kosh files
     """
 
     @concretemethod
@@ -18,3 +18,10 @@ class data_root(_param):
         """
         instance.config.set("data", "root", params[0])
         logger().info("Set data root to %s", params[0])
+
+    @concretemethod
+    def _value(self) -> Any:
+        """
+        todo: docs
+        """
+        return instance.config.get("data", "root")

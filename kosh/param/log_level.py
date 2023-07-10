@@ -1,6 +1,6 @@
 from logging import getLevelName
 from sys import exit
-from typing import List
+from typing import Any, List
 
 from ..utility.concretemethod import concretemethod
 from ..utility.instance import instance
@@ -10,7 +10,7 @@ from ._param import _param
 
 class log_level(_param):
     """
-    todo: docs
+    Specifies the kosh logger level
     """
 
     @concretemethod
@@ -25,3 +25,10 @@ class log_level(_param):
 
         instance.config.set("logger", "level", params[0])
         logger().info("Set log level to %s", params[0])
+
+    @concretemethod
+    def _value(self) -> Any:
+        """
+        todo: docs
+        """
+        return instance.config.get("logger", "level")
