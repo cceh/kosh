@@ -1,8 +1,7 @@
-from importlib import import_module
-from sys import argv, exit
-from os import path
-from typing import List
+from importlib import import_module, metadata
+from os import _exit, path
 from pkgutil import iter_modules
+from typing import Any, List
 
 from ..utility.concretemethod import concretemethod
 from ..utility.logger import logger
@@ -11,47 +10,39 @@ from ._param import _param
 
 class help(_param):
     """
-    Show help and list commands
+    Show this help and list available parameters
     """
-
-    @staticmethod
-    def get_param_values(name, argv) -> List[str]:
-        values = []
-        found = False
-        for arg in argv:
-            if arg == f"--{name}":
-                found = True
-                continue
-            elif arg.startswith("--") and found:
-                break
-            if found:
-                values.append(arg)
-        return values
 
     @concretemethod
     def _parse(self, params: List[str]) -> None:
         """
         todo: docs
         """
-        modules = [
-            i
-            for _, i, _ in iter_modules([path.dirname(__file__)])
-            if i[0] != ("_")
-        ]
+        summary = metadata.metadata("kosh").get("summary")
+        print(summary + "\n" + len(summary) * "-" + "\n")
+
+        root = path.dirname(__file__)
+        modules = [i for _, i, _ in iter_modules([root]) if i[0] != ("_")]
         logger().debug("Found param modules %s", modules)
 
-        print("Parameters:")
         maxlen = max(map(len, modules))
+        print("Parameters:")
+
         for module in modules:
-            param_cls = import_module("kosh.param.{}".format(module)).__dict__[
-                module
-            ]
-            values = self.get_param_values(module, argv)
-            userval = (
-                ", set to '{}'".format(", ".join(values)) if values else ""
-            )
+            param = import_module(f"kosh.param.{module}").__dict__[module]
+            value = param._value(param)
+
             print(
-                f"    --{module:<{maxlen}}  {param_cls.__doc__.strip()}{userval}"
+                f"    --{module:<{maxlen}} ",
+                param.__doc__.strip().split("\n")[0],
+                f"(set to: {value})" if value else "",
             )
 
-        exit(0)
+        _exit(0)
+
+    @concretemethod
+    def _value(self) -> Any:
+        """
+        todo: docs
+        """
+        return None
