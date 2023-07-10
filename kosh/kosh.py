@@ -58,21 +58,21 @@ class kosh:
             instance.config.read_dict(defaultconfig)
             logger().info("Started kosh with pid %s", getpid())
 
-            root = "{}/{}".format(path.dirname(__file__), "api")
+            root = f"{path.dirname(__file__)}/api"
             modules = [i for _, i, _ in iter_modules([root]) if i[0] != ("_")]
             logger().info("Loaded API endpoint modules %s", modules)
 
             instance.modules = [
-                import_module("kosh.api.{}".format(module)).__dict__[module]
+                import_module(f"kosh.api.{module}").__dict__[module]
                 for module in modules
             ]
 
             for arg in [i for i in argv if i.startswith("--")]:
                 try:
-                    module = "kosh.param.{}".format(arg[2:])
+                    module = f"kosh.param.{arg[2:]}"
                     import_module(module).__dict__[arg[2:]](argv)
                 except Exception:
-                    exit("Invalid parameter or argument to {}".format(arg[2:]))
+                    exit(f"Invalid parameter or argument to {arg[2:]}")
 
             config = dotdictionary(instance.config["data"])
             connections.create_connection(hosts=[config.host])
@@ -147,8 +147,8 @@ class kosh:
         )
 
         flask.add_url_rule(
-            "{}/<uid>".format(config.root),
-            "{}/<uid>".format(config.root),
+            f"{config.root}/<uid>",
+            f"{config.root}/<uid>",
             lambda uid: specs(instance.lexicons[uid]),
         )
 

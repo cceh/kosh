@@ -26,7 +26,7 @@ class log_file(_param):
             handler.setFormatter(getLogger().handlers[0].formatter)
             getLogger().addHandler(handler)
         except Exception:
-            exit("Invalid log file {}".format(params[0]))
+            exit(f"Invalid log file {params[0]}")
 
         instance.config.set("logger", "file", params[0])
         logger().info("Set log file to %s", params[0])

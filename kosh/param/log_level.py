@@ -21,7 +21,7 @@ class log_level(_param):
         try:
             logger().setLevel(getLevelName(params[0]))
         except Exception:
-            exit("Invalid log level {}".format(params[0]))
+            exit(f"Invalid log level {params[0]}")
 
         instance.config.set("logger", "level", params[0])
         logger().info("Set log level to %s", params[0])

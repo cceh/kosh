@@ -20,7 +20,7 @@ class config_file(_param):
         try:
             instance.config.read_file(open(params[0]))
         except Exception:
-            exit("Invalid config file {}".format(params[0]))
+            exit(f"Invalid config file {params[0]}")
 
         instance.config.set("DEFAULT", "conf", params[0])
         logger().info("Read config file %s", params[0])

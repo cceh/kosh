@@ -68,7 +68,7 @@ class index:
         indices = []
         logger().debug("Looking for dict definitions in %s", root)
 
-        for file in glob("{}/**/{}".format(root, spec), recursive=True):
+        for file in glob(f"{root}/**/{spec}", recursive=True):
             try:
                 indices += cls.__parser(file)
             except Exception:
@@ -88,7 +88,7 @@ class index:
         unique = lambda value: (value[2], int(time() / 60))
 
         for tick, _ in groupby(task.event_gen(yield_nones=0), key=unique):
-            file = "{}/{}".format(tick[0], spec)
+            file = f"{tick[0]}/{spec}"
 
             if ".git" not in file and path.isfile(file):
                 logger().debug("Observed change in %s", tick[0])
@@ -139,19 +139,13 @@ class index:
                     (
                         "files",
                         [
-                            "{}/{}".format(root, file)
+                            f"{root}/{file}"
                             for file in spec[uid].getvalue("files")
                         ],
                     ),
                     (
                         "schema",
-                        load(
-                            open(
-                                "{}/{}".format(
-                                    root, spec[uid].getvalue("schema")
-                                )
-                            )
-                        ),
+                        load(open(f"{root}/{spec[uid].getvalue('schema')}")),
                     ),
                     *[
                         (key, spec[uid].getvalue(key))
