@@ -25,7 +25,7 @@ from ._api import _api
 
 class graphql(_api):
     """
-    todo: docs
+    A GraphQL endpoint serving lexical data
     """
 
     graphenemap = dotdictionary(

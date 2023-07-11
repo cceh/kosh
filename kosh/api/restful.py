@@ -17,7 +17,7 @@ from ._api import _api
 
 class restful(_api):
     """
-    todo: docs
+    A RESTful endpoint serving lexical data
     """
 
     swaggermap = dotdictionary(
