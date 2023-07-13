@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 
 from ..utility.concretemethod import concretemethod
 from ..utility.instance import instance
@@ -8,7 +8,7 @@ from ._param import _param
 
 class api_root(_param):
     """
-    todo: docs
+    The API context path kosh will serve
     """
 
     @concretemethod
@@ -21,3 +21,10 @@ class api_root(_param):
 
         instance.config.set("api", "root", params[0])
         logger().info("Set api root to %s", params[0])
+
+    @concretemethod
+    def _value(self) -> Any:
+        """
+        todo: docs
+        """
+        return instance.config.get("api", "root")

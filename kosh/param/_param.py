@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Any, List
 
 from ..utility.logger import logger
 
@@ -27,6 +27,13 @@ class _param(ABC):
 
     @abstractmethod
     def _parse(self, params: List[str]) -> None:
+        """
+        todo: docs
+        """
+        raise NotImplementedError("Too abstract")
+
+    @abstractmethod
+    def _value(self) -> Any:
         """
         todo: docs
         """

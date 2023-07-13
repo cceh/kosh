@@ -25,7 +25,7 @@ from ._api import _api
 
 class graphql(_api):
     """
-    todo: docs
+    A GraphQL endpoint serving lexical data
     """
 
     graphenemap = dotdictionary(
@@ -87,7 +87,7 @@ class graphql(_api):
         typing = {}
 
         for property in self.mapping:
-            array_like = "[{}]".format(property) in fields
+            array_like = f"[{property}]" in fields
             graphene = self.graphenemap[self.mapping[property].type]
             typing[property] = List(graphene) if array_like else graphene()
 

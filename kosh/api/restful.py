@@ -17,7 +17,7 @@ from ._api import _api
 
 class restful(_api):
     """
-    todo: docs
+    A RESTful endpoint serving lexical data
     """
 
     swaggermap = dotdictionary(
@@ -37,7 +37,7 @@ class restful(_api):
         """
         todo: docs
         """
-        path = lambda endpoint: "{}/{}".format(self.path, endpoint)
+        path = lambda endpoint: f"{self.path}/{endpoint}"
         logger().debug("Deploying RESTful endpoint %s", self.path)
 
         flask.add_url_rule(path("entries"), path("entries"), self.entries)
@@ -96,7 +96,7 @@ class restful(_api):
 
             return (
                 swagger
-                if not "[{}]".format(name) in fields
+                if not f"[{name}]" in fields
                 else {"type": "array", "items": swagger}
             )
 
@@ -126,7 +126,7 @@ class restful(_api):
             return {
                 "200": {
                     "description": "Matching dictionary entries",
-                    "schema": {"$ref": "#/definitions/{}".format(name)},
+                    "schema": {"$ref": f"#/definitions/{name}"},
                 },
                 "400": {"description": "Missing or invalid parameter"},
             }
@@ -216,7 +216,7 @@ class restful(_api):
             if isinstance(body, datetime):
                 return body.isoformat()
 
-            raise TypeError("Type {} not serializable".format(type(body)))
+            raise TypeError(f"Type {type(body)} not serializable")
 
         return Response(
             dumps(body, default=serialize, ensure_ascii=False),
