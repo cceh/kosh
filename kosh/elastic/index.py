@@ -4,6 +4,7 @@ from glob import glob
 from itertools import groupby
 from json import load, loads
 from os import path
+from re import compile
 from time import time
 from typing import Any, Callable, Dict, List
 
@@ -112,6 +113,8 @@ class index:
         pool = instance.config["data"]["pool"]
         root = path.dirname(file)
         spec = ConfigParser(converters={"value": cls.__value})
+
+        spec.SECTCRE = compile(r"^\[(?P<header>[a-z][_a-z0-9]+)\]$")
         spec.read_file(open(file))
 
         return [
