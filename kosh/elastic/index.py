@@ -4,7 +4,6 @@ from glob import glob
 from itertools import groupby
 from json import load, loads
 from os import path
-from re import sub
 from time import time
 from typing import Any, Callable, Dict, List
 
@@ -112,13 +111,7 @@ class index:
         """
         pool = instance.config["data"]["pool"]
         root = path.dirname(file)
-        spec = ConfigParser(
-            converters={
-                "index": cls.__index,
-                "value": cls.__value,
-            }
-        )
-
+        spec = ConfigParser(converters={"value": cls.__value})
         spec.read_file(open(file))
 
         return [
@@ -131,10 +124,7 @@ class index:
                     ),
                     (
                         "pool",
-                        "{}[{}]".format(
-                            spec[uid].getindex("pool", pool),
-                            cls.__index(uid),
-                        ),
+                        f"{spec[uid].getvalue('pool', pool)}[{uid}]",
                     ),
                     (
                         "files",
@@ -181,15 +171,6 @@ class index:
         }
 
         return lexicon.schema
-
-    @classmethod
-    def __index(cls, value: str) -> str:
-        """
-        todo: docs
-        """
-        return sub(
-            "^[+.\-_]+", "", sub('[\s,:?"*/\\\#<>|]+', "_", value.lower())
-        )
 
     @classmethod
     def __value(cls, value: str) -> Any:
