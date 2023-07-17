@@ -1,4 +1,3 @@
-from distutils.util import strtobool
 from typing import Any, List
 
 from ..utility.concretemethod import concretemethod
@@ -17,8 +16,11 @@ class data_sync(_param):
         """
         todo: docs
         """
-        instance.config.set("data", "sync", str(strtobool(params[0])))
-        logger().info("Set data sync to %r", bool(strtobool(params[0])))
+        if not params[0].isdigit():
+            raise TypeError()
+
+        instance.config.set("data", "sync", params[0])
+        logger().info("Set data sync to %s", params[0])
 
     @concretemethod
     def _value(self) -> Any:
