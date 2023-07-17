@@ -54,44 +54,9 @@ class kosh:
         todo: docs
         """
         try:
-            instance.config = ConfigParser()
-            instance.config.read_dict(defaultconfig)
-            logger().info("Started kosh with pid %s", getpid())
-
-            root = f"{path.dirname(__file__)}/api"
-            modules = [i for _, i, _ in iter_modules([root]) if i[0] != ("_")]
-            logger().info("Loaded API endpoint modules %s", modules)
-
-            instance.modules = [
-                import_module(f"kosh.api.{module}").__dict__[module]
-                for module in modules
-            ]
-
-            for arg in [i for i in argv if i.startswith("--")]:
-                try:
-                    module = f"kosh.param.{arg[2:]}"
-                    import_module(module).__dict__[arg[2:]](argv)
-                except Exception:
-                    exit(f"Invalid parameter or argument to {arg[2:]}")
+            self.setup()
 
             config = dotdictionary(instance.config["data"])
-            connections.create_connection(hosts=[config.host])
-            logger().info("Connecting to Elasticsearch host %s", config.host)
-
-            instance.lexicons = {
-                lexicon.uid: lexicon
-                for lexicon in index.lookup(config.root, config.spec)
-            }
-
-            instance.query_types = [
-                query_type
-                for query_type in instance.config["query_types"]
-                if query_type not in instance.config.defaults()
-                and instance.config.getboolean("query_types", query_type)
-            ]
-
-            for lexicon in instance.lexicons.values():
-                index.update(lexicon)
 
             self.serve()
             self.watch() if int(config.sync) > 0 else pause()
@@ -105,6 +70,49 @@ class kosh:
 
         finally:
             logger().info("Stopped kosh with pid %s", getpid())
+
+    def setup(self) -> None:
+        """
+        todo: docs
+        """
+        instance.config = ConfigParser()
+        instance.config.read_dict(defaultconfig)
+        logger().info("Started kosh with pid %s", getpid())
+
+        root = f"{path.dirname(__file__)}/api"
+        modules = [i for _, i, _ in iter_modules([root]) if i[0] != ("_")]
+        logger().info("Loaded API endpoint modules %s", modules)
+
+        instance.modules = [
+            import_module(f"kosh.api.{module}").__dict__[module]
+            for module in modules
+        ]
+
+        for arg in [i for i in argv if i.startswith("--")]:
+            try:
+                module = f"kosh.param.{arg[2:]}"
+                import_module(module).__dict__[arg[2:]](argv)
+            except Exception:
+                exit(f"Invalid parameter or argument to {arg[2:]}")
+
+        config = dotdictionary(instance.config["data"])
+        connections.create_connection(hosts=[config.host])
+        logger().info("Connecting to Elasticsearch host %s", config.host)
+
+        instance.lexicons = {
+            lexicon.uid: lexicon
+            for lexicon in index.lookup(config.root, config.spec)
+        }
+
+        instance.query_types = [
+            query_type
+            for query_type in instance.config["query_types"]
+            if query_type not in instance.config.defaults()
+            and instance.config.getboolean("query_types", query_type)
+        ]
+
+        for lexicon in instance.lexicons.values():
+            index.update(lexicon)
 
     def serve(self) -> None:
         """
