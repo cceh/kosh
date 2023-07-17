@@ -28,7 +28,7 @@ class entry:
         todo: docs
         """
         filename = path.basename(file)
-        namespaces = {**instance.config["namespaces"]}
+        namespaces = {**instance.config._sections["namespaces"]}
         xpaths = self.lexicon.schema.mappings._meta._xpaths
 
         logger().debug("Parsing file %s/%s", self.lexicon.uid, filename)
@@ -59,7 +59,7 @@ class entry:
         todo: docs
         """
         element = etree.tostring(root, encoding="unicode")
-        namespaces = {**instance.config["namespaces"]}
+        namespaces = {**instance.config._sections["namespaces"]}
         xpaths = self.lexicon.schema.mappings._meta._xpaths
 
         for name in root.xpath(xpaths.id, namespaces=namespaces) or [None]:
