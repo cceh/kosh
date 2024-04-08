@@ -24,18 +24,19 @@ class entry:
         self.lexicon = lexicon
 
     def parse(self, file: str) -> List[Document]:
-        """
-        todo: docs
-        """
         filename = path.basename(file)
+        # Retrieve and filter namespaces to exclude empty URIs
         namespaces = {**instance.config["namespaces"]}
+        namespaces = {prefix: uri for prefix, uri in namespaces.items() if uri}
+
         xpaths = self.lexicon.schema.mappings._meta._xpaths
 
         logger().debug("Parsing file %s/%s", self.lexicon.uid, filename)
         tree = etree.parse(file, etree.XMLParser(remove_blank_text=True))
 
         for element in tree.xpath(xpaths.root, namespaces=namespaces):
-            yield self.__record(element)
+            yield self.__record(element, namespaces)
+
 
     def schema(self, *args, **kwargs) -> Document:
         """
@@ -54,12 +55,13 @@ class entry:
 
         return entry(*args, **kwargs)
 
-    def __record(self, root: etree.Element) -> Document:
+    def __record(self, root: etree.Element, namespaces) -> Document:
         """
         todo: docs
         """
         element = etree.tostring(root, encoding="unicode")
-        namespaces = {**instance.config["namespaces"]}
+
+
         xpaths = self.lexicon.schema.mappings._meta._xpaths
 
         for name in root.xpath(xpaths.id, namespaces=namespaces) or [None]:
