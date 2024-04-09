@@ -2,7 +2,7 @@ version: '3'
 
 services:
   elasticsearch:
-    image: elasticsearch:7.17.6
+    image: elasticsearch:7.17.19
     environment:
       - ES_SETTING_DISCOVERY_TYPE=single-node
       - ES_SETTING_LOGGER_DEPRECATION_LEVEL=off
@@ -13,8 +13,7 @@ services:
 
   kosh:
     build: https://github.com/cceh/kosh.git
-    command: --data_host 'http://elasticsearch:9200'
-    image: cceh/kosh:latest
+    command: --data_host http://elasticsearch:9200
     ports: [5000:5000]
     volumes: [../kosh_data:/var/lib/kosh:ro]
     depends_on:

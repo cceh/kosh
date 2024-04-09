@@ -15,8 +15,7 @@ from ..utility.dotdictionary import dotdictionary
 from ..utility.instance import instance
 from ..utility.logger import logger
 from .entry import entry
-import traceback
-from lxml import etree
+
 
 class index:
     """
@@ -30,22 +29,15 @@ class index:
         """
         input = entry(lexicon)
         lexicon.size = 0
-        
+
         for file in lexicon.files:
-                    try:
-                        bulk = (i.to_dict(include_meta=True) for i in input.parse(file))
-                        size, _ = helpers.bulk(connections.get_connection(), bulk)
-                        logger().debug("Read %i entries to index %s", size, lexicon.uid)
-                        lexicon.size += size
-                    except etree.XMLSyntaxError as xml_error:
-                        logger().warn("Skipping corrupt dict XML at %s", file)
-                        logger().warn("XML Error: %s", str(xml_error))
-                    except etree.XPathEvalError as xpath_error:
-                        logger().warn("XPath Error in file %s: %s", file, str(xpath_error))
-                    except Exception as e:
-                        logger().warn("Skipping due to unexpected error at %s", file)
-                        logger().warn("Error: %s", str(e))
-                        logger().warn("Traceback: %s", traceback.format_exc())
+            try:
+                bulk = (i.to_dict(include_meta=True) for i in input.parse(file))
+                size, _ = helpers.bulk(connections.get_connection(), bulk)
+                logger().debug("Read %i entries to index %s", size, lexicon.uid)
+                lexicon.size += size
+            except Exception:
+                logger().warn("Skipping corrupt dict XML at %s", file)
 
         collect()
         logger().info("Added %i entries to index %s", lexicon.size, lexicon.uid)
