@@ -75,8 +75,14 @@ class kosh:
                     exit(f"Invalid parameter or argument to {arg[2:]}")
 
             config = dotdictionary(instance.config["data"])
-            connections.create_connection(hosts=[config.host])
             logger().info("Connecting to Elasticsearch host %s", config.host)
+
+            connections.create_connection(
+                hosts=[config.host],
+                max_retries=int(config.loop),
+                retry_on_timeout=int(config.loop) > 0,
+                timeout=int(config.wait),
+            )
 
             instance.lexicons = {
                 lexicon.uid: lexicon
@@ -97,7 +103,7 @@ class kosh:
             self.watch() if int(config.sync) > 0 else pause()
 
         except KeyboardInterrupt:
-            print("\N{bomb}")
+            print("\N{BOMB}")
         except Exception as exception:
             logger().exception(exception)
         except SystemExit as exception:
