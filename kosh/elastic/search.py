@@ -26,7 +26,7 @@ class search:
         try:
             return [
                 {**item.to_dict(), "id": item.meta.id}
-                for item in find.mget(ids)
+                for item in find.mget(list(set(ids)))
                 if item
             ]
         except Exception:
