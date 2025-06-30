@@ -2,6 +2,7 @@
 ``defaultconfig`` variable, containing the default configuration. Should be
 passed to ``ConfigParser.read_dict`` to define sane default values.
 """
+
 defaultconfig = {
     "DEFAULT": {
         "conf": "",
@@ -14,10 +15,12 @@ defaultconfig = {
     },
     "data": {
         "host": "127.0.0.1",
+        "loop": 3,
         "pool": "%(name)s",
         "root": "/var/lib/%(name)s",
         "spec": ".%(name)s",
         "sync": 10,
+        "wait": 60,
     },
     "info": {
         "desc": "%(name)s - APIs for Lexical Data",

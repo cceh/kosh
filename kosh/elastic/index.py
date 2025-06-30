@@ -10,6 +10,8 @@ from typing import Any, Callable, Dict, List
 
 from elasticsearch import helpers
 from elasticsearch_dsl import connections
+from elastic_transport import ConnectionTimeout
+from lxml.etree import XMLSyntaxError, XPathEvalError
 
 from ..utility.dotdictionary import dotdictionary
 from ..utility.instance import instance
@@ -36,11 +38,17 @@ class index:
                 size, _ = helpers.bulk(connections.get_connection(), bulk)
                 logger().debug("Read %i entries to index %s", size, lexicon.uid)
                 lexicon.size += size
-            except Exception:
+            except ConnectionTimeout:
+                logger().warn("Requeueing %s as the connectoun timed out", file)
+                lexicon.files += [file]
+            except (XMLSyntaxError, XPathEvalError):
                 logger().warn("Skipping corrupt dict XML at %s", file)
+            except Exception:
+                logger().warn("Skipping due to unexpected error at %s", file)
 
-        collect()
         logger().info("Added %i entries to index %s", lexicon.size, lexicon.uid)
+        lexicon.files = list(set(lexicon.files))
+        collect()
 
     @classmethod
     def create(cls, lexicon: Dict[str, Any]) -> None:
